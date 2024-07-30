@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KCRV_Statistics.UI", "KCRV_Statistics.UI\KCRV_Statistics.UI.csproj", "{91A46869-273A-4A2A-8574-8CE8C457341F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KCRV_Statistics.Model", "KCRV_Statistics.Model\KCRV_Statistics.Model.csproj", "{5F751A57-F82C-4741-940E-62228E5AB96A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KCRV_Statistics.Core", "KCRV_Statistics.Core\KCRV_Statistics.Core.csproj", "{5B0CC1B3-B39B-479C-BA17-8160470DCB97}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Тесты", "Тесты", "{43FB5FBA-F6A9-4596-AD62-58B20941E3C3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ModelTests", "ModelTests", "{5189917F-B225-49E4-854A-F6673ECA3AB5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathServiceTests", "MathServiceTests\MathServiceTests.csproj", "{E1E4C32D-AE76-4396-82FC-1B0750659045}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{91A46869-273A-4A2A-8574-8CE8C457341F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91A46869-273A-4A2A-8574-8CE8C457341F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91A46869-273A-4A2A-8574-8CE8C457341F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91A46869-273A-4A2A-8574-8CE8C457341F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F751A57-F82C-4741-940E-62228E5AB96A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F751A57-F82C-4741-940E-62228E5AB96A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F751A57-F82C-4741-940E-62228E5AB96A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F751A57-F82C-4741-940E-62228E5AB96A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B0CC1B3-B39B-479C-BA17-8160470DCB97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B0CC1B3-B39B-479C-BA17-8160470DCB97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B0CC1B3-B39B-479C-BA17-8160470DCB97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B0CC1B3-B39B-479C-BA17-8160470DCB97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1E4C32D-AE76-4396-82FC-1B0750659045}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1E4C32D-AE76-4396-82FC-1B0750659045}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1E4C32D-AE76-4396-82FC-1B0750659045}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1E4C32D-AE76-4396-82FC-1B0750659045}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5189917F-B225-49E4-854A-F6673ECA3AB5} = {43FB5FBA-F6A9-4596-AD62-58B20941E3C3}
+		{E1E4C32D-AE76-4396-82FC-1B0750659045} = {5189917F-B225-49E4-854A-F6673ECA3AB5}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {18CB68FC-BE5D-4930-B49D-5616072A1322}
+	EndGlobalSection
+EndGlobal

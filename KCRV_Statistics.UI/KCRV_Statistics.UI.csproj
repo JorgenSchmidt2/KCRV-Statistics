@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <Product>KCRV</Product>
+    <AssemblyName>KCRV Statistics</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\KCRV_Statistics.Core\KCRV_Statistics.Core.csproj" />
+    <ProjectReference Include="..\KCRV_Statistics.Model\KCRV_Statistics.Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ViewModels\IntermediateWindows\" />
+    <Folder Include="ViewModels\MasterWindows\" />
+    <Folder Include="Views\IntermediateWindows\" />
+    <Folder Include="Views\MasterWindows\" />
+  </ItemGroup>
+
+</Project>

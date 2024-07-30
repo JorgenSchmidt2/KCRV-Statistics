@@ -1,0 +1,138 @@
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\KCRV_Statistics.UI.csproj.AssemblyReference.cache
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\App.g.cs
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\KCRV_Statistics.UI.GeneratedMSBuildEditorConfig.editorconfig
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\KCRV_Statistics.UI.AssemblyInfoInputs.cache
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\KCRV_Statistics.UI.AssemblyInfo.cs
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\KCRV_Statistics.UI.csproj.CoreCompileInputs.cache
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\KCRV_Statistics.UI.genruntimeconfig.cache
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\KCRV Statistics.exe
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\KCRV Statistics.deps.json
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\KCRV Statistics.runtimeconfig.json
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\KCRV Statistics.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\KCRV Statistics.pdb
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\KCRV Statistics_MarkupCompile.cache
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\KCRV Statistics_MarkupCompile.lref
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\KCRV Statistics.g.resources
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\KCRV Statistics.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\refint\KCRV Statistics.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\KCRV Statistics.pdb
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\ref\KCRV Statistics.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\Views\EntryWindow.g.cs
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\Views\EntryWindow.baml
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\GeneratedInternalTypeHelper.g.cs
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\CalcModuleKCRV.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\DataModuleKCRV.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\DataModuleKCRV.pdb
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\CalcModuleKCRV.pdb
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\KCRV_Statistics.UI.csproj.CopyComplete
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\EPPlus.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\EPPlus.Interfaces.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\EPPlus.System.Drawing.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\itext.barcodes.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\itext.forms.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\itext.io.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\itext.kernel.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\itext.layout.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\itext.pdfa.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\itext.sign.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\itext.styledxmlparser.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\itext.svg.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\itext.commons.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.DotNet.PlatformAbstractions.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.Extensions.Configuration.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.Extensions.Configuration.Abstractions.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.Extensions.Configuration.FileExtensions.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.Extensions.Configuration.Json.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.Extensions.DependencyInjection.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.Extensions.DependencyModel.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.Extensions.FileProviders.Abstractions.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.Extensions.FileProviders.Physical.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.Extensions.FileSystemGlobbing.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.Extensions.Logging.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.Extensions.Logging.Abstractions.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.Extensions.Options.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.Extensions.Primitives.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.IO.RecyclableMemoryStream.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.Xaml.Behaviors.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Newtonsoft.Json.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\BouncyCastle.Crypto.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Prism.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Prism.Wpf.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\System.Formats.Asn1.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\System.Security.Cryptography.Pkcs.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\System.Text.Encoding.CodePages.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\System.Text.Encodings.Web.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\System.Text.Json.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.Security.Cryptography.Pkcs.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.Text.Encoding.CodePages.dll
+D:\Program Files (x86)\Университет\Производственная практика, 4 курс\Программы\KCRV Statistics\KCRV-Statistics\KCRV Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\runtimes\browser\lib\net7.0\System.Text.Encodings.Web.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\KCRV Statistics.exe
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\KCRV Statistics.deps.json
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\KCRV Statistics.runtimeconfig.json
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\KCRV Statistics.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\KCRV Statistics.pdb
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\EPPlus.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\EPPlus.Interfaces.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\EPPlus.System.Drawing.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\itext.barcodes.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\itext.forms.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\itext.io.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\itext.kernel.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\itext.layout.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\itext.pdfa.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\itext.sign.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\itext.styledxmlparser.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\itext.svg.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\itext.commons.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.DotNet.PlatformAbstractions.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.Extensions.Configuration.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.Extensions.Configuration.Abstractions.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.Extensions.Configuration.FileExtensions.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.Extensions.Configuration.Json.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.Extensions.DependencyInjection.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.Extensions.DependencyModel.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.Extensions.FileProviders.Abstractions.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.Extensions.FileProviders.Physical.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.Extensions.FileSystemGlobbing.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.Extensions.Logging.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.Extensions.Logging.Abstractions.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.Extensions.Options.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.Extensions.Primitives.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.IO.RecyclableMemoryStream.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Microsoft.Xaml.Behaviors.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Newtonsoft.Json.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\BouncyCastle.Crypto.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Prism.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\Prism.Wpf.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\System.Formats.Asn1.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\System.Security.Cryptography.Pkcs.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\System.Text.Encoding.CodePages.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\System.Text.Encodings.Web.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\System.Text.Json.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.Security.Cryptography.Pkcs.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\runtimes\win\lib\net7.0\System.Text.Encoding.CodePages.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\runtimes\browser\lib\net7.0\System.Text.Encodings.Web.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\CalcModuleKCRV.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\DataModuleKCRV.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\DataModuleKCRV.pdb
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\bin\Debug\net7.0-windows\CalcModuleKCRV.pdb
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\KCRV_Statistics.UI.csproj.AssemblyReference.cache
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\Views\EntryWindow.g.cs
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\App.g.cs
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\GeneratedInternalTypeHelper.g.cs
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\KCRV Statistics_MarkupCompile.cache
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\KCRV Statistics_MarkupCompile.lref
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\Views\EntryWindow.baml
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\KCRV Statistics.g.resources
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\KCRV_Statistics.UI.GeneratedMSBuildEditorConfig.editorconfig
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\KCRV_Statistics.UI.AssemblyInfoInputs.cache
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\KCRV_Statistics.UI.AssemblyInfo.cs
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\KCRV_Statistics.UI.csproj.CoreCompileInputs.cache
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\KCRV_Statistics.UI.csproj.CopyComplete
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\KCRV Statistics.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\refint\KCRV Statistics.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\KCRV Statistics.pdb
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\KCRV_Statistics.UI.genruntimeconfig.cache
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\ref\KCRV Statistics.dll

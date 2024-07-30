@@ -1,0 +1,187 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\Program Files (x86)\\Университет\\Производственная практика, 4 курс\\Программы\\KCRV Statistics\\KCRV-Statistics\\KCRV Statistics\\KCRV_Statistics.UI\\KCRV_Statistics.UI.csproj": {}
+  },
+  "projects": {
+    "D:\\Program Files (x86)\\Университет\\Производственная практика, 4 курс\\Программы\\KCRV Statistics\\KCRV-Statistics\\KCRV Statistics\\KCRV_Statistics.Core\\KCRV_Statistics.Core.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Program Files (x86)\\Университет\\Производственная практика, 4 курс\\Программы\\KCRV Statistics\\KCRV-Statistics\\KCRV Statistics\\KCRV_Statistics.Core\\KCRV_Statistics.Core.csproj",
+        "projectName": "DataModuleKCRV",
+        "projectPath": "D:\\Program Files (x86)\\Университет\\Производственная практика, 4 курс\\Программы\\KCRV Statistics\\KCRV-Statistics\\KCRV Statistics\\KCRV_Statistics.Core\\KCRV_Statistics.Core.csproj",
+        "packagesPath": "C:\\Users\\Joe\\.nuget\\packages\\",
+        "outputPath": "D:\\Program Files (x86)\\Университет\\Производственная практика, 4 курс\\Программы\\KCRV Statistics\\KCRV-Statistics\\KCRV Statistics\\KCRV_Statistics.Core\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Joe\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.101\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\Program Files (x86)\\Университет\\Производственная практика, 4 курс\\Программы\\KCRV Statistics\\KCRV-Statistics\\KCRV Statistics\\KCRV_Statistics.Model\\KCRV_Statistics.Model.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Program Files (x86)\\Университет\\Производственная практика, 4 курс\\Программы\\KCRV Statistics\\KCRV-Statistics\\KCRV Statistics\\KCRV_Statistics.Model\\KCRV_Statistics.Model.csproj",
+        "projectName": "CalcModuleKCRV",
+        "projectPath": "D:\\Program Files (x86)\\Университет\\Производственная практика, 4 курс\\Программы\\KCRV Statistics\\KCRV-Statistics\\KCRV Statistics\\KCRV_Statistics.Model\\KCRV_Statistics.Model.csproj",
+        "packagesPath": "C:\\Users\\Joe\\.nuget\\packages\\",
+        "outputPath": "D:\\Program Files (x86)\\Университет\\Производственная практика, 4 курс\\Программы\\KCRV Statistics\\KCRV-Statistics\\KCRV Statistics\\KCRV_Statistics.Model\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Joe\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0-windows"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0-windows7.0": {
+            "targetAlias": "net7.0-windows",
+            "projectReferences": {
+              "D:\\Program Files (x86)\\Университет\\Производственная практика, 4 курс\\Программы\\KCRV Statistics\\KCRV-Statistics\\KCRV Statistics\\KCRV_Statistics.Core\\KCRV_Statistics.Core.csproj": {
+                "projectPath": "D:\\Program Files (x86)\\Университет\\Производственная практика, 4 курс\\Программы\\KCRV Statistics\\KCRV-Statistics\\KCRV Statistics\\KCRV_Statistics.Core\\KCRV_Statistics.Core.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0-windows7.0": {
+          "targetAlias": "net7.0-windows",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.101\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\Program Files (x86)\\Университет\\Производственная практика, 4 курс\\Программы\\KCRV Statistics\\KCRV-Statistics\\KCRV Statistics\\KCRV_Statistics.UI\\KCRV_Statistics.UI.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Program Files (x86)\\Университет\\Производственная практика, 4 курс\\Программы\\KCRV Statistics\\KCRV-Statistics\\KCRV Statistics\\KCRV_Statistics.UI\\KCRV_Statistics.UI.csproj",
+        "projectName": "KCRV Statistics",
+        "projectPath": "D:\\Program Files (x86)\\Университет\\Производственная практика, 4 курс\\Программы\\KCRV Statistics\\KCRV-Statistics\\KCRV Statistics\\KCRV_Statistics.UI\\KCRV_Statistics.UI.csproj",
+        "packagesPath": "C:\\Users\\Joe\\.nuget\\packages\\",
+        "outputPath": "D:\\Program Files (x86)\\Университет\\Производственная практика, 4 курс\\Программы\\KCRV Statistics\\KCRV-Statistics\\KCRV Statistics\\KCRV_Statistics.UI\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Joe\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0-windows"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0-windows7.0": {
+            "targetAlias": "net7.0-windows",
+            "projectReferences": {
+              "D:\\Program Files (x86)\\Университет\\Производственная практика, 4 курс\\Программы\\KCRV Statistics\\KCRV-Statistics\\KCRV Statistics\\KCRV_Statistics.Core\\KCRV_Statistics.Core.csproj": {
+                "projectPath": "D:\\Program Files (x86)\\Университет\\Производственная практика, 4 курс\\Программы\\KCRV Statistics\\KCRV-Statistics\\KCRV Statistics\\KCRV_Statistics.Core\\KCRV_Statistics.Core.csproj"
+              },
+              "D:\\Program Files (x86)\\Университет\\Производственная практика, 4 курс\\Программы\\KCRV Statistics\\KCRV-Statistics\\KCRV Statistics\\KCRV_Statistics.Model\\KCRV_Statistics.Model.csproj": {
+                "projectPath": "D:\\Program Files (x86)\\Университет\\Производственная практика, 4 курс\\Программы\\KCRV Statistics\\KCRV-Statistics\\KCRV Statistics\\KCRV_Statistics.Model\\KCRV_Statistics.Model.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0-windows7.0": {
+          "targetAlias": "net7.0-windows",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            },
+            "Microsoft.WindowsDesktop.App.WPF": {
+              "privateAssets": "none"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.101\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
