@@ -57,5 +57,19 @@ namespace KCRV_Statistics.Model.DirectoryService.DirectoryInfoGetters
 
             return Result;
         }
+
+        public static bool CheckDirForEmpty (string Input)
+        {
+            bool Result = true;
+
+            var Files = Directory.GetFiles(Input);
+
+            if (Files.Length == 0)
+            {
+                Result = false;
+            }
+
+            return Result;
+        }
     }
 }

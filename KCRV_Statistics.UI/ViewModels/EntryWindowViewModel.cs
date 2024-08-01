@@ -59,7 +59,8 @@ namespace KCRV_Statistics.UI.ViewModels
                 return new Command(
                     obj =>
                     {
-
+                        AppData.AppFileData = DirectoryInfoReader.GetDirectoryList(AppData.ChoisedFolders);
+                        FileDatas = AppData.AppFileData;
                     }
                 );
             }
@@ -130,6 +131,13 @@ namespace KCRV_Statistics.UI.ViewModels
                     xlsx_Check = value;
                     AppData.ChoisedFolders = ChangeChoises();
                     AppData.AppFileData = DirectoryInfoReader.GetDirectoryList(AppData.ChoisedFolders);
+
+                    if (!DirectoryInfoReader.CheckDirForEmpty(AppFolders.InputFiles_XLSX))
+                    {
+                        xlsx_Check = false;
+                        AppData.ChoisedFolders = ChangeChoises();
+                    }
+
                     FileDatas = AppData.AppFileData;
                 }
                 CheckChanges();
@@ -156,6 +164,13 @@ namespace KCRV_Statistics.UI.ViewModels
                     json_Check = value;
                     AppData.ChoisedFolders = ChangeChoises();
                     AppData.AppFileData = DirectoryInfoReader.GetDirectoryList(AppData.ChoisedFolders);
+
+                    if (!DirectoryInfoReader.CheckDirForEmpty(AppFolders.InputFiles_CSV_JSON))
+                    {
+                        json_Check = false;
+                        AppData.ChoisedFolders = ChangeChoises();
+                    }
+
                     FileDatas = AppData.AppFileData;
                 }
                 CheckChanges();
@@ -181,7 +196,15 @@ namespace KCRV_Statistics.UI.ViewModels
                     simple_Check = value;
                     AppData.ChoisedFolders = ChangeChoises();
                     AppData.AppFileData = DirectoryInfoReader.GetDirectoryList(AppData.ChoisedFolders);
+
+                    if (!DirectoryInfoReader.CheckDirForEmpty(AppFolders.InputFiles_Simple))
+                    {
+                        simple_Check = false;
+                        AppData.ChoisedFolders = ChangeChoises();
+                    }
+
                     FileDatas = AppData.AppFileData;
+
                 }
                 CheckChanges();
             }
