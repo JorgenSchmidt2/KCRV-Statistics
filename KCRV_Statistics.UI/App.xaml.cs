@@ -1,4 +1,5 @@
 ﻿using KCRV_Statistics.Core.AppConfiguration;
+using KCRV_Statistics.Model.DirectoryService.DirectoryInfoGetters;
 using KCRV_Statistics.UI.AppService;
 using System.IO;
 using System.Windows;
@@ -43,6 +44,9 @@ namespace KCRV_Statistics.UI
                 Directory.CreateDirectory(AppFolders.Results);
                 MessageBox.Show("Папка \"Results\" пересоздана.");
             }
+
+            AppData.ChoisedFolders.Add(AppFolders.InputFiles_XLSX);
+            AppData.AppFileData = DirectoryInfoReader.GetDirectoryList(AppData.ChoisedFolders);
 
             WindowsObjects.EntryWindow = new();
             if (WindowsObjects.EntryWindow.ShowDialog() == true)

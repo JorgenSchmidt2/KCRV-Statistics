@@ -1,4 +1,6 @@
-﻿using KCRV_Statistics.Core.Entities.FileSystemEntites;
+﻿using KCRV_Statistics.Core.AppConfiguration;
+using KCRV_Statistics.Core.Entities.FileSystemEntites;
+using KCRV_Statistics.Model.DirectoryService.DirectoryInfoGetters;
 using KCRV_Statistics.UI.AppService;
 using System.Collections.Generic;
 using System.Windows;
@@ -67,7 +69,7 @@ namespace KCRV_Statistics.UI.ViewModels
 
         #region Список файлов
 
-        public List<EFileData> fileDatas = new List<EFileData>();
+        public List<EFileData> fileDatas = AppData.AppFileData;
 
         public List<EFileData> FileDatas
         {
@@ -88,8 +90,29 @@ namespace KCRV_Statistics.UI.ViewModels
 
         private string ChoisePartFalseMessage = "Должен быть выбран хотя бы один вариант выбираемого формата файлов.";
 
-        public bool xlsx_Check = true;
+        private List<string> ChangeChoises ()
+        {
+            List<string> Result = new List<string>();
 
+            if (XLSX_Check)
+            {
+                Result.Add(AppFolders.InputFiles_XLSX);
+            }
+
+            if (JSON_Check)
+            {
+                Result.Add(AppFolders.InputFiles_CSV_JSON);
+            }
+
+            if (Simple_Check)
+            {
+                Result.Add(AppFolders.InputFiles_Simple);
+            }
+
+            return Result;
+        }
+
+        public bool xlsx_Check = true;
         public bool XLSX_Check
         {
             get 
@@ -105,6 +128,9 @@ namespace KCRV_Statistics.UI.ViewModels
                 else
                 {
                     xlsx_Check = value;
+                    AppData.ChoisedFolders = ChangeChoises();
+                    AppData.AppFileData = DirectoryInfoReader.GetDirectoryList(AppData.ChoisedFolders);
+                    FileDatas = AppData.AppFileData;
                 }
                 CheckChanges();
             }
@@ -128,6 +154,9 @@ namespace KCRV_Statistics.UI.ViewModels
                 else
                 {
                     json_Check = value;
+                    AppData.ChoisedFolders = ChangeChoises();
+                    AppData.AppFileData = DirectoryInfoReader.GetDirectoryList(AppData.ChoisedFolders);
+                    FileDatas = AppData.AppFileData;
                 }
                 CheckChanges();
             }
@@ -150,6 +179,9 @@ namespace KCRV_Statistics.UI.ViewModels
                 else
                 {
                     simple_Check = value;
+                    AppData.ChoisedFolders = ChangeChoises();
+                    AppData.AppFileData = DirectoryInfoReader.GetDirectoryList(AppData.ChoisedFolders);
+                    FileDatas = AppData.AppFileData;
                 }
                 CheckChanges();
             }

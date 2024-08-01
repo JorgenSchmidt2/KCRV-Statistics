@@ -26,7 +26,7 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="ID" Width="50" DisplayMemberBinding="{Binding ID}" />
-                    <GridViewColumn Header="Имя файла" Width="390" DisplayMemberBinding="{Binding Directory}"/>
+                    <GridViewColumn Header="Имя файла" Width="390" DisplayMemberBinding="{Binding FileName}"/>
                 </GridView>
             </ListView.View>
         </ListView>
