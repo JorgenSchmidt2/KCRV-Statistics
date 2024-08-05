@@ -13,13 +13,13 @@ namespace MathServiceTests.EstimatorsTests.Tests.Mean
         [TestMethod]
         public void Mean_X_test_1_DEF()
         {
-            double result = Estimators.Mean(Data_1.TestData, 0, 0).X;
+            double result = Estimators.Mean(Estimators_Data_1.TestData, 0, 0).X;
             Assert.AreEqual(9.9616, result);
         }
         [TestMethod]
         public void Mean_U_test_2_DEF()
         {
-            double result = Estimators.Mean(Data_1.TestData, 0, 0).U;
+            double result = Estimators.Mean(Estimators_Data_1.TestData, 0, 0).U;
             Assert.AreEqual(0.1565, result);
         }
 
@@ -30,7 +30,7 @@ namespace MathServiceTests.EstimatorsTests.Tests.Mean
         public void Mean_X_test_3_Calibration()
         {
             double resultcalibr = 9.96158898572207;
-            double result = Estimators.Mean(Data_1.TestData, mean_iteration_calibr, mean_result_calibr).X;
+            double result = Estimators.Mean(Estimators_Data_1.TestData, mean_iteration_calibr, mean_result_calibr).X;
 
             Assert.AreEqual(Math.Round(resultcalibr, mean_result_calibr),
                             result);
@@ -39,7 +39,7 @@ namespace MathServiceTests.EstimatorsTests.Tests.Mean
         public void Mean_U_test_4_Calibration()
         {
             double resultcalibr = 0.156494754481712;
-            double result = Estimators.Mean(Data_1.TestData, mean_iteration_calibr, mean_result_calibr).U;
+            double result = Estimators.Mean(Estimators_Data_1.TestData, mean_iteration_calibr, mean_result_calibr).U;
 
             Assert.AreEqual(Math.Round(resultcalibr, mean_result_calibr),
                             result);

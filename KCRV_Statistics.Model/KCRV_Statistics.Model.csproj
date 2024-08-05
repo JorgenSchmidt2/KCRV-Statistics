@@ -17,9 +17,4 @@
     <ProjectReference Include="..\KCRV_Statistics.Core\KCRV_Statistics.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DirectoryService\DirectoryValidators\" />
-    <Folder Include="SearchService\" />
-  </ItemGroup>
-
 </Project>

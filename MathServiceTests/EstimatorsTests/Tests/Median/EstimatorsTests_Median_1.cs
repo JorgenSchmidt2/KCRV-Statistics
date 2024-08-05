@@ -13,13 +13,13 @@ namespace MathServiceTests.EstimatorsTests.Tests.Median
         [TestMethod]
         public void WeightedMean_X_test_1_DEF()
         {
-            double result = Estimators.Median(Data_1.TestData, 0, 0).X;
+            double result = Estimators.Median(Estimators_Data_1.TestData, 0, 0).X;
             Assert.AreEqual(9.8147, result);
         }
         [TestMethod]
         public void WeightedMean_U_test_2_DEF()
         {
-            double result = Estimators.Median(Data_1.TestData, 0, 0).U;
+            double result = Estimators.Median(Estimators_Data_1.TestData, 0, 0).U;
             Assert.AreEqual(0.2056, result);
         }
     }

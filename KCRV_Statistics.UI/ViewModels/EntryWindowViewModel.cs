@@ -1,7 +1,10 @@
 ﻿using KCRV_Statistics.Core.AppConfiguration;
 using KCRV_Statistics.Core.Entities.FileSystemEntites;
 using KCRV_Statistics.Model.DirectoryService.DirectoryInfoGetters;
+using KCRV_Statistics.Model.SearchService.FileFinders;
+using KCRV_Statistics.Model.StructureDataService.Lists;
 using KCRV_Statistics.UI.AppService;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 
@@ -33,7 +36,20 @@ namespace KCRV_Statistics.UI.ViewModels
                 return new Command(
                     obj =>
                     {
+                        if (String.IsNullOrEmpty(Query))
+                        {
+                            MessageBox.Show("Введите запрос.");
+                            return;
+                        }
 
+                        var Result = FileQueryMaker.DoQuery(Query, AppData.AppFileData);
+                        if (Result.Count == 0)
+                        {
+                            MessageBox.Show("Файлов, содержащих \"" + Query + "\" в своём имени не обнаружено");
+                            return;
+                        }
+
+                        FileDatas = Result;
                     }
                 );
             }
@@ -46,7 +62,7 @@ namespace KCRV_Statistics.UI.ViewModels
                 return new Command(
                     obj =>
                     {
-
+                        FileDatas = ListDataOperator.CopyFileDataListEntities(AppData.AppFileData);
                     }
                 );
             }
@@ -59,8 +75,14 @@ namespace KCRV_Statistics.UI.ViewModels
                 return new Command(
                     obj =>
                     {
-                        AppData.AppFileData = DirectoryInfoReader.GetDirectoryList(AppData.ChoisedFolders);
-                        FileDatas = AppData.AppFileData;
+                        var Result = DirectoryInfoReader.GetDirectoryList(AppData.ChoisedFolders);
+                        if (Result.Count == 0)
+                        {
+                            MessageBox.Show("Файлов в указанной/ых директории/ях не обнаружено");
+                            return;
+                        }
+                        AppData.AppFileData = Result;
+                        FileDatas = ListDataOperator.CopyFileDataListEntities(AppData.AppFileData);
                     }
                 );
             }
@@ -87,7 +109,7 @@ namespace KCRV_Statistics.UI.ViewModels
 
         #endregion
 
-        #region Выбор раздела
+        #region Выбор раздела (отрефакторить блоки выбора раздела)
 
         private string ChoisePartFalseMessage = "Должен быть выбран хотя бы один вариант выбираемого формата файлов.";
 
@@ -130,15 +152,17 @@ namespace KCRV_Statistics.UI.ViewModels
                 {
                     xlsx_Check = value;
                     AppData.ChoisedFolders = ChangeChoises();
-                    AppData.AppFileData = DirectoryInfoReader.GetDirectoryList(AppData.ChoisedFolders);
+                    var Result = DirectoryInfoReader.GetDirectoryList(AppData.ChoisedFolders);
 
                     if (!DirectoryInfoReader.CheckDirForEmpty(AppFolders.InputFiles_XLSX))
                     {
                         xlsx_Check = false;
                         AppData.ChoisedFolders = ChangeChoises();
+                        return;
                     }
 
-                    FileDatas = AppData.AppFileData;
+                    AppData.AppFileData = Result;
+                    FileDatas = ListDataOperator.CopyFileDataListEntities(AppData.AppFileData);
                 }
                 CheckChanges();
             }
@@ -163,15 +187,17 @@ namespace KCRV_Statistics.UI.ViewModels
                 {
                     json_Check = value;
                     AppData.ChoisedFolders = ChangeChoises();
-                    AppData.AppFileData = DirectoryInfoReader.GetDirectoryList(AppData.ChoisedFolders);
+                    var Result = DirectoryInfoReader.GetDirectoryList(AppData.ChoisedFolders);
 
                     if (!DirectoryInfoReader.CheckDirForEmpty(AppFolders.InputFiles_CSV_JSON))
                     {
                         json_Check = false;
                         AppData.ChoisedFolders = ChangeChoises();
+                        return;
                     }
 
-                    FileDatas = AppData.AppFileData;
+                    AppData.AppFileData = Result;
+                    FileDatas = ListDataOperator.CopyFileDataListEntities(AppData.AppFileData);
                 }
                 CheckChanges();
             }
@@ -195,15 +221,17 @@ namespace KCRV_Statistics.UI.ViewModels
                 {
                     simple_Check = value;
                     AppData.ChoisedFolders = ChangeChoises();
-                    AppData.AppFileData = DirectoryInfoReader.GetDirectoryList(AppData.ChoisedFolders);
+                    var Result = DirectoryInfoReader.GetDirectoryList(AppData.ChoisedFolders);
 
                     if (!DirectoryInfoReader.CheckDirForEmpty(AppFolders.InputFiles_Simple))
                     {
                         simple_Check = false;
                         AppData.ChoisedFolders = ChangeChoises();
+                        return;
                     }
 
-                    FileDatas = AppData.AppFileData;
+                    AppData.AppFileData = Result;
+                    FileDatas = ListDataOperator.CopyFileDataListEntities(AppData.AppFileData);
 
                 }
                 CheckChanges();
