@@ -136,3 +136,5 @@ D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-win
 D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\KCRV Statistics.pdb
 D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\KCRV_Statistics.UI.genruntimeconfig.cache
 D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\ref\KCRV Statistics.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\Views\IntermediateWindows\OpenCalculateIntermediateWindow.g.cs
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\obj\Debug\net7.0-windows\Views\IntermediateWindows\OpenCalculateIntermediateWindow.baml

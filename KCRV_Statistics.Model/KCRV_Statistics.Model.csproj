@@ -17,4 +17,11 @@
     <ProjectReference Include="..\KCRV_Statistics.Core\KCRV_Statistics.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ValidateService\XLSX_Checkers\" />
+    <Folder Include="ValidateService\JSON_Checkers\" />
+    <Folder Include="ValidateService\CSV_Checkers\" />
+    <Folder Include="ValidateService\SimpleFileCheckers\" />
+  </ItemGroup>
+
 </Project>

@@ -10,9 +10,15 @@
     <Compile Update="Views\EntryWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\IntermediateWindows\OpenCalculateIntermediateWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\EntryWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\IntermediateWindows\OpenCalculateIntermediateWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

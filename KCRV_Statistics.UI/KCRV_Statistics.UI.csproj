@@ -15,9 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ViewModels\IntermediateWindows\" />
     <Folder Include="ViewModels\MasterWindows\" />
-    <Folder Include="Views\IntermediateWindows\" />
     <Folder Include="Views\MasterWindows\" />
   </ItemGroup>
 

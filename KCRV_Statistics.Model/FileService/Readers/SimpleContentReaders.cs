@@ -4,9 +4,9 @@ namespace KCRV_Statistics.Model.FileService.Readers
 {
     public class SimpleContentReaders
     {
-        public static string GetContentFromFile(string DirectoryName, string FileName, string Extension)
+        public static string GetContentFromFile(string DirectoryName, string FileName)
         {
-            string ActuallyFilePath = Environment.CurrentDirectory + @"\" + DirectoryName + @"\" + FileName + "." + Extension;
+            string ActuallyFilePath = DirectoryName + @"\" + FileName;
             string Result = "";
 
             var file = new FileInfo(ActuallyFilePath);

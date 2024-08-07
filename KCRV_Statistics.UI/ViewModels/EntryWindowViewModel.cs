@@ -1,11 +1,14 @@
 ﻿using KCRV_Statistics.Core.AppConfiguration;
 using KCRV_Statistics.Core.Entities.FileSystemEntites;
 using KCRV_Statistics.Model.DirectoryService.DirectoryInfoGetters;
+using KCRV_Statistics.Model.FileService.Readers;
 using KCRV_Statistics.Model.SearchService.FileFinders;
 using KCRV_Statistics.Model.StructureDataService.Lists;
+using KCRV_Statistics.Model.ValidateService.SimpleFileCheckers;
 using KCRV_Statistics.UI.AppService;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 
 namespace KCRV_Statistics.UI.ViewModels
@@ -264,7 +267,31 @@ namespace KCRV_Statistics.UI.ViewModels
                 return new Command(
                     obj =>
                     {
+                        if (ID_Field == 0)
+                        {
+                            MessageBox.Show("Введите ID файла.");
+                            return;
+                        }
 
+                        try
+                        {
+                            var fileInfo = FileDatas.Where(x => x.ID == ID_Field).Select(x => x).FirstOrDefault();
+                            string Content = SimpleContentReaders.GetContentFromFile(fileInfo.Directory, fileInfo.FileName);
+                            var Validate = InterlabDataSimpleChecker.CheckData(Content);
+                            
+                            if (!Validate.Status)
+                            {
+                                MessageBox.Show(Validate.Message);
+                                return;
+                            }
+
+                            var ValuesList = ListConverters.StringToRegularData(Content);
+                        }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show("Возникла неустранимая ошибка: \n" + e.Message);
+                            return;
+                        }
                     }
                 );
             }
