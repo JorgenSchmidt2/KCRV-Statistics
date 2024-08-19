@@ -2,9 +2,17 @@
 
 namespace KCRV_Statistics.Model.ValidateService.SimpleFileCheckers
 {
+    /// <summary>
+    /// Содержит методы проверки простых файлов. Под простым файлом подразумевается обычный .txt файл, содержащий данные в 
+    /// относительно понятном для человека формате (в отличии от двоичного кода .xlsx файлов).
+    /// В простых файлах, данные часто разделяют пробелами, табуляцией, запятыми и т.п. по колонкам и переносом строки по строкам.
+    /// </summary>
     public class InterlabDataSimpleChecker
     {
-        public static SimpleValidateResponse CheckData(string Content)
+        /// <summary>
+        /// Выполняет проверку входного контента из простого файла на соответствие его списку объектов типа RegularData (см. Core -> Entities).
+        /// </summary>
+        public static SimpleValidateResponse CheckSimpleData(string Content)
         {
             // Переменная для результатов
             SimpleValidateResponse Result = new SimpleValidateResponse();
@@ -17,7 +25,6 @@ namespace KCRV_Statistics.Model.ValidateService.SimpleFileCheckers
             try
             {
                 // Предварительные действия
-
                 Content = Content.Replace('.', ',') 
                     .Replace("\t\n", "");  
                 

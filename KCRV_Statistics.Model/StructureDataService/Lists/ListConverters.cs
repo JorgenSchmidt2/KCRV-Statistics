@@ -3,25 +3,36 @@ using KCRV_Statistics.Model.MessageService.MessageBoxService;
 
 namespace KCRV_Statistics.Model.StructureDataService.Lists
 {
+    /// <summary>
+    /// Содержит методы работы со списками, необходимые для работы программы.
+    /// </summary>
     public class ListConverters
     {
+        /// <summary>
+        /// Переводит в RegularData контент переменной типа string, формат контента которой можно описать как 
+        /// "2 столбца разделены табуляцией, произвольное количество строк разделены переносом строки".
+        /// </summary>
         public static List<RegularData> StringToRegularData (string Content)
         {
             List<RegularData> Result = new List<RegularData>();
 
             try
             {
+                // Удаляем лишние знаки
                 Content = Content.Replace('.', ',')
                     .Replace("\t\n", "")
                     .Replace("\r", "");
 
+                // При наличии последнего переноса строки - удаляем и его
                 if (Content[Content.Length - 1] == '\n')
                 {
                     Content = Content.Remove(Content.Length - 1, 1);
                 }
 
+                // Переводим строки в массив для дальнейших операций
                 var lines = Content.Split('\n');
 
+                // Переводим содержимое массива lines в объекты RegularData
                 int laboratoryCounter = 0;
                 foreach (var item in lines)
                 {

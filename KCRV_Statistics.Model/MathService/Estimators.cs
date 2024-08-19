@@ -3,13 +3,17 @@ using KCRV_Statistics.Model.MessageService.MessageBoxService;
 
 namespace KCRV_Statistics.Model.MathService
 {
+    /// <summary>
+    /// Содержит основные методы расчёта оценок межлабораторных исследований и их неопределённости.
+    /// </summary>
     public class Estimators
     {
-
+        // Поля, отвечающие за настройки округления по умолчанию, в данном случае
+        // при итерациях полученное будет округляться до 8, а при выводе до 4
         private static readonly int DefaultIterationDigits = 8;
         private static readonly int DefaultResultDigits = 4;
 
-        #region Переопределения метода Mean
+        #region Метод Mean
 
         /// <summary>
         /// Находит среднее значение выборки и её неопределённость 
@@ -23,14 +27,16 @@ namespace KCRV_Statistics.Model.MathService
         {
             try
             {
+                // Если оба входных показателя, отвечающих за округление равны 0, то 
+                // им присваивается значение, равное соответствующим константам
                 if (IterationDigits == 0 && ResultDigits == 0)
                 {
                     IterationDigits = DefaultIterationDigits;
                     ResultDigits = DefaultResultDigits;
                 }
 
-                OutputData Result = new OutputData();
-                Result.Content = "Mean";
+                OutputData Result = new OutputData();   // Объявляем выходную переменную
+                Result.MethodName = "Mean";             // Подписываем имя метода
 
                 // Вычисление итогового значения
                 foreach (RegularData item in Data)
@@ -54,14 +60,14 @@ namespace KCRV_Statistics.Model.MathService
             catch (Exception e)
             {
                 GetMessageBox.Show("Ошибка в методе Mean: \n" + e.Message);
-                return new OutputData() { Content = "Error (Mean)" };
+                return new OutputData() { MethodName = "Error (Mean)" };
             }
         }
 
         #endregion
 
 
-        #region Переопределения метода WeightedMean
+        #region Метод WeightedMean
 
         /// <summary>
         /// Находит средневзвешенное значение выборки и её неопределённость
@@ -75,6 +81,8 @@ namespace KCRV_Statistics.Model.MathService
         {
             try
             {
+                // Если оба входных показателя, отвечающих за округление равны 0, то 
+                // им присваивается значение, равное соответствующим константам
                 if (IterationDigits == 0 && ResultDigits == 0)
                 {
                     IterationDigits = DefaultIterationDigits;
@@ -82,12 +90,13 @@ namespace KCRV_Statistics.Model.MathService
                 }
 
                 OutputData Result = new OutputData();
-                Result.Content = "WeightedMean";
+                Result.MethodName = "WeightedMean";
 
                 double Numerator = 0;
                 double Denominator = 0;
 
-                // Нахождение ключевых для расчёта параметров сумм
+                // Нахождение ключевых для расчёта сумм, для числителя и знаменателя основной оценки
+                // Применяются и при расчёте неопределённости результата (только знаменатель)
                 foreach (RegularData item in Data)
                 {
                     Numerator = Math.Round(Numerator + item.Value / Math.Pow(item.Uncertanity, 2), IterationDigits);
@@ -103,17 +112,19 @@ namespace KCRV_Statistics.Model.MathService
             catch (Exception e)
             {
                 GetMessageBox.Show("Ошибка в методе WeightedMean: \n" + e.Message);
-                return new OutputData() { Content = "Error (WeightedMean)" };
+                return new OutputData() { MethodName = "Error (WeightedMean)" };
             }
         }
 
         #endregion
 
 
-        #region Переопределения метода Median и всё что с ними связано
+        #region Метод Median и всё что с ними связано
 
         /// <summary>
-        /// Достаёт средний элемент списка без нахождения медианы (в противном случае нарушение принципа единственной ответственности)
+        /// Достаёт средний элемент списка без нахождения медианы (в противном случае нарушение принципа единственной ответственности).
+        /// Для получения непосредственно медианы, необходимо перед применением метода отсортировать список, например методом SomeList.Sort(),
+        /// где SomeList - некоторый определённый список.
         /// </summary>
         /// <param name="Data"> Для RegularData </param>
         private static double GetMediavalElement (List<RegularData> Data)
@@ -132,6 +143,8 @@ namespace KCRV_Statistics.Model.MathService
 
         /// <summary>
         /// Достаёт средний элемент списка без нахождения медианы (в противном случае нарушение принципа единственной ответственности)
+        /// Для получения непосредственно медианы, необходимо перед применением метода отсортировать список, например методом SomeList.Sort(),
+        /// где SomeList - некоторый определённый список.
         /// </summary>
         /// <param name="Data"> Для double </param>
         private static double GetMediavalElement(List<double> Data)
@@ -161,6 +174,8 @@ namespace KCRV_Statistics.Model.MathService
         {
             try
             {
+                // Если оба входных показателя, отвечающих за округление равны 0, то 
+                // им присваивается значение, равное соответствующим константам
                 if (IterationDigits == 0 && ResultDigits == 0)
                 {
                     IterationDigits = DefaultIterationDigits;
@@ -168,14 +183,14 @@ namespace KCRV_Statistics.Model.MathService
                 }
 
                 OutputData Result = new OutputData();
-                Result.Content = "Median";
+                Result.MethodName = "Median";
 
                 // Нахождение медианы
                 Data = Data.OrderBy(x => x.Value).ToList();
                 Result.X = Math.Round(GetMediavalElement(Data), ResultDigits);
 
                 // Нахождение оценки неопределённости медианы
-                List<double> Dispersion = new List<double>();
+                List<double> Dispersion = new List<double>();   // Вычисляем степени удалённости переменных от медианы
                 foreach (var item in Data)
                     Dispersion.Add(
                         Math.Round(
@@ -183,7 +198,7 @@ namespace KCRV_Statistics.Model.MathService
                         )
                     );
 
-                Dispersion.Sort();
+                Dispersion.Sort();      // В данной строке сортируем список, в следующей уже вычисляем неопределённость
                 Result.U = Math.Round(
                     Math.Sqrt(Math.PI * Math.Pow(GetMediavalElement(Dispersion) * 1.483, 2) / 2 / Dispersion.Count)
                     , ResultDigits
@@ -194,7 +209,7 @@ namespace KCRV_Statistics.Model.MathService
             catch (Exception e)
             {
                 GetMessageBox.Show("Ошибка в методе Median: \n" + e.Message);
-                return new OutputData() { Content = "Error (Median)" };
+                return new OutputData() { MethodName = "Error (Median)" };
             }
 
         }

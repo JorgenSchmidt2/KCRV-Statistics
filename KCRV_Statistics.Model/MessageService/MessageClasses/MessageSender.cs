@@ -2,6 +2,9 @@
 
 namespace KCRV_Statistics.Model.MessageService.MessageClasses
 {
+    /// <summary>
+    /// Класс-отправщик, отвечает за отправку сообщений на шину.
+    /// </summary>
     public class MessageSender
     {
         private readonly IMessageService _messageService;

@@ -46,7 +46,7 @@ namespace KCRV_Statistics.UI
             }
 
             AppData.ChoisedFolders.Add(AppFolders.InputFiles_XLSX);
-            AppData.AppFileData = DirectoryInfoReader.GetDirectoryList(AppData.ChoisedFolders);
+            AppData.AppFileData = DirectoryInfoReader.GetFileListFromDirectory(AppData.ChoisedFolders);
 
             WindowsObjects.EntryWindow = new();
             if (WindowsObjects.EntryWindow.ShowDialog() == true)

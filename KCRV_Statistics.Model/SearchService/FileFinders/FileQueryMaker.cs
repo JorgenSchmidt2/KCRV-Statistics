@@ -2,8 +2,14 @@
 
 namespace KCRV_Statistics.Model.SearchService.FileFinders
 {
+    /// <summary>
+    /// Отвечает за выполнение запросов по списку.
+    /// </summary>
     public class FileQueryMaker
     {
+        /// <summary>
+        /// Выполняет поиск включений определённого набора символов Query в списке FileList, содержащего имена файлов.
+        /// </summary>
         public static List<EFileData> DoQuery (string Query, List<EFileData> FileList)
         {
             List<EFileData> Result = new List<EFileData>();

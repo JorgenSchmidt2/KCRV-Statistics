@@ -2,6 +2,9 @@
 
 namespace KCRV_Statistics.Model.MessageService
 {
+    /// <summary>
+    /// Содержит логику работы при отправке сообщений на шину, либо подписке обновлений с неё. 
+    /// </summary>
     public class MessageService : IMessageService
     {
         private readonly Dictionary<Type, List<object>> _subscribers = new Dictionary<Type, List<object>>();

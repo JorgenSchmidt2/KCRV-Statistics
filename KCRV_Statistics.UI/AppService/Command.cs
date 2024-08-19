@@ -3,6 +3,9 @@ using System.Windows.Input;
 
 namespace KCRV_Statistics.UI.AppService
 {
+    /// <summary>
+    /// Содержит основную логику работы при использовании кнопок управления программой.
+    /// </summary>
     public class Command : ICommand
     {
         private Action<object> execute;

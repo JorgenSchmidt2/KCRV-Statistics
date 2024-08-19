@@ -1,17 +1,31 @@
 ﻿using KCRV_Statistics.Core.Entities.FileSystemEntites;
 using KCRV_Statistics.Model.MessageService.MessageBoxService;
+using System.Windows;
 
 namespace KCRV_Statistics.Model.DirectoryService.DirectoryInfoGetters
 {
+    /// <summary>
+    /// Содержит статические методы для получения информации из директорий
+    /// </summary>
     public class DirectoryInfoReader
     {
-        public static List<EFileData> GetDirectoryList (List<string> DirectoryNames)
+        /// <summary>
+        /// Получает список файлов из указанных директорий.
+        /// Под "указанными директориями" в данном случае 
+        /// имеется ввиду список директорий, передаваемый в функцию
+        /// </summary>
+        public static List<EFileData> GetFileListFromDirectory (List<string> DirectoryNames)
         {
-            List<EFileData> Result = new List<EFileData> ();
-            List<string> NonEmptyDirectories = new List<string>();
+            // Содержит результат работы метода
+            List<EFileData> Result = new List<EFileData>();
+            // По логике должна содержать список реально существующих директорий из входного списка
+            List<string> ExistsDirectories = new List<string>();
             
             try
             {
+                // Проверка каждого элемента из полученного списка директорий на то существует ли элемент из списка
+                // При положительном результате - папка добавляется в список существующих директорий (см. выше переменную ExistsDirectories)
+                // При отрицательном результате - на экран пользователю выдаётся ошибка, исполнение программы продолжается
                 foreach (var item in DirectoryNames)
                 {
                     if (!Directory.Exists(Environment.CurrentDirectory + @"\" + item))
@@ -20,12 +34,27 @@ namespace KCRV_Statistics.Model.DirectoryService.DirectoryInfoGetters
                     }
                     else
                     {
-                        NonEmptyDirectories.Add(item);
+                        ExistsDirectories.Add(item);
                     }
                 }
 
+                // Если из полученного списка не существует ни одной из директорий - ход метода останавливается
+                // Пользователь получает уведомление об ошибке (см. выше)
+                if (ExistsDirectories.Count <= 0)
+                {
+                    var Message = "Следующих директорий не существует: \n";
+                    foreach (var item in DirectoryNames)
+                    {
+                        Message += item + "\n";
+                    }
+                    Message += "Считывание данных из директорий остановлено.";
+                    MessageBox.Show(Message);
+                    return new List<EFileData>();
+                }
+
+                // Считывание файлов из существующих директорий
                 int FileCounter = 1;
-                foreach (var item in NonEmptyDirectories)
+                foreach (var item in ExistsDirectories)
                 {
                     var FileList = Directory.GetFiles(Environment.CurrentDirectory + @"\" + item);
                     if (FileList.Length == 0)
@@ -37,14 +66,14 @@ namespace KCRV_Statistics.Model.DirectoryService.DirectoryInfoGetters
                         foreach (var curFile in FileList)
                         {
                             var splits = curFile.Split('\\');
-                            var concat = "";
 
-                            for (int i = 0; i <= splits.Length - 1 - 1; i++)
-                            {
-                                concat += splits[i] + @"\";
-                            }
+                            Result.Add( 
+                                new EFileData() { 
+                                    ID = FileCounter, 
+                                    Directory = splits[splits.Length - 2], 
+                                    FileName = splits[splits.Length - 1] 
+                                });
 
-                            Result.Add( new EFileData() { ID = FileCounter, Directory = concat, FileName = splits[splits.Length - 1] });
                             FileCounter += 1;
                         }
                     }
@@ -58,13 +87,18 @@ namespace KCRV_Statistics.Model.DirectoryService.DirectoryInfoGetters
             return Result;
         }
 
+        /// <summary>
+        /// Проверяет пуста ли директория
+        /// </summary>
         public static bool CheckDirForEmpty (string Input)
         {
             bool Result = true;
 
+            // Получаем список файлов из директории
             var Files = Directory.GetFiles(Input);
 
-            if (Files.Length == 0)
+            // Проверяем пуста ли директория сравнением с 0
+            if (Files.Length <= 0)
             {
                 Result = false;
             }

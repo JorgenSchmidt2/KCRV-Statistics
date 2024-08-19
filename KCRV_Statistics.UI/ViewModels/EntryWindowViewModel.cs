@@ -78,7 +78,7 @@ namespace KCRV_Statistics.UI.ViewModels
                 return new Command(
                     obj =>
                     {
-                        var Result = DirectoryInfoReader.GetDirectoryList(AppData.ChoisedFolders);
+                        var Result = DirectoryInfoReader.GetFileListFromDirectory(AppData.ChoisedFolders);
                         if (Result.Count == 0)
                         {
                             MessageBox.Show("Файлов в указанной/ых директории/ях не обнаружено");
@@ -112,32 +112,88 @@ namespace KCRV_Statistics.UI.ViewModels
 
         #endregion
 
-        #region Выбор раздела (отрефакторить блоки выбора раздела)
+        #region Выбор раздела
 
         private string ChoisePartFalseMessage = "Должен быть выбран хотя бы один вариант выбираемого формата файлов.";
 
-        private List<string> ChangeChoises ()
+        private void ChangeChoises()
         {
-            List<string> Result = new List<string>();
+            List<string> Result_Folders = new List<string>();
 
-            if (XLSX_Check)
+            if (xlsx_Check_addit)
             {
-                Result.Add(AppFolders.InputFiles_XLSX);
+                Result_Folders.Add(AppFolders.InputFiles_XLSX);
             }
 
-            if (JSON_Check)
+            if (json_Check_addit)
             {
-                Result.Add(AppFolders.InputFiles_CSV_JSON);
+                Result_Folders.Add(AppFolders.InputFiles_CSV_JSON);
             }
 
-            if (Simple_Check)
+            if (simple_Check_addit)
             {
-                Result.Add(AppFolders.InputFiles_Simple);
+                Result_Folders.Add(AppFolders.InputFiles_Simple);
             }
 
-            return Result;
+            AppData.ChoisedFolders.Clear();
+            AppData.ChoisedFolders = Result_Folders;
+
         }
 
+
+        private void ChangeCheckButtonsState (bool input_xlsx, bool input_json, bool input_simple)
+        {
+            try
+            {
+                if (input_xlsx == false && input_json == false && input_simple == false)
+                {
+                    xlsx_Check_addit = XLSX_Check;
+                    json_Check_addit = JSON_Check;
+                    simple_Check_addit = Simple_Check;
+                    MessageBox.Show(ChoisePartFalseMessage);
+                }
+                else
+                {
+                    if (!DirectoryInfoReader.CheckDirForEmpty(AppFolders.InputFiles_XLSX))
+                    {
+                        xlsx_Check_addit = false;
+                    }
+                    else
+                    {
+                        xlsx_Check_addit = input_xlsx;
+                    }
+
+                    if (!DirectoryInfoReader.CheckDirForEmpty(AppFolders.InputFiles_CSV_JSON))
+                    {
+                        json_Check_addit = false;
+                    }
+                    else
+                    {
+                        json_Check_addit = input_json;
+                    }
+
+                    if (!DirectoryInfoReader.CheckDirForEmpty(AppFolders.InputFiles_Simple))
+                    {
+                        simple_Check_addit = false;
+                    }
+                    else
+                    {
+                        simple_Check_addit = input_simple;
+                    }
+
+                    ChangeChoises();
+                    var DirResult = DirectoryInfoReader.GetFileListFromDirectory(AppData.ChoisedFolders);
+                    AppData.AppFileData = DirResult;
+                    FileDatas = ListDataOperator.CopyFileDataListEntities(AppData.AppFileData);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Возникла неустранимая ошибка:\n" + e);
+            }
+        }
+
+        private bool xlsx_Check_addit = true;
         public bool xlsx_Check = true;
         public bool XLSX_Check
         {
@@ -147,32 +203,14 @@ namespace KCRV_Statistics.UI.ViewModels
             }
             set
             {
-                if (value == false && JSON_Check == false && Simple_Check == false)
-                {
-                    MessageBox.Show(ChoisePartFalseMessage);
-                }
-                else
-                {
-                    xlsx_Check = value;
-                    AppData.ChoisedFolders = ChangeChoises();
-                    var Result = DirectoryInfoReader.GetDirectoryList(AppData.ChoisedFolders);
-
-                    if (!DirectoryInfoReader.CheckDirForEmpty(AppFolders.InputFiles_XLSX))
-                    {
-                        xlsx_Check = false;
-                        AppData.ChoisedFolders = ChangeChoises();
-                        return;
-                    }
-
-                    AppData.AppFileData = Result;
-                    FileDatas = ListDataOperator.CopyFileDataListEntities(AppData.AppFileData);
-                }
+                ChangeCheckButtonsState(value, JSON_Check, Simple_Check);
+                xlsx_Check = xlsx_Check_addit;
                 CheckChanges();
             }
         }
 
+        private bool json_Check_addit = false;
         public bool json_Check = false;
-
         public bool JSON_Check
         {
             get
@@ -182,32 +220,14 @@ namespace KCRV_Statistics.UI.ViewModels
 
             set
             {
-                if (value == false && XLSX_Check == false && Simple_Check == false)
-                {
-                    MessageBox.Show(ChoisePartFalseMessage);
-                }
-                else
-                {
-                    json_Check = value;
-                    AppData.ChoisedFolders = ChangeChoises();
-                    var Result = DirectoryInfoReader.GetDirectoryList(AppData.ChoisedFolders);
-
-                    if (!DirectoryInfoReader.CheckDirForEmpty(AppFolders.InputFiles_CSV_JSON))
-                    {
-                        json_Check = false;
-                        AppData.ChoisedFolders = ChangeChoises();
-                        return;
-                    }
-
-                    AppData.AppFileData = Result;
-                    FileDatas = ListDataOperator.CopyFileDataListEntities(AppData.AppFileData);
-                }
+                ChangeCheckButtonsState(XLSX_Check, value, Simple_Check);
+                json_Check = json_Check_addit;
                 CheckChanges();
             }
         }
 
+        private bool simple_Check_addit = false;
         public bool simple_Check = false;
-
         public bool Simple_Check
         {
             get
@@ -216,27 +236,8 @@ namespace KCRV_Statistics.UI.ViewModels
             }
             set
             {
-                if (value == false && XLSX_Check == false && JSON_Check == false)
-                {
-                    MessageBox.Show(ChoisePartFalseMessage);
-                }
-                else
-                {
-                    simple_Check = value;
-                    AppData.ChoisedFolders = ChangeChoises();
-                    var Result = DirectoryInfoReader.GetDirectoryList(AppData.ChoisedFolders);
-
-                    if (!DirectoryInfoReader.CheckDirForEmpty(AppFolders.InputFiles_Simple))
-                    {
-                        simple_Check = false;
-                        AppData.ChoisedFolders = ChangeChoises();
-                        return;
-                    }
-
-                    AppData.AppFileData = Result;
-                    FileDatas = ListDataOperator.CopyFileDataListEntities(AppData.AppFileData);
-
-                }
+                ChangeCheckButtonsState(XLSX_Check, JSON_Check, value);
+                simple_Check = simple_Check_addit;
                 CheckChanges();
             }
         }
@@ -277,7 +278,7 @@ namespace KCRV_Statistics.UI.ViewModels
                         {
                             var fileInfo = FileDatas.Where(x => x.ID == ID_Field).Select(x => x).FirstOrDefault();
                             string Content = SimpleContentReaders.GetContentFromFile(fileInfo.Directory, fileInfo.FileName);
-                            var Validate = InterlabDataSimpleChecker.CheckData(Content);
+                            var Validate = InterlabDataSimpleChecker.CheckSimpleData(Content);
                             
                             if (!Validate.Status)
                             {
@@ -365,3 +366,26 @@ namespace KCRV_Statistics.UI.ViewModels
         #endregion
     }
 }
+
+
+/*if (value == false && XLSX_Check == false && JSON_Check == false)
+{
+    MessageBox.Show(ChoisePartFalseMessage);
+}
+else
+{
+    simple_Check = value;
+    ChangeChoises();
+    var Result = DirectoryInfoReader.GetDirectoryList(AppData.ChoisedFolders);
+
+    if (!DirectoryInfoReader.CheckDirForEmpty(AppFolders.InputFiles_Simple))
+    {
+        simple_Check = false;
+        ChangeChoises();
+        return;
+    }
+
+    AppData.AppFileData = Result;
+    FileDatas = ListDataOperator.CopyFileDataListEntities(AppData.AppFileData);
+
+}*/
