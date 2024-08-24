@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET7_0;NETCOREAPP
 D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.UI\App.xaml
-2-1722520898
+3-392942553
 
-10-1946645385
+12-185030541
 235-941365317
-Views\EntryWindow.xaml;Views\IntermediateWindows\OpenCalculateIntermediateWindow.xaml;
+Views\EntryWindow.xaml;Views\IntermediateWindows\OpenCalculateIntermediateWindow.xaml;Views\MasterWindows\CalculateMasterWindow.xaml;
 
 False
 

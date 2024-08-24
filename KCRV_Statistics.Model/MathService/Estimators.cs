@@ -1,4 +1,5 @@
-﻿using KCRV_Statistics.Core.Entities.DataEntities.RegularDataUnits;
+﻿using KCRV_Statistics.Core.AppConfiguration;
+using KCRV_Statistics.Core.Entities.DataEntities.RegularDataUnits;
 using KCRV_Statistics.Model.MessageService.MessageBoxService;
 
 namespace KCRV_Statistics.Model.MathService
@@ -18,7 +19,7 @@ namespace KCRV_Statistics.Model.MathService
         /// <summary>
         /// Находит среднее значение выборки и её неопределённость 
         /// (округление задаётся через параметры метода, в случае если оба значения сразу оказываются равны нулю,
-        /// округляем до дефолтных значений)
+        /// округляем до дефолтных значений).
         /// </summary>
         /// <param name="Data"> Входные данные типа "Значение-неопределённость"</param>
         /// <param name="IterationDigits"> Насколько округляются получаемые суммы при итерациях </param>
@@ -35,8 +36,8 @@ namespace KCRV_Statistics.Model.MathService
                     ResultDigits = DefaultResultDigits;
                 }
 
-                OutputData Result = new OutputData();   // Объявляем выходную переменную
-                Result.MethodName = "Mean";             // Подписываем имя метода
+                OutputData Result = new OutputData();       // Объявляем выходную переменную    (для следующих методов     |
+                Result.MethodName = KCRV_MethodsNames.Mean; // Подписываем имя метода           |это подписываться не будет)
 
                 // Вычисление итогового значения
                 foreach (RegularData item in Data)
@@ -72,7 +73,7 @@ namespace KCRV_Statistics.Model.MathService
         /// <summary>
         /// Находит средневзвешенное значение выборки и её неопределённость
         /// (округление задаётся через параметры метода, в случае если оба значения сразу оказываются равны нулю,
-        /// округляем до дефолтных значений)
+        /// округляем до дефолтных значений).
         /// </summary>
         /// <param name="Data"> Входные данные типа "Значение-неопределённость"</param>
         /// <param name="IterationDigits"> Насколько округляются получаемые суммы при итерациях </param>
@@ -90,7 +91,7 @@ namespace KCRV_Statistics.Model.MathService
                 }
 
                 OutputData Result = new OutputData();
-                Result.MethodName = "WeightedMean";
+                Result.MethodName = KCRV_MethodsNames.WeightedMean;
 
                 double Numerator = 0;
                 double Denominator = 0;
@@ -164,7 +165,7 @@ namespace KCRV_Statistics.Model.MathService
         /// <summary>
         /// Находит медиану списка значений и их неопределённость
         /// (округление задаётся через параметры метода, в случае если оба значения сразу оказываются равны нулю,
-        /// округляем до дефолтных значений)
+        /// округляем до дефолтных значений).
         /// </summary>
         /// <param name="Data"></param>
         /// <param name="IterationDigits"></param>
@@ -183,7 +184,7 @@ namespace KCRV_Statistics.Model.MathService
                 }
 
                 OutputData Result = new OutputData();
-                Result.MethodName = "Median";
+                Result.MethodName = KCRV_MethodsNames.Median;
 
                 // Нахождение медианы
                 Data = Data.OrderBy(x => x.Value).ToList();
@@ -212,6 +213,32 @@ namespace KCRV_Statistics.Model.MathService
                 return new OutputData() { MethodName = "Error (Median)" };
             }
 
+        }
+
+        #endregion
+
+        #region Расчёт всех показателей
+
+        /// <summary>
+        /// Метод для составления списка всех показателей для полученной выборки.
+        /// </summary>
+        /// <param name="Data"></param>
+        /// <param name="IterationDigits"></param>
+        /// <param name="ResultDigits"></param>
+        /// <returns></returns>
+        public static List<OutputData> CalculateAllMethods (List<RegularData> Data, int IterationDigits, int ResultDigits)
+        {
+            List<OutputData> Result = new List<OutputData>();
+
+            var mean = Mean(Data, IterationDigits, ResultDigits);
+            var weightedMean = WeightedMean(Data, IterationDigits, ResultDigits);
+            var median = Median(Data, IterationDigits, ResultDigits);
+
+            Result.Add(mean);
+            Result.Add(weightedMean);
+            Result.Add(median);
+
+            return Result;
         }
 
         #endregion

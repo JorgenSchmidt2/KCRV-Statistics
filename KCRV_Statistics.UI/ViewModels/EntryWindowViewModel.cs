@@ -327,7 +327,7 @@ namespace KCRV_Statistics.UI.ViewModels
             }
         }
 
-        public Command Calculate
+        public Command Calculate // Требуется адаптировать под открытие .xlsx и json-csv файлов
         {
             get
             {
@@ -346,17 +346,39 @@ namespace KCRV_Statistics.UI.ViewModels
 
                         try
                         {
+                            // Ищем в списке файл с нужным ID
                             var fileInfo = FileDatas.Where(x => x.ID == ID_Field).Select(x => x).FirstOrDefault();
+
+                            // Если не найдено объекта с нужным айди - пользователю показывается сообщение об ошибке, ход прерывается
+                            if (fileInfo == null)
+                            {
+                                MessageBox.Show("Элемента с таким ID (" + ID_Field + ") не обнаружено.");
+                                return;
+                            }
+
+                            // Получаем содержимое файла
                             string Content = SimpleContentReaders.GetContentFromFile(fileInfo.Directory, fileInfo.FileName);
+
+                            // Проверяем содержимое файла на соответствие его формату "два столбца разделены табуляцией, строки - переносом строки"
+                            // Если содержимое не соответствует вышеуказанным требованиям - выводится сообщение об ошибке, ход прерывается
                             var Validate = InterlabDataSimpleChecker.CheckSimpleData(Content);
-                            
                             if (!Validate.Status)
                             {
                                 MessageBox.Show(Validate.Message);
                                 return;
                             }
 
+                            // Получаем переданный ранее контент в удобном для обработки виде, дополнительно забиваем его в статическую переменную
                             var ValuesList = ListConverters.StringToRegularData(Content);
+                            AppData.CurrentData.Clear();
+                            AppData.CurrentData = ValuesList;
+
+                            // Открываем окно указания начала координат (для xlsx файла)
+                            WindowsObjects.OpenCalculateIntermediateWindow = new();
+                            if (WindowsObjects.OpenCalculateIntermediateWindow.ShowDialog() == true)
+                            {
+                                WindowsObjects.OpenCalculateIntermediateWindow.Show();
+                            }
                         }
                         catch (Exception e)
                         {
@@ -375,7 +397,7 @@ namespace KCRV_Statistics.UI.ViewModels
                 return new Command(
                     obj => 
                     {
-
+                        MessageBox.Show("Not Implemented.");
                     }
                 );
             }
@@ -388,7 +410,8 @@ namespace KCRV_Statistics.UI.ViewModels
                 return new Command(
                     obj =>
                     {
-
+                        var Content = "";
+                        MessageBox.Show(Content);
                     }    
                 );
             }
@@ -401,7 +424,8 @@ namespace KCRV_Statistics.UI.ViewModels
                 return new Command(
                     obj =>
                     {
-
+                        var Content = "";
+                        MessageBox.Show(Content);
                     }    
                 );
             }
@@ -414,7 +438,8 @@ namespace KCRV_Statistics.UI.ViewModels
                 return new Command(
                     obj =>
                     {
-
+                        var Content = "";
+                        MessageBox.Show(Content);
                     }    
                 );
             }
@@ -427,7 +452,8 @@ namespace KCRV_Statistics.UI.ViewModels
                 return new Command(
                     obj =>
                     {
-
+                        var Content = "";
+                        MessageBox.Show(Content);
                     }    
                 );
             }

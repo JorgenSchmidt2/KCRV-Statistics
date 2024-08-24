@@ -14,9 +14,4 @@
     <ProjectReference Include="..\KCRV_Statistics.Model\KCRV_Statistics.Model.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ViewModels\MasterWindows\" />
-    <Folder Include="Views\MasterWindows\" />
-  </ItemGroup>
-
 </Project>
