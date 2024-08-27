@@ -22,3 +22,5 @@ D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.Core\obj\Debug\net7.0\D
 D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.Core\obj\Debug\net7.0\refint\DataModuleKCRV.dll
 D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.Core\obj\Debug\net7.0\DataModuleKCRV.pdb
 D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.Core\obj\Debug\net7.0\ref\DataModuleKCRV.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.Core\bin\Debug\net7.0\presentationcore.dll
+D:\git\github\УНИИМ\KCRV-Statistics\KCRV_Statistics.Core\obj\Debug\net7.0\KCRV_Statistics.Core.csproj.CopyComplete

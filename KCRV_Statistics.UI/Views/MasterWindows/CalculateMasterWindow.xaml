@@ -3,19 +3,158 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:KCRV_Statistics.UI.Views.MasterWindows"
+        xmlns:local="clr-namespace:KCRV_Statistics.UI.ViewModels.MasterWindows"
+        xmlns:core ="clr-namespace:KCRV_Statistics.Core.Entities.GraphicsShellEntities;assembly=DataModuleKCRV"
         mc:Ignorable="d"
         WindowStyle="None"
-        Title="CalculateMasterWindow" Height="450" Width="800" ResizeMode="NoResize"
+        Title="CalculateMasterWindow" Height="615" Width="1280" ResizeMode="NoResize"
         BorderThickness="0.5" BorderBrush="Black">
+    <Window.DataContext>
+        <local:CalculateMasterWindowViewModel/>
+    </Window.DataContext>
     <Grid>
-        <!-- Для возможности перемещать окно по экрану компьютера -->
-        <Grid Background="#e0e0e0" Height="20" VerticalAlignment="Top" >
-            <Label Content="Окно расчёта показателей KCRV" FontSize="9.5" Margin="0,-2,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <!-- Для возможности перемещать окно по экрану компьютера (master window version)-->
+        <Grid Background="#e0e0e0" Height="30" VerticalAlignment="Top" >
+            <Label Content="Окно отображения показателей KCRV" FontSize="12" Margin="4,2,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             <Grid Grid.Row="0" MouseDown="Grid_MoveForLeftButton" Background="Transparent"></Grid>
             <Grid Grid.Row="1"></Grid>
         </Grid>
         
+        <!-- Кнопка закрытия окна -->
+        <Button Command="{Binding Close}" HorizontalAlignment="Right" VerticalAlignment="Top" Height="30" Width="30">
+            <Button.Content>
+                <StackPanel>
+                    <TextBlock >╳</TextBlock>
+                </StackPanel>
+            </Button.Content>
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Background" Value="#E0E0E0" />
+                    <Setter Property="Foreground" Value="#999" />
+                    <Setter Property="FontSize" Value="13" />
+                    <Setter Property="SnapsToDevicePixels" Value="True" />
+
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="{TemplateBinding Background}" CornerRadius="2">
+                                    <Grid>
+                                        <ContentPresenter x:Name="MyContentPresenter" Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-4,0,0" />
+                                    </Grid>
+                                </Border>
+
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#C12" />
+                                        <Setter Property="Foreground" Value="#FEE" />
+                                    </Trigger>
+
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter Property="Background" Value="#A01" />
+                                        <Setter Property="Foreground" Value="#FFF" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Button.Style>
+        </Button>
+
+        <!-- Внешняя часть графика данных (нужна для подписей) -->
+        <Rectangle Margin="9,39,0,0" Height="{Binding ExternalFrameHeight}" Width="{Binding ExternalFrameWidth}" HorizontalAlignment="Left" VerticalAlignment="Top" Stroke="#111" StrokeThickness="1" />
+        <Viewbox Margin="10,40,0,0" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{Binding ExternalCanvasWidth}" Height="{Binding ExternalCanvasHeight}">
+            <ItemsControl ItemsSource="{Binding LabelData}" Width="{Binding ExternalCanvasWidth}" Height="{Binding ExternalCanvasHeight}" >
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.Resources>
+                    <Style TargetType="ContentPresenter">
+                        <Setter Property="Canvas.Left" Value="0" />
+                        <Setter Property="Canvas.Bottom" Value="0" />
+                    </Style>
+                    <!-- В DataTemplate прописываем путь к классу абстракции отрисовываемых линий -->
+                    <DataTemplate DataType="{x:Type core:TextLabel}">
+                        <Label Margin="{Binding LabelMargin}" Content="{Binding Content}" FontSize="{Binding FontSize}" />
+                    </DataTemplate>
+                </ItemsControl.Resources>
+            </ItemsControl>
+        </Viewbox>
+
+        <!-- Внутренняя часть графика данных (для отображения данных в графическом виде) -->
+        <Rectangle Margin="64,64,0,0" Height="{Binding InternalFrameHeight}" Width="{Binding InternalFrameWidth}" HorizontalAlignment="Left" VerticalAlignment="Top" Stroke="#111" StrokeThickness="2" />
+        <Viewbox Margin="65,65,0,0" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{Binding InternalCanvasWidth}" Height="{Binding InternalCanvasHeight}">
+            <ItemsControl ItemsSource="{Binding MainData}" Width="{Binding InternalCanvasWidth}" Height="{Binding InternalCanvasHeight}" >
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.Resources>
+                    <Style TargetType="ContentPresenter">
+                        <Setter Property="Canvas.Left" Value="0" />
+                        <Setter Property="Canvas.Bottom" Value="0" />
+                    </Style>
+                    <!-- В DataTemplate прописываем путь к классу абстракции отрисовываемых шаров -->
+                    <DataTemplate DataType="{x:Type core:Sphere}">
+                        <Ellipse Margin="{Binding SphereMargin}" Stroke="{Binding Color}" StrokeThickness="{Binding StrokeThicknessValue}" Height="{Binding Radius}" Width="{Binding Radius}" />
+                    </DataTemplate>
+                </ItemsControl.Resources>
+            </ItemsControl>
+        </Viewbox>
+        <Viewbox Margin="65,65,0,0" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{Binding InternalCanvasWidth}" Height="{Binding InternalCanvasHeight}">
+            <ItemsControl ItemsSource="{Binding LinesData}" Width="{Binding InternalCanvasWidth}" Height="{Binding InternalCanvasHeight}" >
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.Resources>
+                    <Style TargetType="ContentPresenter">
+                        <Setter Property="Canvas.Left" Value="0" />
+                        <Setter Property="Canvas.Top" Value="0" />
+                    </Style>
+                    <!-- В DataTemplate прописываем путь к классу абстракции отрисовываемых линий -->
+                    <DataTemplate DataType="{x:Type core:Line}">
+                        <Line X1="{Binding X1}" X2="{Binding X2}" Y1="{Binding Y1}" Y2="{Binding Y2}" Stroke="{Binding Color}" StrokeThickness="{Binding StrokeThicknessValue}" />
+                    </DataTemplate>
+                </ItemsControl.Resources>
+            </ItemsControl>
+        </Viewbox>
         
+        <!-- Результаты расчётов -->
+        <Label Margin="650,40,0,0" Height="30" Width="260" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Результаты по среднему значению:" />
+        <Label Margin="650,68,0,0" Height="30" Width="20" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Х:" />
+        <TextBox Text="{Binding Mean_X, Mode=OneWay}" IsEnabled="False" Margin="675,70,0,0" Height="20" Width="80" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Label Margin="770,68,0,0" Height="30" Width="20" HorizontalAlignment="Left" VerticalAlignment="Top" Content="U:" />
+        <TextBox Text="{Binding Mean_U, Mode=OneWay}"  IsEnabled="False" Margin="795,70,0,0" Height="20" Width="80" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <CheckBox Margin="890,73,0,0" Content="Отобразить" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+        <Label Margin="650,110,0,0" Height="30" Width="280" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Результаты по ср. взвеш. значению:" />
+        <Label Margin="650,138,0,0" Height="30" Width="20" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Х:" />
+        <TextBox Text="{Binding WeightedMean_X, Mode=OneWay}" IsEnabled="False" Margin="675,140,0,0" Height="20" Width="80" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Label Margin="770,138,0,0" Height="30" Width="20" HorizontalAlignment="Left" VerticalAlignment="Top" Content="U:" />
+        <TextBox Text="{Binding WeightedMean_U, Mode=OneWay}" IsEnabled="False" Margin="795,140,0,0" Height="20" Width="80" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <CheckBox Margin="890,143,0,0" Content="Отобразить" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+        <Label Margin="650,180,0,0" Height="30" Width="200" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Результаты по медиане.:" />
+        <Label Margin="650,208,0,0" Height="30" Width="20" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Х:" />
+        <TextBox Text="{Binding Median_X, Mode=OneWay}" IsEnabled="False" Margin="675,210,0,0" Height="20" Width="80" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Label Margin="770,208,0,0" Height="30" Width="20" HorizontalAlignment="Left" VerticalAlignment="Top" Content="U:" />
+        <TextBox Text="{Binding Median_U, Mode=OneWay}" IsEnabled="False" Margin="795,210,0,0" Height="20" Width="80" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <CheckBox Margin="890,213,0,0" Content="Отобразить" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+        <!-- Управляющие кнопки и всё что с ними связано -->
+        <Rectangle Margin="1020,30,0,0" Height="350" Width="255" HorizontalAlignment="Left" VerticalAlignment="Top" Stroke="#111" StrokeThickness="1" />
+        <Label Margin="1040,40,0,0" Height="30" Width="220" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Выгрузить результаты в папку: " />
+        <TextBox Text="{Binding FolderName}" IsEnabled="False" Margin="1040,70,0,0" Height="20" Width="220" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <CheckBox IsChecked="{Binding MustCreateReport}" Margin="1040,103,0,0" Content="Дополнительно создать отчёт" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <Button Command="{Binding Create}" Margin="1040, 140, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Создать" Height="30" Width="100" />
+        <Button Command="{Binding Help}" Margin="1160, 140, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Справка" Height="30" Width="100" />
+        <Button Command="{Binding OutputFilesInfo}" Margin="1040, 225, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Формат итоговых файлов" Height="30" Width="220" />
+        <Button Command="{Binding ReportInfo}" Margin="1040, 270, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Формат отчёта" Height="30" Width="220" />
+        <Button Command="{Binding Close}" Margin="1160, 330, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Закрыть окно" Height="30" Width="100" />
     </Grid>
 </Window>
