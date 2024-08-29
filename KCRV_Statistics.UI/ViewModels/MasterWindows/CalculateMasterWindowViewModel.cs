@@ -1,5 +1,8 @@
 ﻿using KCRV_Statistics.Core.AppConfiguration;
+using KCRV_Statistics.Core.Entities.GraphicsShellEntities;
+using KCRV_Statistics.Model.GraphicsShell;
 using KCRV_Statistics.UI.AppService;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 
@@ -74,6 +77,64 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
             get
             {
                 return GraphicsShellConfiguration.InternalCanvasWidth + GraphicsShellConfiguration.PointRadius;
+            }
+        }
+
+        #endregion
+
+        #region Область графических данных
+        
+        public List<TextLabelEntity> labelData = GraphicsSketchers.GetLabels(
+                AppData.CurrentData.Min(x => x.Value),
+                AppData.CurrentData.Max(x => x.Value),
+                AppData.CurrentData.Count()
+        );
+
+        public List<TextLabelEntity> LabelData
+        {
+            get
+            {
+                for (int i = 0; i < labelData.Count; i++)
+                {
+                    labelData[i].LabelMargin = ThicknessGetter.GetCoords(
+                        labelData[i].X,
+                        labelData[i].Y
+                    );
+                }
+                return labelData;
+            }
+
+            set
+            {
+                labelData = value;
+                CheckChanges();
+            }
+        }
+
+        public List<SphereGraphicsEntity> sphereEntities = GraphicsSketchers.GetSpheres(AppData.CurrentData);
+        
+        public List<SphereGraphicsEntity> SphereEntities
+        {
+            get
+            {
+                for (int i = 0; i < sphereEntities.Count; i++)
+                {
+                    sphereEntities[i].SphereMargin = ThicknessGetter.GetTranslatedCoords(
+                        sphereEntities[i].X,
+                        sphereEntities[i].Y,
+                        1,
+                        AppData.CurrentData.Count,
+                        AppData.CurrentData.Min(x => x.Value),
+                        AppData.CurrentData.Max(x => x.Value)
+                    );
+                }
+
+                return sphereEntities;
+            }
+            set
+            {
+                sphereEntities = value;
+                CheckChanges();
             }
         }
 

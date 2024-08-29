@@ -15,13 +15,14 @@ namespace KCRV_Statistics.Core.AppConfiguration
         public static readonly int TrendPointCount = 2;
 
         // Количество подписей для координатной оси
-        public static readonly int XLabelCount = 10;
+        public static readonly int MaxXLabelCount = 20;
         public static readonly int YLabelCount = 10;
 
         // Конфигурация точек
-        public static readonly int PointRadius = 5;
+        public static readonly int PointRadius = 8;
         public static readonly int PointThickness = 1;
         public static readonly SolidColorBrush PointColor = Brushes.Red;
+        public static readonly SolidColorBrush Fill = Brushes.Red;
 
         // Конфигурация численных подписей (по осям X, Y)
         public static readonly int NumLabelFontSize = 10;

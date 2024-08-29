@@ -13,14 +13,15 @@
         <local:CalculateMasterWindowViewModel/>
     </Window.DataContext>
     <Grid>
-        <!-- Для возможности перемещать окно по экрану компьютера (master window version)-->
+        <!--#region Для возможности перемещать окно по экрану компьютера (master window version)-->
         <Grid Background="#e0e0e0" Height="30" VerticalAlignment="Top" >
             <Label Content="Окно отображения показателей KCRV" FontSize="12" Margin="4,2,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             <Grid Grid.Row="0" MouseDown="Grid_MoveForLeftButton" Background="Transparent"></Grid>
             <Grid Grid.Row="1"></Grid>
         </Grid>
+        <!--#endregion-->
         
-        <!-- Кнопка закрытия окна -->
+        <!--#region Кнопка закрытия окна -->
         <Button Command="{Binding Close}" HorizontalAlignment="Right" VerticalAlignment="Top" Height="30" Width="30">
             <Button.Content>
                 <StackPanel>
@@ -60,8 +61,9 @@
                 </Style>
             </Button.Style>
         </Button>
+        <!--#endregion-->
 
-        <!-- Внешняя часть графика данных (нужна для подписей) -->
+        <!--#region Внешняя часть графика данных (нужна для подписей) -->
         <Rectangle Margin="9,39,0,0" Height="{Binding ExternalFrameHeight}" Width="{Binding ExternalFrameWidth}" HorizontalAlignment="Left" VerticalAlignment="Top" Stroke="#111" StrokeThickness="1" />
         <Viewbox Margin="10,40,0,0" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{Binding ExternalCanvasWidth}" Height="{Binding ExternalCanvasHeight}">
             <ItemsControl ItemsSource="{Binding LabelData}" Width="{Binding ExternalCanvasWidth}" Height="{Binding ExternalCanvasHeight}" >
@@ -76,17 +78,18 @@
                         <Setter Property="Canvas.Bottom" Value="0" />
                     </Style>
                     <!-- В DataTemplate прописываем путь к классу абстракции отрисовываемых линий -->
-                    <DataTemplate DataType="{x:Type core:TextLabel}">
+                    <DataTemplate DataType="{x:Type core:TextLabelEntity}">
                         <Label Margin="{Binding LabelMargin}" Content="{Binding Content}" FontSize="{Binding FontSize}" />
                     </DataTemplate>
                 </ItemsControl.Resources>
             </ItemsControl>
         </Viewbox>
+        <!--#endregion-->
 
-        <!-- Внутренняя часть графика данных (для отображения данных в графическом виде) -->
+        <!--#region Внутренняя часть графика данных (для отображения данных в графическом виде) -->
         <Rectangle Margin="64,64,0,0" Height="{Binding InternalFrameHeight}" Width="{Binding InternalFrameWidth}" HorizontalAlignment="Left" VerticalAlignment="Top" Stroke="#111" StrokeThickness="2" />
         <Viewbox Margin="65,65,0,0" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{Binding InternalCanvasWidth}" Height="{Binding InternalCanvasHeight}">
-            <ItemsControl ItemsSource="{Binding MainData}" Width="{Binding InternalCanvasWidth}" Height="{Binding InternalCanvasHeight}" >
+            <ItemsControl ItemsSource="{Binding SphereEntities}" Width="{Binding InternalCanvasWidth}" Height="{Binding InternalCanvasHeight}" >
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <Canvas/>
@@ -98,8 +101,8 @@
                         <Setter Property="Canvas.Bottom" Value="0" />
                     </Style>
                     <!-- В DataTemplate прописываем путь к классу абстракции отрисовываемых шаров -->
-                    <DataTemplate DataType="{x:Type core:Sphere}">
-                        <Ellipse Margin="{Binding SphereMargin}" Stroke="{Binding Color}" StrokeThickness="{Binding StrokeThicknessValue}" Height="{Binding Radius}" Width="{Binding Radius}" />
+                    <DataTemplate DataType="{x:Type core:SphereGraphicsEntity}">
+                        <Ellipse Margin="{Binding SphereMargin}" Stroke="{Binding Color}" Fill="{Binding Fill}" StrokeThickness="{Binding StrokeThicknessValue}" Height="{Binding Radius}" Width="{Binding Radius}" />
                     </DataTemplate>
                 </ItemsControl.Resources>
             </ItemsControl>
@@ -117,14 +120,16 @@
                         <Setter Property="Canvas.Top" Value="0" />
                     </Style>
                     <!-- В DataTemplate прописываем путь к классу абстракции отрисовываемых линий -->
-                    <DataTemplate DataType="{x:Type core:Line}">
+                    <DataTemplate DataType="{x:Type core:LineGraphicsEntity}">
                         <Line X1="{Binding X1}" X2="{Binding X2}" Y1="{Binding Y1}" Y2="{Binding Y2}" Stroke="{Binding Color}" StrokeThickness="{Binding StrokeThicknessValue}" />
                     </DataTemplate>
                 </ItemsControl.Resources>
             </ItemsControl>
         </Viewbox>
+        <!--#endregion-->
         
-        <!-- Результаты расчётов -->
+        <!-- Результаты расчётов (не отнесено к отдельному региону в xaml коде окна для удобства, 
+        все последующие разделы также не будут отнесены к какому-либо региону) -->
         <Label Margin="650,40,0,0" Height="30" Width="260" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Результаты по среднему значению:" />
         <Label Margin="650,68,0,0" Height="30" Width="20" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Х:" />
         <TextBox Text="{Binding Mean_X, Mode=OneWay}" IsEnabled="False" Margin="675,70,0,0" Height="20" Width="80" HorizontalAlignment="Left" VerticalAlignment="Top"/>
@@ -147,12 +152,12 @@
         <CheckBox Margin="890,213,0,0" Content="Отобразить" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
         <!-- Управляющие кнопки и всё что с ними связано -->
-        <Rectangle Margin="1020,30,0,0" Height="350" Width="255" HorizontalAlignment="Left" VerticalAlignment="Top" Stroke="#111" StrokeThickness="1" />
-        <Label Margin="1040,40,0,0" Height="30" Width="220" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Выгрузить результаты в папку: " />
-        <TextBox Text="{Binding FolderName}" IsEnabled="False" Margin="1040,70,0,0" Height="20" Width="220" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <CheckBox IsChecked="{Binding MustCreateReport}" Margin="1040,103,0,0" Content="Дополнительно создать отчёт" HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <Button Command="{Binding Create}" Margin="1040, 140, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Создать" Height="30" Width="100" />
-        <Button Command="{Binding Help}" Margin="1160, 140, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Справка" Height="30" Width="100" />
+        <Rectangle Margin="1020,40,0,0" Height="340" Width="255" HorizontalAlignment="Left" VerticalAlignment="Top" Stroke="#111" StrokeThickness="1" />
+        <Label Margin="1040,50,0,0" Height="30" Width="220" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Выгрузить результаты в папку: " />
+        <TextBox Text="{Binding FolderName}" IsEnabled="False" Margin="1040,80,0,0" Height="20" Width="220" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <CheckBox IsChecked="{Binding MustCreateReport}" Margin="1040,113,0,0" Content="Дополнительно создать отчёт" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <Button Command="{Binding Create}" Margin="1040, 150, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Создать" Height="30" Width="100" />
+        <Button Command="{Binding Help}" Margin="1160, 150, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Справка" Height="30" Width="100" />
         <Button Command="{Binding OutputFilesInfo}" Margin="1040, 225, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Формат итоговых файлов" Height="30" Width="220" />
         <Button Command="{Binding ReportInfo}" Margin="1040, 270, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Формат отчёта" Height="30" Width="220" />
         <Button Command="{Binding Close}" Margin="1160, 330, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Закрыть окно" Height="30" Width="100" />
