@@ -21,7 +21,6 @@
         /// Имя поля с названием директории с результатами
         /// </summary>
         public readonly static string Results = "Results";
-        public readonly static string Reports = "Reports";
     }
 }
 

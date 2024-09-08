@@ -35,12 +35,6 @@ namespace KCRV_Statistics.UI
                 MessageBox.Show("Папка \"Input Files CSV-JSON\" пересоздана.");
             }
 
-            if (!Directory.Exists(AppFolders.Reports))
-            {
-                Directory.CreateDirectory(AppFolders.Reports);
-                MessageBox.Show("Папка \"Reports\" пересоздана.");
-            }
-
             if (!Directory.Exists(AppFolders.Results))
             {
                 Directory.CreateDirectory(AppFolders.Results);

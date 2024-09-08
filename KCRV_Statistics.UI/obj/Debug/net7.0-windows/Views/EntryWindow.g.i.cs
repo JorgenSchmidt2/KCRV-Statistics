@@ -53,7 +53,7 @@ namespace KCRV_Statistics.UI.Views {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/KCRV Statistics;V1.0.0.0;component/views/entrywindow.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/KCRV Statistics;component/views/entrywindow.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\Views\EntryWindow.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

@@ -9,7 +9,7 @@ namespace KCRV_Statistics.Model.GraphicsShell
     {
         /// <summary>
         /// Задаёт координаты для подписей. По оси Х откладываются номера лабораторий, по оси Y от минимального до максимального значений.
-        /// Количество подписей 
+        /// (требуется доработка)
         /// </summary>
         public static List<TextLabelEntity> GetLabels(double value_min, double value_max, double LaboratoriesCount)
         {
@@ -17,21 +17,26 @@ namespace KCRV_Statistics.Model.GraphicsShell
             {
                 var Result = new List<TextLabelEntity>();
 
+                // Вычисление начальных точек расположения подписей на внешнем поле отрисовки
                 int XFieldInitPoints = (GraphicsShellConfiguration.ExternalCanvasWidth - GraphicsShellConfiguration.InternalCanvasWidth) / 2;
                 int YFieldInitPoints = (GraphicsShellConfiguration.ExternalCanvasHeight - GraphicsShellConfiguration.InternalCanvasHeight) / 2;
 
+                // Определение того, дискретизировать ли надписи по координате Х    (если лабораторий будет слишком много - надписи будут сливаться,
+                //                                                                   как следствие будут сложноразличимы либо неразличимы)
                 if (LaboratoriesCount > GraphicsShellConfiguration.MaxXLabelCount)
                 {
                     var xStep = Convert.ToInt32(
                         Math.Round(LaboratoriesCount / GraphicsShellConfiguration.MaxXLabelCount)
                     );
-
+                    // ... Доработать здесь
                 }
                 else
                 {
+                    // Определение "цены" деления на координатной плоскости КАНВАСА под имеющиеся данные координаты
                     var kx = (GraphicsShellConfiguration.InternalCanvasWidth)
                         / Math.Sqrt(Math.Pow(LaboratoriesCount - 1, 2));
 
+                    // Определение координат подписей номеров лабораторий на канвасе
                     for (double x = 0; x <= LaboratoriesCount - 1; x++)
                     {
                         var XCoord = Convert.ToInt32(x * kx);
@@ -47,14 +52,17 @@ namespace KCRV_Statistics.Model.GraphicsShell
                     }
                 }
 
+                // Определение шага по Х, по полученным данным
                 var yStep = Math.Sqrt(
                         Math.Pow(value_max - value_min, 2)
                     )
                     / GraphicsShellConfiguration.YLabelCount;
 
+                // Определение цены деления на КАНВАСЕ для подписей значений
                 var ky = (GraphicsShellConfiguration.InternalCanvasHeight)
                     / Math.Sqrt(Math.Pow(value_max - value_min, 2));
 
+                // Определение координат подписей значений по каждой из лабораторий на канвасе
                 for (double y = value_min; y <= value_max; y += Math.Round(yStep, 6))
                 {
                     var YCoord = Convert.ToInt32((y - value_min) * ky);
@@ -78,14 +86,18 @@ namespace KCRV_Statistics.Model.GraphicsShell
             }
         }
 
-        public static List<SphereGraphicsEntity> GetSpheres(List<RegularData> Data)
+        /// <summary>
+        /// Задаёт положение точек на координатной плоскости
+        /// </summary>
+        public static List<PointGraphicsEntity> GetPoints(List<RegularData> Data)
         {
-            var Result = new List<SphereGraphicsEntity>();
+            var Result = new List<PointGraphicsEntity>();
 
+            // Задание координат точек
             foreach (var item in Data)
             {
                 Result.Add(
-                    new SphereGraphicsEntity
+                    new PointGraphicsEntity
                     {
                         X = item.LaboratoryNumber,
                         Y = item.Value

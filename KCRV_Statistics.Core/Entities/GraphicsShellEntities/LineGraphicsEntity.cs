@@ -3,6 +3,9 @@ using System.Windows.Media;
 
 namespace KCRV_Statistics.Core.Entities.GraphicsShellEntities
 {
+    /// <summary>
+    /// Объект, по которому происходит построение линий на графике.
+    /// </summary>
     public class LineGraphicsEntity
     {
         // Координаты ключевых точек

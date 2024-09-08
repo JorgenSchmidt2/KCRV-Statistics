@@ -53,8 +53,8 @@ namespace KCRV_Statistics.UI.Views.IntermediateWindows {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/KCRV Statistics;V1.0.0.0;component/views/intermediatewindows/opencalculateinterm" +
-                    "ediatewindow.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/KCRV Statistics;component/views/intermediatewindows/opencalculateintermediatewin" +
+                    "dow.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\..\Views\IntermediateWindows\OpenCalculateIntermediateWindow.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

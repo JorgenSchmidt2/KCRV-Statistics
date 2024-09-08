@@ -2,6 +2,9 @@
 
 namespace KCRV_Statistics.Core.AppConfiguration
 {
+    /// <summary>
+    /// Содержит конфигурацию основных графических элементов на графике.
+    /// </summary>
     public class GraphicsShellConfiguration
     {
         // Размеры окна данных (для внешней части и внутренней)
@@ -21,8 +24,8 @@ namespace KCRV_Statistics.Core.AppConfiguration
         // Конфигурация точек
         public static readonly int PointRadius = 8;
         public static readonly int PointThickness = 1;
-        public static readonly SolidColorBrush PointColor = Brushes.Red;
-        public static readonly SolidColorBrush Fill = Brushes.Red;
+        public static readonly SolidColorBrush PointColor = Brushes.Red; // "Рамка" точки 
+        public static readonly SolidColorBrush Fill = Brushes.Red; // Заливка точки
 
         // Конфигурация численных подписей (по осям X, Y)
         public static readonly int NumLabelFontSize = 10;

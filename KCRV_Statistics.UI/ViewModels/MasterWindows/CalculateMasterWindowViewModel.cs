@@ -8,10 +8,16 @@ using System.Windows;
 
 namespace KCRV_Statistics.UI.ViewModels.MasterWindows
 {
+    /// <summary>
+    /// Модель визуального представления для окна отображения результатов расчёта
+    /// </summary>
     public class CalculateMasterWindowViewModel : NotifyPropertyChanged
     {
         #region Определение размера графика (внешняя часть)
 
+        /// <summary>
+        /// Возвращает высоту рамки для внешней области данных
+        /// </summary>
         public int ExternalFrameHeight
         {
             get
@@ -20,6 +26,9 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
             }
         }
 
+        /// <summary>
+        /// Возвращает высоту внешней области данных
+        /// </summary>
         public int ExternalCanvasHeight
         {
             get
@@ -28,6 +37,9 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
             }
         }
 
+        /// <summary>
+        /// Возвращает ширину рамки для внешней области данных
+        /// </summary>
         public int ExternalFrameWidth
         {
             get
@@ -36,6 +48,9 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
             }
         }
 
+        /// <summary>
+        /// Возвращает ширину внешней области данных
+        /// </summary>
         public int ExternalCanvasWidth
         {
             get
@@ -48,6 +63,9 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
 
         #region Определение размера графика (внутренняя часть)
 
+        /// <summary>
+        /// Возвращает высоту рамки для внутренней области данных
+        /// </summary>
         public int InternalFrameHeight
         {
             get
@@ -56,6 +74,9 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
             }
         }
 
+        /// <summary>
+        /// Возвращает высоту внутренней области данных
+        /// </summary>
         public int InternalCanvasHeight
         {
             get
@@ -64,6 +85,9 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
             }
         }
 
+        /// <summary>
+        /// Возвращает ширину рамки для внутренней области данных
+        /// </summary>
         public int InternalFrameWidth
         {
             get
@@ -72,6 +96,9 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
             }
         }
 
+        /// <summary>
+        /// Возвращает ширину внутренней области данных
+        /// </summary>
         public int InternalCanvasWidth
         {
             get
@@ -84,12 +111,18 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
 
         #region Область графических данных
         
+        /// <summary>
+        /// При инициализации окна получает данные о подписях (для внешнего окна)
+        /// </summary>
         public List<TextLabelEntity> labelData = GraphicsSketchers.GetLabels(
                 AppData.CurrentData.Min(x => x.Value),
                 AppData.CurrentData.Max(x => x.Value),
                 AppData.CurrentData.Count()
         );
 
+        /// <summary>
+        /// Возвращает список объектов типа Label для отображения в интерфейсе приложения
+        /// </summary>
         public List<TextLabelEntity> LabelData
         {
             get
@@ -111,17 +144,23 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
             }
         }
 
-        public List<SphereGraphicsEntity> sphereEntities = GraphicsSketchers.GetSpheres(AppData.CurrentData);
-        
-        public List<SphereGraphicsEntity> SphereEntities
+        /// <summary>
+        /// При инициализации окна получает данные о значениях расчётов в виде набора точек (для внутреннего окна)
+        /// </summary>
+        public List<PointGraphicsEntity> pointEntities = GraphicsSketchers.GetPoints(AppData.CurrentData);
+
+        /// <summary>
+        /// Возвращает список объектов типа Point для отображения в интерфейсе приложения
+        /// </summary>
+        public List<PointGraphicsEntity> PointEntities
         {
             get
             {
-                for (int i = 0; i < sphereEntities.Count; i++)
+                for (int i = 0; i < pointEntities.Count; i++)
                 {
-                    sphereEntities[i].SphereMargin = ThicknessGetter.GetTranslatedCoords(
-                        sphereEntities[i].X,
-                        sphereEntities[i].Y,
+                    pointEntities[i].PointMargin = ThicknessGetter.GetTranslatedCoords(
+                        pointEntities[i].X,
+                        pointEntities[i].Y,
                         1,
                         AppData.CurrentData.Count,
                         AppData.CurrentData.Min(x => x.Value),
@@ -129,18 +168,18 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
                     );
                 }
 
-                return sphereEntities;
+                return pointEntities;
             }
             set
             {
-                sphereEntities = value;
+                pointEntities = value;
                 CheckChanges();
             }
         }
 
         #endregion
 
-        #region Данные расчётов
+        #region Данные расчётов (ожидается смена способа отображения)
 
         public string Mean_X
         {
@@ -196,6 +235,9 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
 
         public string folderName = "";
 
+        /// <summary>
+        /// Подвязка к полю ввода имени папки
+        /// </summary>
         public string FolderName
         {
             get
@@ -210,6 +252,10 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
         }
 
         public bool mustCreateReport = true;
+
+        /// <summary>
+        /// Определяет будет ли дополнительно генерироваться отчёт
+        /// </summary>
         public bool MustCreateReport
         {
             get 
@@ -223,6 +269,9 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
             }
         }
 
+        /// <summary>
+        /// Подвязка к кнопке создания отчёта
+        /// </summary>
         public Command Create
         {
             get

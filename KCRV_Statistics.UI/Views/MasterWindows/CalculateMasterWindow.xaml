@@ -89,7 +89,7 @@
         <!--#region Внутренняя часть графика данных (для отображения данных в графическом виде) -->
         <Rectangle Margin="64,64,0,0" Height="{Binding InternalFrameHeight}" Width="{Binding InternalFrameWidth}" HorizontalAlignment="Left" VerticalAlignment="Top" Stroke="#111" StrokeThickness="2" />
         <Viewbox Margin="65,65,0,0" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{Binding InternalCanvasWidth}" Height="{Binding InternalCanvasHeight}">
-            <ItemsControl ItemsSource="{Binding SphereEntities}" Width="{Binding InternalCanvasWidth}" Height="{Binding InternalCanvasHeight}" >
+            <ItemsControl ItemsSource="{Binding PointEntities}" Width="{Binding InternalCanvasWidth}" Height="{Binding InternalCanvasHeight}" >
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <Canvas/>
@@ -101,8 +101,8 @@
                         <Setter Property="Canvas.Bottom" Value="0" />
                     </Style>
                     <!-- В DataTemplate прописываем путь к классу абстракции отрисовываемых шаров -->
-                    <DataTemplate DataType="{x:Type core:SphereGraphicsEntity}">
-                        <Ellipse Margin="{Binding SphereMargin}" Stroke="{Binding Color}" Fill="{Binding Fill}" StrokeThickness="{Binding StrokeThicknessValue}" Height="{Binding Radius}" Width="{Binding Radius}" />
+                    <DataTemplate DataType="{x:Type core:PointGraphicsEntity}">
+                        <Ellipse Margin="{Binding PointMargin}" Stroke="{Binding Color}" Fill="{Binding Fill}" StrokeThickness="{Binding StrokeThicknessValue}" Height="{Binding Radius}" Width="{Binding Radius}" />
                     </DataTemplate>
                 </ItemsControl.Resources>
             </ItemsControl>
