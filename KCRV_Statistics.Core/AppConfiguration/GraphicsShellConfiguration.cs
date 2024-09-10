@@ -21,6 +21,9 @@ namespace KCRV_Statistics.Core.AppConfiguration
         public static readonly int MaxXLabelCount = 20;
         public static readonly int YLabelCount = 10;
 
+        // Начальная точка по внешнему канвасу для отображения подписей
+        public static readonly int LabelStartCoordinate = 30;
+
         // Конфигурация точек
         public static readonly int PointRadius = 8;
         public static readonly int PointThickness = 1;
