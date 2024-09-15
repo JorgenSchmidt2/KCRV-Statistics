@@ -76,9 +76,9 @@ namespace KCRV_Statistics.Model.GraphicsShell
 
                 return Result;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                MessageObjects.Sender.SendMessage("Ошибка: \n" + ex.Message);
+                MessageObjects.Sender.SendMessage("Ошибка при попытке получить данные для отрисовки подписей: \n" + e.Message);
                 return new List<TextLabelEntity>();
             }
         }
@@ -88,23 +88,98 @@ namespace KCRV_Statistics.Model.GraphicsShell
         /// </summary>
         public static List<PointGraphicsEntity> GetPoints(List<RegularData> Data)
         {
-            var Result = new List<PointGraphicsEntity>();
-
-            // Задание координат точек
-            foreach (var item in Data)
+            try
             {
+                var Result = new List<PointGraphicsEntity>();
+
+                // Задание координат точек
+                foreach (var item in Data)
+                {
+                    Result.Add(
+                        new PointGraphicsEntity
+                        {
+                            X = item.LaboratoryNumber,
+                            Y = item.Value
+                        }
+                    );
+                }
+
+                return Result;
+            }
+            catch (Exception e)
+            {
+                MessageObjects.Sender.SendMessage("Ошибка при попытке получить данные для отрисовки точек: \n" + e.Message);
+                return new List<PointGraphicsEntity>();
+            }
+        }
+
+        /// <summary>
+        /// Даёт координаты для отрисовки интервала показателя KCRV
+        /// </summary>
+        public static List<LineGraphicsEntity> GetKCRV_Lines (OutputData obj, List<RegularData> regdata)
+        {
+            try
+            {
+                List<LineGraphicsEntity> Result = new List<LineGraphicsEntity>();
+
+                var min = regdata.Min(x => x.Value);
+                var max = regdata.Max(x => x.Value);
+
+                var kx = (GraphicsShellConfiguration.InternalCanvasWidth)
+                    / Math.Sqrt(Math.Pow(max - min, 2));
+
+                var ky = (GraphicsShellConfiguration.InternalCanvasHeight)
+                    / Math.Sqrt(Math.Pow(max - min, 2));
+
+                var Y_Reg = GraphicsShellConfiguration.InternalCanvasWidth - Convert.ToInt32((obj.X - min) * ky);
                 Result.Add(
-                    new PointGraphicsEntity
+                    new LineGraphicsEntity()
                     {
-                        X = item.LaboratoryNumber,
-                        Y = item.Value
+                        X1 = 1,
+                        Y1 = Y_Reg,
+                        X2 = GraphicsShellConfiguration.InternalCanvasWidth + GraphicsShellConfiguration.PointRadius,
+                        Y2 = Y_Reg,
+                        Color = GraphicsShellConfiguration.RegressionLinesColor,
+                        StrokeThicknessValue = 2
                     }
                 );
-            }
 
-            return Result;
+                var Y_MinTrust = GraphicsShellConfiguration.InternalCanvasWidth - Convert.ToInt32((obj.X - obj.U - min) * ky);
+                Result.Add(
+                    new LineGraphicsEntity()
+                    {
+                        X1 = 1,
+                        Y1 = Y_MinTrust,
+                        X2 = GraphicsShellConfiguration.InternalCanvasWidth + GraphicsShellConfiguration.PointRadius,
+                        Y2 = Y_MinTrust,
+                        Color = GraphicsShellConfiguration.TrustLinesColor,
+                        StrokeThicknessValue = 1
+                    }
+                );
+
+                var Y_MaxTrust = GraphicsShellConfiguration.InternalCanvasWidth - Convert.ToInt32((obj.X + obj.U - min) * ky);
+                Result.Add(
+                    new LineGraphicsEntity()
+                    {
+                        X1 = 1,
+                        Y1 = Y_MaxTrust,
+                        X2 = GraphicsShellConfiguration.InternalCanvasWidth + GraphicsShellConfiguration.PointRadius,
+                        Y2 = Y_MaxTrust,
+                        Color = GraphicsShellConfiguration.TrustLinesColor,
+                        StrokeThicknessValue = 1
+                    }
+                );
+
+                return Result;
+            }
+            catch (Exception e)
+            {
+                MessageObjects.Sender.SendMessage("Ошибка при попытке получить данные для отрисовки линий для показателей KCRV: \n" + e.Message);
+                return new List<LineGraphicsEntity>();
+            }
         }
 
         #endregion
+
     }
 }

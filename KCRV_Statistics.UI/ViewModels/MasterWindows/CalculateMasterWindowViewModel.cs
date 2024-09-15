@@ -3,6 +3,7 @@ using KCRV_Statistics.Core.Entities.GraphicsShellEntities;
 using KCRV_Statistics.Model.GraphicsShell;
 using KCRV_Statistics.UI.AppService;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 
@@ -177,58 +178,62 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
             }
         }
 
+        public List<LineGraphicsEntity> KCRV_data = GraphicsSketchers.GetKCRV_Lines(AppData.OutputData[0], AppData.CurrentData);
+        public List<LineGraphicsEntity> KCRV_Data
+        {
+            get
+            {
+                return KCRV_data;
+            }
+            set
+            {
+                KCRV_data = value;
+                CheckChanges();
+            }
+        }
+
         #endregion
 
-        #region Данные расчётов (ожидается смена способа отображения)
+        #region Данные расчётов 
 
-        public string Mean_X
+        public ObservableCollection<ViewedOutputData> viewedOutputData = GraphicsShellService.GetViewedOutputData(AppData.OutputData);
+
+        public ObservableCollection<ViewedOutputData> ViewedOutputData
         {
             get
             {
-                return AppData.OutputData.FirstOrDefault(x => x.MethodName.Equals(KCRV_MethodsNames.Mean)).X.ToString();
+                return viewedOutputData;
+            }
+            set
+            {
+                viewedOutputData = value;
+                CheckChanges();
             }
         }
 
-        public string Mean_U
+        // Нужно будет убрать, заменив на отслеживание изменений в списке через событие
+        public Command ShowOnGraphic
         {
             get
             {
-                return AppData.OutputData.FirstOrDefault(x => x.MethodName.Equals(KCRV_MethodsNames.Mean)).U.ToString();
+                return new Command(
+                    obj =>
+                    {
+                        var truelistcount = ViewedOutputData.Where(x => x.MethodIsChoised).Select(x => x);
+                        if (truelistcount.Count() != 1)
+                        {
+                            MessageBox.Show("Должен быть выбран ровно один элемент");
+                        }
+                        else
+                        {
+                            var choisedobj = ViewedOutputData.FirstOrDefault(x => x.MethodIsChoised);
+
+                            KCRV_Data = GraphicsSketchers.GetKCRV_Lines(choisedobj, AppData.CurrentData);
+                        }
+                    }
+                );
             }
         }
-
-        public string WeightedMean_X
-        {
-            get
-            {
-                return AppData.OutputData.FirstOrDefault(x => x.MethodName.Equals(KCRV_MethodsNames.WeightedMean)).X.ToString();
-            }
-        }
-
-        public string WeightedMean_U
-        {
-            get
-            {
-                return AppData.OutputData.FirstOrDefault(x => x.MethodName.Equals(KCRV_MethodsNames.WeightedMean)).U.ToString();
-            }
-        }
-
-        public string Median_X
-        {
-            get
-            {
-                return AppData.OutputData.FirstOrDefault(x => x.MethodName.Equals(KCRV_MethodsNames.Median)).X.ToString();
-            }
-        }
-
-        public string Median_U
-        {
-            get
-            {
-                return AppData.OutputData.FirstOrDefault(x => x.MethodName.Equals(KCRV_MethodsNames.Median)).U.ToString();
-            }
-        }
-
         #endregion
 
         #region Управляющие кнопки и всё что с ними связано

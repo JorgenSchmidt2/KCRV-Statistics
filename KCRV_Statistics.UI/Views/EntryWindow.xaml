@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KCRV_Statistics.UI.ViewModels"
         mc:Ignorable="d"
-        Title="KCRV Statistics v 0.0.0.2" Height="390" Width="725" ResizeMode="NoResize">
+        Title="KCRV Statistics v 0.0.0.3" Height="390" Width="725" ResizeMode="NoResize">
     <Window.DataContext>
         <local:EntryWindowViewModel/>
     </Window.DataContext>

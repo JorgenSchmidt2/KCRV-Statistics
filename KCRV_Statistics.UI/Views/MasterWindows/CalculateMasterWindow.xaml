@@ -7,7 +7,7 @@
         xmlns:core ="clr-namespace:KCRV_Statistics.Core.Entities.GraphicsShellEntities;assembly=DataModuleKCRV"
         mc:Ignorable="d"
         WindowStyle="None"
-        Title="CalculateMasterWindow" Height="615" Width="1280" ResizeMode="NoResize"
+        Title="CalculateMasterWindow" Height="615" Width="1282" ResizeMode="NoResize"
         BorderThickness="0.5" BorderBrush="Black">
     <Window.DataContext>
         <local:CalculateMasterWindowViewModel/>
@@ -88,6 +88,7 @@
 
         <!--#region Внутренняя часть графика данных (для отображения данных в графическом виде) -->
         <Rectangle Margin="64,64,0,0" Height="{Binding InternalFrameHeight}" Width="{Binding InternalFrameWidth}" HorizontalAlignment="Left" VerticalAlignment="Top" Stroke="#111" StrokeThickness="2" />
+        <!-- Для отображения результатов лабораторий -->
         <Viewbox Margin="65,65,0,0" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{Binding InternalCanvasWidth}" Height="{Binding InternalCanvasHeight}">
             <ItemsControl ItemsSource="{Binding PointEntities}" Width="{Binding InternalCanvasWidth}" Height="{Binding InternalCanvasHeight}" >
                 <ItemsControl.ItemsPanel>
@@ -107,8 +108,29 @@
                 </ItemsControl.Resources>
             </ItemsControl>
         </Viewbox>
+        <!-- Для отображения доверительных интервалов -->
         <Viewbox Margin="65,65,0,0" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{Binding InternalCanvasWidth}" Height="{Binding InternalCanvasHeight}">
-            <ItemsControl ItemsSource="{Binding LinesData}" Width="{Binding InternalCanvasWidth}" Height="{Binding InternalCanvasHeight}" >
+            <ItemsControl ItemsSource="{Binding TrustIntervalData}" Width="{Binding InternalCanvasWidth}" Height="{Binding InternalCanvasHeight}" >
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.Resources>
+                    <Style TargetType="ContentPresenter">
+                        <Setter Property="Canvas.Left" Value="0" />
+                        <Setter Property="Canvas.Top" Value="0" />
+                    </Style>
+                    <!-- В DataTemplate прописываем путь к классу абстракции отрисовываемых линий -->
+                    <DataTemplate DataType="{x:Type core:LineGraphicsEntity}">
+                        <Line X1="{Binding X1}" X2="{Binding X2}" Y1="{Binding Y1}" Y2="{Binding Y2}" Stroke="{Binding Color}" StrokeThickness="{Binding StrokeThicknessValue}" />
+                    </DataTemplate>
+                </ItemsControl.Resources>
+            </ItemsControl>
+        </Viewbox>
+        <!-- Для отображения показателей KCRV -->
+        <Viewbox Margin="65,65,0,0" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{Binding InternalCanvasWidth}" Height="{Binding InternalCanvasHeight}">
+            <ItemsControl ItemsSource="{Binding KCRV_Data}" Width="{Binding InternalCanvasWidth}" Height="{Binding InternalCanvasHeight}" >
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <Canvas />
@@ -130,26 +152,51 @@
         
         <!-- Результаты расчётов (не отнесено к отдельному региону в xaml коде окна для удобства, 
         все последующие разделы также не будут отнесены к какому-либо региону) -->
-        <Label Margin="650,40,0,0" Height="30" Width="260" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Результаты по среднему значению:" />
-        <Label Margin="650,68,0,0" Height="30" Width="20" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Х:" />
-        <TextBox Text="{Binding Mean_X, Mode=OneWay}" IsEnabled="False" Margin="675,70,0,0" Height="20" Width="80" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Label Margin="770,68,0,0" Height="30" Width="20" HorizontalAlignment="Left" VerticalAlignment="Top" Content="U:" />
-        <TextBox Text="{Binding Mean_U, Mode=OneWay}"  IsEnabled="False" Margin="795,70,0,0" Height="20" Width="80" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <CheckBox Margin="890,73,0,0" Content="Отобразить" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        
+        
+        <!-- Список файлов -->
+        <ListView ItemsSource="{Binding ViewedOutputData}" Margin="650,40,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="340" Width="350">
+            <ListView.View>
+                <GridView>
+                    <!--Основные поля списка-->
+                    <GridViewColumn Header="Название метода" Width="120">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding MethodName}" TextAlignment="Center"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="X" Width="85">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding X}" TextAlignment="Center"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="U" Width="85">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding U}" TextAlignment="Center"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
 
-        <Label Margin="650,110,0,0" Height="30" Width="280" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Результаты по ср. взвеш. значению:" />
-        <Label Margin="650,138,0,0" Height="30" Width="20" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Х:" />
-        <TextBox Text="{Binding WeightedMean_X, Mode=OneWay}" IsEnabled="False" Margin="675,140,0,0" Height="20" Width="80" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Label Margin="770,138,0,0" Height="30" Width="20" HorizontalAlignment="Left" VerticalAlignment="Top" Content="U:" />
-        <TextBox Text="{Binding WeightedMean_U, Mode=OneWay}" IsEnabled="False" Margin="795,140,0,0" Height="20" Width="80" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <CheckBox Margin="890,143,0,0" Content="Отобразить" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-
-        <Label Margin="650,180,0,0" Height="30" Width="200" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Результаты по медиане.:" />
-        <Label Margin="650,208,0,0" Height="30" Width="20" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Х:" />
-        <TextBox Text="{Binding Median_X, Mode=OneWay}" IsEnabled="False" Margin="675,210,0,0" Height="20" Width="80" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Label Margin="770,208,0,0" Height="30" Width="20" HorizontalAlignment="Left" VerticalAlignment="Top" Content="U:" />
-        <TextBox Text="{Binding Median_U, Mode=OneWay}" IsEnabled="False" Margin="795,210,0,0" Height="20" Width="80" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <CheckBox Margin="890,213,0,0" Content="Отобразить" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <!-- Блок выбора метода расчёта показателей KCRV на отображение -->
+                    <GridViewColumn Header="Выбрать" Width="55">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid HorizontalAlignment="Stretch">
+                                    <CheckBox IsChecked="{Binding MethodIsChoised}" HorizontalAlignment="Center" />
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <!--нужно будет убрать, заменив на отслеживание изменений в списке через события (временный вариант)-->
+        <Button Command="{Binding ShowOnGraphic}" Margin="650,400,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Отобразить выбранное на канвасе" Height="30" Width="350" />
 
         <!-- Управляющие кнопки и всё что с ними связано -->
         <Rectangle Margin="1020,40,0,0" Height="340" Width="255" HorizontalAlignment="Left" VerticalAlignment="Top" Stroke="#111" StrokeThickness="1" />

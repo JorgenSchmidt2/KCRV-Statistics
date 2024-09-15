@@ -35,7 +35,7 @@ namespace KCRV_Statistics.Core.AppConfiguration
 
         // Конфигурация линий
         public static readonly int LineStrokeThickness = 1;
-        public static readonly SolidColorBrush RegressionLinesColor = Brushes.Red;
+        public static readonly SolidColorBrush RegressionLinesColor = Brushes.Blue;
         public static readonly SolidColorBrush TrustLinesColor = Brushes.Gray;
     }
 }

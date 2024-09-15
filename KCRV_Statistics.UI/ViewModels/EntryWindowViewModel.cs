@@ -8,6 +8,7 @@ using KCRV_Statistics.Model.ValidateService.SimpleFileCheckers;
 using KCRV_Statistics.UI.AppService;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
 
@@ -66,8 +67,7 @@ namespace KCRV_Statistics.UI.ViewModels
                 return new Command(
                     obj =>
                     {
-                        // Проверка введено ли что-то в поле запроса, если нет - выдаётся сообщение об ошибке,
-                        // Выполнение прерывается
+                        // Проверка введено ли что-то в поле запроса, если нет - выдаётся сообщение об ошибке, а выполнение прерывается
                         if (String.IsNullOrEmpty(Query))
                         {
                             MessageBox.Show("Введите запрос.");
@@ -150,7 +150,6 @@ namespace KCRV_Statistics.UI.ViewModels
                 CheckChanges();
             }
         }
-
         #endregion
 
         #region Выбор раздела
