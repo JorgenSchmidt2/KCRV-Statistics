@@ -4,45 +4,45 @@ namespace SearchServiceTests.FileFinderTests.Data
 {
     public class FileFinder_Data_1
     {
-        public static List<EFileData> TestData = new List<EFileData>()
+        public static List<FileDataEntity> TestData = new List<FileDataEntity>()
         {
-            new EFileData()
+            new FileDataEntity()
             {
                 ID = 1,
                 Directory = "",
                 FileName= "abcdef",
             },
-            new EFileData()
+            new FileDataEntity()
             {
                 ID = 2,
                 Directory = "",
                 FileName= "bcdefg",
             },
-            new EFileData()
+            new FileDataEntity()
             {
                 ID = 3,
                 Directory = "",
                 FileName= "cdefgh",
             },
-            new EFileData()
+            new FileDataEntity()
             {
                 ID = 4,
                 Directory = "",
                 FileName= "defghi",
             },
-            new EFileData()
+            new FileDataEntity()
             {
                 ID = 5,
                 Directory = "",
                 FileName= "efghij",
             },
-            new EFileData()
+            new FileDataEntity()
             {
                 ID = 6,
                 Directory = "",
                 FileName= "fghijk",
             },
-            new EFileData()
+            new FileDataEntity()
             {
                 ID = 7,
                 Directory = "",
@@ -50,27 +50,27 @@ namespace SearchServiceTests.FileFinderTests.Data
             },
         };
 
-        public static List<EFileData> Ethalon_DoQueryTest_DEF = new List<EFileData>()
+        public static List<FileDataEntity> Ethalon_DoQueryTest_DEF = new List<FileDataEntity>()
         {
-            new EFileData()
+            new FileDataEntity()
             {
                 ID = 1,
                 Directory = "",
                 FileName= "abcdef",
             },
-            new EFileData()
+            new FileDataEntity()
             {
                 ID = 2,
                 Directory = "",
                 FileName= "bcdefg",
             },
-            new EFileData()
+            new FileDataEntity()
             {
                 ID = 3,
                 Directory = "",
                 FileName= "cdefgh",
             },
-            new EFileData()
+            new FileDataEntity()
             {
                 ID = 4,
                 Directory = "",
@@ -78,27 +78,27 @@ namespace SearchServiceTests.FileFinderTests.Data
             },
         };
 
-        public static List<EFileData> Ethalon_DoQueryTest_GHI = new List<EFileData>
+        public static List<FileDataEntity> Ethalon_DoQueryTest_GHI = new List<FileDataEntity>
         {
-            new EFileData()
+            new FileDataEntity()
             {
                 ID = 1,
                 Directory = "",
                 FileName= "defghi",
             },
-            new EFileData()
+            new FileDataEntity()
             {
                 ID = 2,
                 Directory = "",
                 FileName= "efghij",
             },
-            new EFileData()
+            new FileDataEntity()
             {
                 ID = 3,
                 Directory = "",
                 FileName= "fghijk",
             },
-            new EFileData()
+            new FileDataEntity()
             {
                 ID = 4,
                 Directory = "",
@@ -106,27 +106,27 @@ namespace SearchServiceTests.FileFinderTests.Data
             }
         };
 
-        public static List<EFileData> Ethalon_DoQueryTest_FGH = new List<EFileData>
+        public static List<FileDataEntity> Ethalon_DoQueryTest_FGH = new List<FileDataEntity>
         {
-            new EFileData()
+            new FileDataEntity()
             {
                 ID = 1,
                 Directory = "",
                 FileName= "cdefgh",
             },
-            new EFileData()
+            new FileDataEntity()
             {
                 ID = 2,
                 Directory = "",
                 FileName= "defghi",
             },
-            new EFileData()
+            new FileDataEntity()
             {
                 ID = 3,
                 Directory = "",
                 FileName= "efghij",
             },
-            new EFileData()
+            new FileDataEntity()
             {
                 ID = 4,
                 Directory = "",

@@ -1,6 +1,6 @@
 ﻿namespace KCRV_Statistics.Core.Entities.FileSystemEntites
 {
-    public class EFileData
+    public class FileDataEntity
     {
         public int ID { get; set; }
         public string Directory { get; set; }

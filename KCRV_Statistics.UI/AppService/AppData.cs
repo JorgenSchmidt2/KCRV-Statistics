@@ -1,11 +1,12 @@
 ﻿using KCRV_Statistics.Core.Entities.DataEntities.RegularDataUnits;
 using KCRV_Statistics.Core.Entities.FileSystemEntites;
+using KCRV_Statistics.Core.Entities.GraphicsShellEntities;
 using System.Collections.Generic;
 
 namespace KCRV_Statistics.UI.AppService
 {
     /// <summary>
-    /// Содержит основные поля, используемые непосредственно при работе окон программы.
+    /// Содержит основные поля, используемые непосредственно при работе окон программы. Не годятся для обнуления.
     /// </summary>
     public class AppData
     {
@@ -14,7 +15,11 @@ namespace KCRV_Statistics.UI.AppService
         /// 1."Находится в одной из выбранных папок"; 
         /// 2."При наличии запроса, содержит только те файлы, которые в имени содержат содержимое запроса.
         /// </summary>
-        public static List<EFileData> AppFileData = new List<EFileData>();
+        public static List<FileDataEntity> AppFileData = new List<FileDataEntity>();
+        /// <summary>
+        /// Список директорий, указанных в конфигурации
+        /// </summary>
+        public static List<ViewedDirectoryData> AppDirectoryData = new List<ViewedDirectoryData>();
         /// <summary>
         /// Содержит список выбранных пользователем директорий.
         /// </summary>
@@ -29,3 +34,10 @@ namespace KCRV_Statistics.UI.AppService
         public static List<OutputData> OutputData = new List<OutputData>();
     }
 }
+
+/*
+        /// <summary>
+        /// Содержит список выбранных пользователем директорий.
+        /// </summary>
+        public static List<string> ChoisedFolders = new List<string>();
+ */

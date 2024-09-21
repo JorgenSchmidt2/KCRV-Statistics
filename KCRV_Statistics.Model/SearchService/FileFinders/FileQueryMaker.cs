@@ -10,9 +10,9 @@ namespace KCRV_Statistics.Model.SearchService.FileFinders
         /// <summary>
         /// Выполняет поиск включений определённого набора символов Query в списке FileList, содержащего имена файлов.
         /// </summary>
-        public static List<EFileData> DoQuery (string Query, List<EFileData> FileList)
+        public static List<FileDataEntity> DoQuery (string Query, List<FileDataEntity> FileList)
         {
-            List<EFileData> Result = new List<EFileData>();
+            List<FileDataEntity> Result = new List<FileDataEntity>();
 
             int FileCounter = 1;
 
@@ -21,7 +21,7 @@ namespace KCRV_Statistics.Model.SearchService.FileFinders
                 if (item.FileName.Contains(Query))
                 {
                     Result.Add(
-                        new EFileData ()
+                        new FileDataEntity ()
                         {
                             ID = FileCounter,
                             FileName = item.FileName,

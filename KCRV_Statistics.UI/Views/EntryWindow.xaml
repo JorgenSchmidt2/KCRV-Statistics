@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KCRV_Statistics.UI.ViewModels"
         mc:Ignorable="d"
-        Title="KCRV Statistics v 0.0.0.3" Height="390" Width="725" ResizeMode="NoResize">
+        Title="KCRV Statistics v 0.0.0.5" Height="390" Width="725" ResizeMode="NoResize">
     <Window.DataContext>
         <local:EntryWindowViewModel/>
     </Window.DataContext>
@@ -21,34 +21,53 @@
         <Button Command="{Binding Update}" Margin="340, 30, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="40" Width="120">
             <TextBlock TextAlignment="Center">Обновить для <LineBreak/>выбранного раздела</TextBlock>
         </Button>
-        
-        <!-- Список файлов -->
-        <ListView ItemsSource="{Binding FileDatas}" Margin="10,85,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="215" Width="450">
+
+        <!-- Список файлов и директорий -->
+        <ListView ItemsSource="{Binding DirectoryDataEntities}" Margin="10,85,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="190" Width="210">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Имя директории" Width="135" DisplayMemberBinding="{Binding DirectoryName}" />
+                    <GridViewColumn Header="Выбрать" Width="65">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid HorizontalAlignment="Stretch">
+                                    <CheckBox IsChecked="{Binding IsChoised}" HorizontalAlignment="Center" />
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button Command="{Binding ConfirmDirChoise}" Margin="10, 280, 0, 0"  Height="25" Width="100" Content="Подтвердить" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button Command="{Binding CurrentDirectories}" Margin="120, 280, 0, 0"  Height="25" Width="100" Content="Текущие папки" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <ListView ItemsSource="{Binding FileDatas}" Margin="250,85,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="219" Width="210">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="ID" Width="50" DisplayMemberBinding="{Binding ID}" />
-                    <GridViewColumn Header="Имя файла" Width="390" DisplayMemberBinding="{Binding FileName}"/>
+                    <GridViewColumn Header="Имя файла" Width="150" DisplayMemberBinding="{Binding FileName}"/>
                 </GridView>
             </ListView.View>
         </ListView>
         
         <!-- Выбор раздела -->
-        <Label Margin="10,307,0,0" Width="200" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Открыть файл формата:" />
-        <CheckBox Margin="170,313,0,0" IsChecked="{Binding XLSX_Check}" Content="XLSX" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <CheckBox Margin="250,313,0,0" IsChecked="{Binding JSON_Check}" Content="CSV-JSON" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <CheckBox Margin="355,313,0,0" IsChecked="{Binding Simple_Check}" Content="Обычный файл" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Label Margin="10,319,0,0" Width="200" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Отобразить файлы формата:" />
+        <CheckBox Margin="190,325,0,0" IsChecked="{Binding XLSX_Check}" Content="XLSX" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <CheckBox Margin="270,325,0,0" IsChecked="{Binding JSON_Check}" Content="JSON" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <CheckBox Margin="350,325,0,0" IsChecked="{Binding CSV_Check}" Content="CSV" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <CheckBox Margin="420,325,0,0" IsChecked="{Binding TXT_Check}" Content="TXT" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
         <!-- Управление и описание программы -->
         <Label Margin="500,23,0,0" Height="30" Width="150" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Открыть файл по ID:" />
         <TextBox Text="{Binding ID_Field}" Margin="500,53,0,0" Height="20" Width="180" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <Button Command="{Binding Calculate}" Margin="500, 83, 0, 0"  Height="25" Width="180" Content="Расчитать" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <Button Command="{Binding ShowVisualization}" Margin="500, 117, 0, 0" Height="25" Width="180" Content="Визуализация данных" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Button Command="{Binding ShortDescription}" Margin="500, 180, 0, 0" Height="30" Width="180" FontSize="10" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <Button Command="{Binding ShortDescription}" Margin="500, 190, 0, 0" Height="30" Width="180" FontSize="10" HorizontalAlignment="Left" VerticalAlignment="Top">
             <TextBlock TextAlignment="Center">Краткое описание окон<LineBreak/>Расчитать / Визуализация данных</TextBlock>
         </Button>
-        <Button Command="{Binding SearchInfo}" Margin="500, 220, 0, 0" Height="30" Width="180" FontSize="10" Content="Использование поиска" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Button Command="{Binding ProgrammCycleInfo}" Margin="500, 260, 0, 0" Height="30" Width="180" FontSize="10" Content="Цикл использования программы" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Button Command="{Binding Help}" Margin="500, 300, 0, 0" Height="30" Width="180" FontSize="10" Content="Справка по программе" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button Command="{Binding SearchInfo}" Margin="500, 230, 0, 0" Height="30" Width="180" FontSize="10" Content="Использование поиска" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button Command="{Binding ProgrammCycleInfo}" Margin="500, 270, 0, 0" Height="30" Width="180" FontSize="10" Content="Цикл использования программы" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button Command="{Binding Help}" Margin="500, 310, 0, 0" Height="30" Width="180" FontSize="10" Content="Справка по программе" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>

@@ -4,14 +4,14 @@ namespace KCRV_Statistics.Model.StructureDataService.Lists
 {
     public class ListDataOperator
     {
-        public static List<EFileData> CopyFileDataListEntities (List<EFileData> Input)
+        public static List<FileDataEntity> CopyFileDataListEntities (List<FileDataEntity> Input)
         {
-            List<EFileData> Result = new List<EFileData>();
+            List<FileDataEntity> Result = new List<FileDataEntity>();
 
-            foreach (EFileData item in Input)
+            foreach (FileDataEntity item in Input)
             {
                 Result.Add(
-                    new EFileData
+                    new FileDataEntity
                     {
                         ID = item.ID,
                         Directory = item.Directory,

@@ -14,10 +14,10 @@ namespace KCRV_Statistics.Model.DirectoryService.DirectoryInfoGetters
         /// Под "указанными директориями" в данном случае 
         /// имеется ввиду список директорий, передаваемый в функцию
         /// </summary>
-        public static List<EFileData> GetFileListFromDirectory (List<string> DirectoryNames)
+        public static List<FileDataEntity> GetFileListFromDirectory (List<string> DirectoryNames)
         {
             // Содержит результат работы метода
-            List<EFileData> Result = new List<EFileData>();
+            List<FileDataEntity> Result = new List<FileDataEntity>();
             // По логике должна содержать список реально существующих директорий из входного списка
             List<string> ExistsDirectories = new List<string>();
             
@@ -49,7 +49,7 @@ namespace KCRV_Statistics.Model.DirectoryService.DirectoryInfoGetters
                     }
                     Message += "Считывание данных из директорий остановлено.";
                     MessageBox.Show(Message);
-                    return new List<EFileData>();
+                    return new List<FileDataEntity>();
                 }
 
                 // Считывание файлов из существующих директорий
@@ -68,7 +68,7 @@ namespace KCRV_Statistics.Model.DirectoryService.DirectoryInfoGetters
                             var splits = curFile.Split('\\');
 
                             Result.Add( 
-                                new EFileData() { 
+                                new FileDataEntity() { 
                                     ID = FileCounter, 
                                     Directory = splits[splits.Length - 2], 
                                     FileName = splits[splits.Length - 1] 
@@ -88,14 +88,16 @@ namespace KCRV_Statistics.Model.DirectoryService.DirectoryInfoGetters
         }
 
         /// <summary>
-        /// Проверяет пуста ли директория
+        /// Проверяет пуста ли локальная директория
         /// </summary>
-        public static bool CheckDirForEmpty (string Input)
+        public static bool CheckDirForEmpty (string DirectoryName)
         {
+            // Объявление переменных
             bool Result = true;
+            string ActuallyDirectoryName = Environment.CurrentDirectory + "//" + DirectoryName;
 
             // Получаем список файлов из директории
-            var Files = Directory.GetFiles(Input);
+            var Files = Directory.GetFiles(ActuallyDirectoryName);
 
             // Проверяем пуста ли директория сравнением с 0
             if (Files.Length <= 0)

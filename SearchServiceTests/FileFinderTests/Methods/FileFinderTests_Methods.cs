@@ -4,7 +4,7 @@ namespace SearchServiceTests.FileFinderTests.Methods
 {
     public class FileFinderTests_Methods
     {
-        public static bool FileListsAreEquals_ByFileName (List<EFileData> Ethalon, List<EFileData> Getted)
+        public static bool FileListsAreEquals_ByFileName (List<FileDataEntity> Ethalon, List<FileDataEntity> Getted)
         {
             bool Result = true;
 

@@ -1,7 +1,11 @@
-﻿using KCRV_Statistics.Core.AppConfiguration;
+﻿using KCRV_Statistics.Core.AppConstants;
 using KCRV_Statistics.Model.DirectoryService.DirectoryInfoGetters;
+using KCRV_Statistics.Model.FileService.Readers;
+using KCRV_Statistics.Model.ValidateService.DirectoryCheckers;
 using KCRV_Statistics.UI.AppService;
+using System;
 using System.IO;
+using System.Linq;
 using System.Windows;
 
 namespace KCRV_Statistics.UI
@@ -15,36 +19,71 @@ namespace KCRV_Statistics.UI
         {
             base.OnStartup(e);
 
-            // Проверяем все ли необходимые для работы программы директории существуют
-            // Если не существуют, выводим пользователю сообщение об их пересоздании и пересоздаём их
-            if (!Directory.Exists(AppFolders.InputFiles_Simple))
+            if (!File.Exists(Environment.CurrentDirectory + "\\" + FileSystemNames.ConfigurationFile))
             {
-                Directory.CreateDirectory(AppFolders.InputFiles_Simple);
-                MessageBox.Show("Папка \"Input Files Simple\" пересоздана.");
+                File.Create(Environment.CurrentDirectory + "\\" + FileSystemNames.ConfigurationFile);
+                var Content = "Не найдено файла, содержащего имена используемых директорий"
+                    + FileSystemNames.ConfigurationFile + "."
+                    + "\nФайл будет пересоздан, а работа программы окончена, прежде чем снова запустить программу, заполните его, "
+                    + "в противном случае работа программы снова будет завершена.";
+                MessageBox.Show(Content);
+                Shutdown();
+                return;
             }
 
-            if (!Directory.Exists(AppFolders.InputFiles_XLSX))
+            var FileListContent = SimpleContentReaders.GetContentFromFile("", FileSystemNames.ConfigurationFile);
+            var FileList = FileListContent.Replace("\r", "").Split('\n');
+
+            if (FileListContent.Equals(""))
             {
-                Directory.CreateDirectory(AppFolders.InputFiles_XLSX);
-                MessageBox.Show("Папка \"Input Files XLSX\" пересоздана.");
+                MessageBox.Show("Так как указанный файл определял какие папки будут использоваться в приложении - работа программы закончится.");
+                Shutdown();
+                return;
             }
 
-            if (!Directory.Exists(AppFolders.InputFiles_CSV_JSON))
+            AppData.AppDirectoryData = CorrectDirectoryNamesGetter.GetCorrectDirectories(FileList);
+
+            if (AppData.AppDirectoryData.Count == 0)
             {
-                Directory.CreateDirectory(AppFolders.InputFiles_CSV_JSON);
-                MessageBox.Show("Папка \"Input Files CSV-JSON\" пересоздана.");
+                MessageBox.Show("Конфигурационный файл с именем " + FileSystemNames.ConfigurationFile + "не содержит имён пригодных для открытия директорий. " 
+                    +"\nРабота программы окончена.");
+                Shutdown();
+                return;
             }
 
-            if (!Directory.Exists(AppFolders.Results))
+            foreach (var CurrentDir in AppData.AppDirectoryData)
             {
-                Directory.CreateDirectory(AppFolders.Results);
-                MessageBox.Show("Папка \"Results\" пересоздана.");
+                if (!Directory.Exists(CurrentDir.DirectoryName))
+                {
+                    Directory.CreateDirectory(CurrentDir.DirectoryName);
+
+                    var content = "Директория " + CurrentDir.DirectoryName + " пересоздана.";
+                    MessageBox.Show(content);
+                }
+                if (CurrentDir.IsChoised)
+                {
+                    AppData.ChoisedFolders.Add(CurrentDir.DirectoryName);
+                }
             }
 
-            // По умолчанию, при открытии должна быть прожата галочка на XLSX файлах, как следствие при начале работы программы,
-            // в список задействованных директорий будет включена папка с XLSX файлами
-            // После получаем в статическую переменную список всех файлов оттуда.
-            AppData.ChoisedFolders.Add(AppFolders.InputFiles_XLSX);
+            if (!Directory.Exists(Environment.CurrentDirectory + "\\" + FileSystemNames.ResultsFolder))
+            {
+                Directory.CreateDirectory(Environment.CurrentDirectory + "\\" + FileSystemNames.ResultsFolder);
+                MessageBox.Show("Папка " + FileSystemNames.ResultsFolder + " пересоздана.");
+            }
+
+            if (AppData.AppDirectoryData
+                .Where(x => DirectoryInfoReader.CheckDirForEmpty(x.DirectoryName))
+                .Select(x => x)
+                .Count() == 0)
+            {
+                MessageBox.Show("Все указанные в конфигурационном файле " + FileSystemNames.ConfigurationFile + " папки оказались пусты." 
+                    + "\nРабота программы окончена."
+                    + "\nДля работы программы нужно чтобы как минимум одна папка содержала в себе хотя бы один файл.");
+                Shutdown();
+                return;
+            }
+
             AppData.AppFileData = DirectoryInfoReader.GetFileListFromDirectory(AppData.ChoisedFolders);
 
             // Открываем главное окно (также прописан алгоритм закрытия главного окна, при котором вся программа заканчивает работу).

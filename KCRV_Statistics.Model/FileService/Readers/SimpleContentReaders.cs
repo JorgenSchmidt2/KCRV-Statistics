@@ -14,13 +14,22 @@ namespace KCRV_Statistics.Model.FileService.Readers
         /// </summary>
         public static string GetContentFromFile(string DirectoryName, string FileName)
         {
-            string ActuallyFilePath = Environment.CurrentDirectory + @"\" + DirectoryName + @"\" + FileName;
+            string ActuallyFilePath = "";
+            if (!DirectoryName.Equals(""))
+            {
+                ActuallyFilePath = Environment.CurrentDirectory + @"\" + DirectoryName + @"\" + FileName;
+            }
+            else
+            {
+                ActuallyFilePath = Environment.CurrentDirectory + @"\" + FileName;
+            }
+
             string Result = "";
 
             var file = new FileInfo(ActuallyFilePath);
             if (!file.Exists || file.Length == 0)
             {
-                GetMessageBox.Show("Ошибка, файл не существует, либо его содержимое пустое.");
+                GetMessageBox.Show("Ошибка, файл " + FileName + " не существует, либо его содержимое пустое.");
                 return "";
             }
 
