@@ -8,8 +8,8 @@
         /// <summary>
         /// Имя конфигурационного файла с именами директорий
         /// </summary>
-        public static string ConfigurationFile = "DirectoryConfiguration.txt";
+        public static readonly string ConfigurationFile = "DirectoryConfiguration.txt";
 
-        public static string ResultsFolder = "Results";
+        public static readonly string ResultsFolder = "Results";
     }
 }

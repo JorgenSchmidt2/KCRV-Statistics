@@ -1,7 +1,7 @@
 ﻿using KCRV_Statistics.Core.Entities.DataEntities.RegularDataUnits;
 using KCRV_Statistics.Model.MessageService.MessageBoxService;
 
-namespace KCRV_Statistics.Model.StructureDataService.Lists
+namespace KCRV_Statistics.Model.DataOperatorsService.Lists
 {
     /// <summary>
     /// Содержит методы работы со списками, необходимые для работы программы.

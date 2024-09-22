@@ -1,9 +1,12 @@
 ﻿using KCRV_Statistics.Core.AppConstants;
+using KCRV_Statistics.Core.Entities.FileSystemEntites;
+using KCRV_Statistics.Model.DataOperatorsService.Lists;
 using KCRV_Statistics.Model.DirectoryService.DirectoryInfoGetters;
 using KCRV_Statistics.Model.FileService.Readers;
 using KCRV_Statistics.Model.ValidateService.DirectoryCheckers;
 using KCRV_Statistics.UI.AppService;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -84,7 +87,14 @@ namespace KCRV_Statistics.UI
                 return;
             }
 
-            AppData.AppFileData = DirectoryInfoReader.GetFileListFromDirectory(AppData.ChoisedFolders);
+            List<string> ChoisedExtensions = new List<string>();
+            ChoisedExtensions.Add(AppFileFormats.XLSX);
+            ChoisedExtensions.Add(AppFileFormats.JSON);
+            ChoisedExtensions.Add(AppFileFormats.CSV);
+            ChoisedExtensions.Add(AppFileFormats.TXT);
+
+            List<FileDataEntity> PrimaryFileList = DirectoryInfoReader.GetFileListFromDirectory(AppData.ChoisedFolders);
+            AppData.AppFileData = ListOperators.FilterFileListByExtension(PrimaryFileList, ChoisedExtensions);
 
             // Открываем главное окно (также прописан алгоритм закрытия главного окна, при котором вся программа заканчивает работу).
             WindowsObjects.EntryWindow = new();

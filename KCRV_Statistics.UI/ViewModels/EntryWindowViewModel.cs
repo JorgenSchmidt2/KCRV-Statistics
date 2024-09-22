@@ -1,9 +1,10 @@
-﻿using KCRV_Statistics.Core.Entities.FileSystemEntites;
+﻿using KCRV_Statistics.Core.AppConstants;
+using KCRV_Statistics.Core.Entities.FileSystemEntites;
 using KCRV_Statistics.Core.Entities.GraphicsShellEntities;
+using KCRV_Statistics.Model.DataOperatorsService.Lists;
 using KCRV_Statistics.Model.DirectoryService.DirectoryInfoGetters;
 using KCRV_Statistics.Model.FileService.Readers;
 using KCRV_Statistics.Model.SearchService.FileFinders;
-using KCRV_Statistics.Model.StructureDataService.Lists;
 using KCRV_Statistics.Model.ValidateService.SimpleFileCheckers;
 using KCRV_Statistics.UI.AppService;
 using System;
@@ -54,7 +55,7 @@ namespace KCRV_Statistics.UI.ViewModels
                 query = value; 
                 CheckChanges();
             }
-        }
+        } 
 
         /// <summary>
         /// Выполнение запроса на поиск совпадений.
@@ -66,7 +67,7 @@ namespace KCRV_Statistics.UI.ViewModels
                 return new Command(
                     obj =>
                     {
-                        /*// Проверка введено ли что-то в поле запроса, если нет - выдаётся сообщение об ошибке, а выполнение прерывается
+                        // Проверка введено ли что-то в поле запроса, если нет - выдаётся сообщение об ошибке, а выполнение прерывается
                         if (String.IsNullOrEmpty(Query))
                         {
                             MessageBox.Show("Введите запрос.");
@@ -81,7 +82,7 @@ namespace KCRV_Statistics.UI.ViewModels
                             return;
                         }
 
-                        FileDatas = Result;*/
+                        FileDatas = Result;
                     }
                 );
             }
@@ -97,7 +98,7 @@ namespace KCRV_Statistics.UI.ViewModels
                 return new Command(
                     obj =>
                     {
-
+                        FileDatas = ListOperators.CopyFileDataListEntities(AppData.AppFileData);
                     }
                 );
             }
@@ -113,7 +114,8 @@ namespace KCRV_Statistics.UI.ViewModels
                 return new Command(
                     obj =>
                     {
-
+                        // Доработать метод с целью универсализации (другой кнопке будет дан немного отличающийся функционал)
+                        UpdateFileInfo();
                     }
                 );
             }
@@ -145,37 +147,8 @@ namespace KCRV_Statistics.UI.ViewModels
                 return new Command(
                     obj =>
                     {
-                        if (DirectoryDataEntities.Where(x => x.IsChoised).Select(x => x).Count() == 0)
-                        {
-                            MessageBox.Show("Нужно выбрать как минимум одну папку.");
-                            return;
-                        }
-
-                        List<string> choised_folders = new List<string>();
-                        foreach (var CurrentDir in DirectoryDataEntities)
-                        {
-                            if (CurrentDir.IsChoised)
-                            {
-                                if (DirectoryInfoReader.CheckDirForEmpty(CurrentDir.DirectoryName))
-                                {
-                                    choised_folders.Add(CurrentDir.DirectoryName);
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Папка " + CurrentDir.DirectoryName + " пуста.");
-                                }
-                            }
-                        }
-
-                        if (choised_folders.Count == 0)
-                        {
-                            MessageBox.Show("Проверьте выбранные папки на наличие в них файлов");
-                            return;
-                        }
-
-                        AppData.ChoisedFolders = choised_folders;
-                        AppData.AppFileData = DirectoryInfoReader.GetFileListFromDirectory(AppData.ChoisedFolders);
-                        FileDatas = ListDataOperator.CopyFileDataListEntities(AppData.AppFileData);
+                        // Доработать метод с целью универсализации (другой кнопке будет дан немного отличающийся функционал)
+                        UpdateFileInfo();
                     }
                 );
             }
@@ -202,7 +175,7 @@ namespace KCRV_Statistics.UI.ViewModels
         /// <summary>
         /// Данные файлов
         /// </summary>
-        public List<FileDataEntity> fileDatas = ListDataOperator.CopyFileDataListEntities(AppData.AppFileData);
+        public List<FileDataEntity> fileDatas = ListOperators.CopyFileDataListEntities(AppData.AppFileData);
         /// <summary>
         /// Отвечает за то, что будет отображено непосредственно на экране пользователю.
         /// </summary>
@@ -225,7 +198,8 @@ namespace KCRV_Statistics.UI.ViewModels
         /// <summary>
         /// Содержит сообщение об ошибке. Вынесено в отдельное поле для удобства.
         /// </summary>
-        private readonly string ChoisePartErrorMessage = "Должен быть выбран хотя бы один вариант выбираемого формата файлов.";
+        private readonly string ChoisePartErrorMessage = "Должен быть выбран хотя-бы один вариант выбираемого формата файлов.";
+
 
         public bool xlsx_Check = true;
         public bool XLSX_Check
@@ -236,7 +210,11 @@ namespace KCRV_Statistics.UI.ViewModels
             }
             set
             {
-                xlsx_Check = value;
+                if (value == false && !(JSON_Check || CSV_Check || TXT_Check)) 
+                    MessageBox.Show(ChoisePartErrorMessage);
+                else
+                    xlsx_Check = value;
+                
                 CheckChanges();
             }
         }
@@ -251,7 +229,11 @@ namespace KCRV_Statistics.UI.ViewModels
 
             set
             {
-                json_Check = value;
+                if (value == false && !(XLSX_Check || CSV_Check || TXT_Check))
+                    MessageBox.Show(ChoisePartErrorMessage);
+                else
+                    json_Check = value;
+
                 CheckChanges();
             }
         }
@@ -261,12 +243,16 @@ namespace KCRV_Statistics.UI.ViewModels
         {
             get
             {
-                return json_Check;
+                return csv_Check;
             }
 
             set
             {
-                csv_Check = value;
+                if (value == false && !(XLSX_Check || JSON_Check || TXT_Check))
+                    MessageBox.Show(ChoisePartErrorMessage);
+                else
+                    csv_Check = value;
+
                 CheckChanges();
             }
         }
@@ -280,7 +266,11 @@ namespace KCRV_Statistics.UI.ViewModels
             }
             set
             {
-                txt_Check = value;
+                if (value == false && !(XLSX_Check || JSON_Check || CSV_Check))
+                    MessageBox.Show(ChoisePartErrorMessage);
+                else
+                    txt_Check = value;
+
                 CheckChanges();
             }
         }
@@ -434,6 +424,54 @@ namespace KCRV_Statistics.UI.ViewModels
                     }    
                 );
             }
+        }
+
+        #endregion
+
+        // Под мультифункциями подразумеваются такие методы, которые могут быть использованы более, чем в одном разделе
+        #region Мультифункции 
+
+        /// <summary>
+        /// Позволяет обновить информацию о имеющихся в папках файлов. Используется в разделах поиска и операций с файлами. 
+        /// (потребуется доработка с целью универсализации)
+        /// </summary>
+        private void UpdateFileInfo ()
+        {
+            if (DirectoryDataEntities.Where(x => x.IsChoised).Select(x => x).Count() == 0)
+            {
+                MessageBox.Show("Нужно выбрать как минимум одну папку.");
+                return;
+            }
+
+            List<string> choised_folders = new List<string>();
+            foreach (var CurrentDir in DirectoryDataEntities)
+            {
+                if (CurrentDir.IsChoised)
+                {
+                    if (DirectoryInfoReader.CheckDirForEmpty(CurrentDir.DirectoryName))
+                    {
+                        choised_folders.Add(CurrentDir.DirectoryName);
+                    }
+                }
+            }
+
+            if (choised_folders.Count == 0)
+            {
+                MessageBox.Show("Проверьте выбранные папки на наличие в них файлов");
+                return;
+            }
+
+            List<string> ChoisedExtensions = new List<string>();
+            if (XLSX_Check) ChoisedExtensions.Add(AppFileFormats.XLSX);
+            if (JSON_Check) ChoisedExtensions.Add(AppFileFormats.JSON);
+            if (CSV_Check) ChoisedExtensions.Add(AppFileFormats.CSV);
+            if (TXT_Check) ChoisedExtensions.Add(AppFileFormats.TXT);
+
+            AppData.ChoisedFolders = choised_folders;
+            List<FileDataEntity> PrimaryFileList = DirectoryInfoReader.GetFileListFromDirectory(AppData.ChoisedFolders);
+            AppData.AppFileData = ListOperators.FilterFileListByExtension(PrimaryFileList, ChoisedExtensions);
+
+            FileDatas = ListOperators.CopyFileDataListEntities(AppData.AppFileData);
         }
 
         #endregion
