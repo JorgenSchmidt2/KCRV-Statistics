@@ -10,6 +10,9 @@ namespace KCRV_Statistics.UI.ViewModels.IntermediateWindows
         #region Поля ввода значений округления при итерации и выводе результата
 
         public int iterationDigits = 0;
+        /// <summary>
+        /// Количество знаков после запятой при итерациях
+        /// </summary>
         public int IterationDigits
         {
             get
@@ -24,6 +27,9 @@ namespace KCRV_Statistics.UI.ViewModels.IntermediateWindows
         }
 
         public int resultDigits = 0;
+        /// <summary>
+        /// Количество знаков после запятой для результата
+        /// </summary>
         public int ResultDigits
         {
             get
@@ -42,6 +48,9 @@ namespace KCRV_Statistics.UI.ViewModels.IntermediateWindows
         #region Поля ввода координат для xlsx
 
         public int coordinateDataBeginX;
+        /// <summary>
+        /// Указание начальной столбца данных в XLSX файле
+        /// </summary>
         public int CoordinateDataBeginX
         {
             get
@@ -56,6 +65,9 @@ namespace KCRV_Statistics.UI.ViewModels.IntermediateWindows
         }
 
         public int coordinateDataBeginY;
+        /// <summary>
+        /// Указание начальной строки данных в XLSX файле
+        /// </summary>
         public int CoordinateDataBeginY
         {
             get
@@ -73,6 +85,9 @@ namespace KCRV_Statistics.UI.ViewModels.IntermediateWindows
 
         #region Кнопки управления
 
+        /// <summary>
+        /// Для кнопки расчёта значений KCRV
+        /// </summary>
         public Command Calculate
         {
             get

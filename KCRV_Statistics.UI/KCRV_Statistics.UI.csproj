@@ -7,7 +7,13 @@
     <UseWPF>true</UseWPF>
     <Product>KCRV</Product>
     <AssemblyName>KCRV Statistics</AssemblyName>
+    <ApplicationIcon>Логотип-УНИИМ-СО-rgb-300dpi-_002_.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Логотип-УНИИМ-СО-rgb-300dpi-_002_.ico" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <ProjectReference Include="..\KCRV_Statistics.Core\KCRV_Statistics.Core.csproj" />

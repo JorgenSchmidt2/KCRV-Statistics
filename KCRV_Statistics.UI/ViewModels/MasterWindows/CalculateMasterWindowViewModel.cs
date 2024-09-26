@@ -179,6 +179,9 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
         }
 
         public List<LineGraphicsEntity> KCRV_data = GraphicsSketchers.GetKCRV_Lines(AppData.OutputData[0], AppData.CurrentData);
+        /// <summary>
+        /// Для отображения значения показателя KCRV с его интервалами доверия
+        /// </summary>
         public List<LineGraphicsEntity> KCRV_Data
         {
             get
@@ -197,7 +200,9 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
         #region Данные расчётов 
 
         public ObservableCollection<ViewedOutputData> viewedOutputData = GraphicsShellService.GetViewedOutputData(AppData.OutputData);
-
+        /// <summary>
+        /// Для отображения полученных показателей KCRV в виде списка значений "Значение-Погрешность"
+        /// </summary>
         public ObservableCollection<ViewedOutputData> ViewedOutputData
         {
             get
@@ -219,14 +224,14 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
                 return new Command(
                     obj =>
                     {
-                        var truelistcount = ViewedOutputData.Where(x => x.MethodIsChoised).Select(x => x);
+                        var truelistcount = ViewedOutputData.Where(x => x.IsChoised).Select(x => x);
                         if (truelistcount.Count() != 1)
                         {
                             MessageBox.Show("Должен быть выбран ровно один элемент");
                         }
                         else
                         {
-                            var choisedobj = ViewedOutputData.FirstOrDefault(x => x.MethodIsChoised);
+                            var choisedobj = ViewedOutputData.FirstOrDefault(x => x.IsChoised);
 
                             KCRV_Data = GraphicsSketchers.GetKCRV_Lines(choisedobj, AppData.CurrentData);
                         }
@@ -239,7 +244,6 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
         #region Управляющие кнопки и всё что с ними связано
 
         public string folderName = "";
-
         /// <summary>
         /// Подвязка к полю ввода имени папки
         /// </summary>
@@ -257,7 +261,6 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
         }
 
         public bool mustCreateReport = true;
-
         /// <summary>
         /// Определяет будет ли дополнительно генерироваться отчёт
         /// </summary>

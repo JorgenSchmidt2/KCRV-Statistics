@@ -186,7 +186,7 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid HorizontalAlignment="Stretch">
-                                    <CheckBox IsChecked="{Binding MethodIsChoised}" HorizontalAlignment="Center" />
+                                    <CheckBox IsChecked="{Binding IsChoised}" HorizontalAlignment="Center" />
                                 </Grid>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>

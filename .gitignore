@@ -1,0 +1,13 @@
+.vs/
+KCRV_Statistics.Core/obj/
+KCRV_Statistics.Core/bin/
+KCRV_Statistics.Model/obj/
+KCRV_Statistics.Model/bin/
+KCRV_Statistics.UI/obj/
+MathServiceTests/obj/
+MathServiceTests/bin/
+SearchServiceTests/obj/
+SearchServiceTests/bin/
+TestResults/
+ValidateServiceTests/obj/
+ValidateServiceTests/bin/

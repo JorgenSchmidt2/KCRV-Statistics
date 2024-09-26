@@ -34,10 +34,3 @@ namespace KCRV_Statistics.UI.AppService
         public static List<OutputData> OutputData = new List<OutputData>();
     }
 }
-
-/*
-        /// <summary>
-        /// Содержит список выбранных пользователем директорий.
-        /// </summary>
-        public static List<string> ChoisedFolders = new List<string>();
- */

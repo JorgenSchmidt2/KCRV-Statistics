@@ -14,10 +14,13 @@ namespace KCRV_Statistics.Model.SearchService.FileFinders
         {
             List<FileDataEntity> Result = new List<FileDataEntity>();
 
+            // Инициализация счётчика для переписывания ID результрующего списка файлов
             int FileCounter = 1;
 
+            // Перебор элементов входного списка
             foreach (var item in FileList)
             {
+                // Проверка включен ли в элемент списка поданный на вход запрос как подстрока
                 if (item.FileName.Contains(Query))
                 {
                     Result.Add(

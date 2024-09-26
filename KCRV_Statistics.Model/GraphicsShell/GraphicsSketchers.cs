@@ -114,7 +114,8 @@ namespace KCRV_Statistics.Model.GraphicsShell
         }
 
         /// <summary>
-        /// Даёт координаты для отрисовки интервала показателя KCRV
+        /// Даёт координаты для отрисовки интервала показателя KCRV. Входной объект (obj) - результаты применения одного из методов KCRV,
+        /// regdata - для определения минимального, максимального значений по осям.
         /// </summary>
         public static List<LineGraphicsEntity> GetKCRV_Lines (OutputData obj, List<RegularData> regdata)
         {
@@ -122,15 +123,17 @@ namespace KCRV_Statistics.Model.GraphicsShell
             {
                 List<LineGraphicsEntity> Result = new List<LineGraphicsEntity>();
 
+                // Определение минимального, максимального значений по осям 
                 var min = regdata.Min(x => x.Value);
                 var max = regdata.Max(x => x.Value);
 
+                // Определение цены одного деления на отображаемой оси
                 var kx = (GraphicsShellConfiguration.InternalCanvasWidth)
                     / Math.Sqrt(Math.Pow(max - min, 2));
-
                 var ky = (GraphicsShellConfiguration.InternalCanvasHeight)
                     / Math.Sqrt(Math.Pow(max - min, 2));
 
+                // Задаёт положение линии регрессии на оси данных
                 var Y_Reg = GraphicsShellConfiguration.InternalCanvasWidth - Convert.ToInt32((obj.X - min) * ky);
                 Result.Add(
                     new LineGraphicsEntity()
@@ -144,6 +147,7 @@ namespace KCRV_Statistics.Model.GraphicsShell
                     }
                 );
 
+                // Задаёт положение нижней части доверительного интервала
                 var Y_MinTrust = GraphicsShellConfiguration.InternalCanvasWidth - Convert.ToInt32((obj.X - obj.U - min) * ky);
                 Result.Add(
                     new LineGraphicsEntity()
@@ -157,6 +161,7 @@ namespace KCRV_Statistics.Model.GraphicsShell
                     }
                 );
 
+                // Задаёт положение верхней части доверительного интервала
                 var Y_MaxTrust = GraphicsShellConfiguration.InternalCanvasWidth - Convert.ToInt32((obj.X + obj.U - min) * ky);
                 Result.Add(
                     new LineGraphicsEntity()

@@ -9,6 +9,7 @@ using KCRV_Statistics.Model.ValidateService.SimpleFileCheckers;
 using KCRV_Statistics.UI.AppService;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows;
 
@@ -21,7 +22,6 @@ namespace KCRV_Statistics.UI.ViewModels
     {
         #region Поиск
 
-        
         public bool mustReadingQuery = true;
         /// <summary>
         /// Отвечает за то, будет ли при выборе раздела учитываться содержимое запроса (свойство Query).
@@ -41,7 +41,7 @@ namespace KCRV_Statistics.UI.ViewModels
 
         public string query; 
         /// <summary>
-        /// Содержит запрос к файловой системе (условно).
+        /// Содержит запрос к файловой системе.
         /// </summary>
         public string Query
         {
@@ -89,7 +89,8 @@ namespace KCRV_Statistics.UI.ViewModels
         }
 
         /// <summary>
-        /// Обращает отображаемое в окне до изначального вида без обновлении информации об изменениях в директориях
+        /// Обращает отображаемое в окне до изначального вида без обновлении информации об изменениях в директориях.
+        /// Происходит без изменения AppData.AppFileData.
         /// </summary>
         public Command Reset
         {
@@ -105,7 +106,7 @@ namespace KCRV_Statistics.UI.ViewModels
         }
 
         /// <summary>
-        /// Обновляет информацию о содержимом в папках
+        /// Обновляет информацию о содержимом в папках с изменением AppData.AppFileData.
         /// </summary>
         public Command Update
         {
@@ -126,7 +127,9 @@ namespace KCRV_Statistics.UI.ViewModels
         #region Список файлов и директорий
 
         public List<ViewedDirectoryData> directoryDataEntities = AppData.AppDirectoryData;
-
+        /// <summary>
+        /// Отображает список доступных директорий.
+        /// </summary>
         public List<ViewedDirectoryData> DirectoryDataEntities
         {
             get
@@ -140,6 +143,9 @@ namespace KCRV_Statistics.UI.ViewModels
             }
         }
 
+        /// <summary>
+        /// Временная кнопка цель которой - помочь отобразить на экране изменения, внесённые пользователем в интерфейсе приложения.
+        /// </summary>
         public Command ConfirmDirChoise
         {
             get
@@ -147,6 +153,7 @@ namespace KCRV_Statistics.UI.ViewModels
                 return new Command(
                     obj =>
                     {
+                        // В дальнейшем кнопка будет удалена
                         // Доработать метод с целью универсализации (другой кнопке будет дан немного отличающийся функционал)
                         UpdateFileInfo();
                     }
@@ -154,6 +161,9 @@ namespace KCRV_Statistics.UI.ViewModels
             }
         }
 
+        /// <summary>
+        /// Временная кнопка цель которой - помочь понять содержимое каких папок отображено на экране компьютера на текущий момент времени.
+        /// </summary>
         public Command CurrentDirectories
         {
             get
@@ -172,9 +182,6 @@ namespace KCRV_Statistics.UI.ViewModels
             }
         }
 
-        /// <summary>
-        /// Данные файлов
-        /// </summary>
         public List<FileDataEntity> fileDatas = ListOperators.CopyFileDataListEntities(AppData.AppFileData);
         /// <summary>
         /// Отвечает за то, что будет отображено непосредственно на экране пользователю.
@@ -200,8 +207,10 @@ namespace KCRV_Statistics.UI.ViewModels
         /// </summary>
         private readonly string ChoisePartErrorMessage = "Должен быть выбран хотя-бы один вариант выбираемого формата файлов.";
 
-
         public bool xlsx_Check = true;
+        /// <summary>
+        /// Переменная, привязанная к checkbutton'у xlsx
+        /// </summary>
         public bool XLSX_Check
         {
             get 
@@ -220,6 +229,9 @@ namespace KCRV_Statistics.UI.ViewModels
         }
 
         public bool json_Check = true;
+        /// <summary>
+        /// Переменная, привязанная к checkbutton'у json
+        /// </summary>
         public bool JSON_Check
         {
             get
@@ -239,6 +251,9 @@ namespace KCRV_Statistics.UI.ViewModels
         }
 
         public bool csv_Check = true;
+        /// <summary>
+        /// Переменная, привязанная к checkbutton'у csv
+        /// </summary>
         public bool CSV_Check
         {
             get
@@ -258,6 +273,9 @@ namespace KCRV_Statistics.UI.ViewModels
         }
 
         public bool txt_Check = true;
+        /// <summary>
+        /// Переменная, привязанная к checkbutton'у txt
+        /// </summary>
         public bool TXT_Check
         {
             get
@@ -280,7 +298,9 @@ namespace KCRV_Statistics.UI.ViewModels
         #region Управление и описание программы
 
         public int id_Field = 0;
-
+        /// <summary>
+        /// ID файла
+        /// </summary>
         public int ID_Field
         {
             get 
@@ -320,6 +340,15 @@ namespace KCRV_Statistics.UI.ViewModels
                             if (fileInfo == null)
                             {
                                 MessageBox.Show("Элемента с таким ID (" + ID_Field + ") не обнаружено.");
+                                return;
+                            }
+
+                            // Проверяем существует ли файл в директории с приложением
+                            if (!File.Exists(Environment.CurrentDirectory + "\\" + fileInfo.Directory + "\\" + fileInfo.FileName))
+                            {
+                                var Message = "Не удалось найти файл " + fileInfo.FileName + " из директории " + fileInfo.Directory + ".\n"
+                                    + "Проверьте целостность файловой структуры в корневой директории приложения.";
+                                MessageBox.Show(Message);
                                 return;
                             }
 
@@ -437,12 +466,14 @@ namespace KCRV_Statistics.UI.ViewModels
         /// </summary>
         private void UpdateFileInfo ()
         {
+            // Если не выбрано ни одной папки - работа метода останавливается
             if (DirectoryDataEntities.Where(x => x.IsChoised).Select(x => x).Count() == 0)
             {
                 MessageBox.Show("Нужно выбрать как минимум одну папку.");
                 return;
             }
 
+            // Составляем список директорий, из которых получим файлы, которые забиваем во временную переменную
             List<string> choised_folders = new List<string>();
             foreach (var CurrentDir in DirectoryDataEntities)
             {
@@ -454,6 +485,7 @@ namespace KCRV_Statistics.UI.ViewModels
                     }
                 }
             }
+            AppData.ChoisedFolders = choised_folders;
 
             if (choised_folders.Count == 0)
             {
@@ -461,16 +493,16 @@ namespace KCRV_Statistics.UI.ViewModels
                 return;
             }
 
+            // Определяем форматы каких файлов будут выведены на экран
             List<string> ChoisedExtensions = new List<string>();
             if (XLSX_Check) ChoisedExtensions.Add(AppFileFormats.XLSX);
             if (JSON_Check) ChoisedExtensions.Add(AppFileFormats.JSON);
             if (CSV_Check) ChoisedExtensions.Add(AppFileFormats.CSV);
             if (TXT_Check) ChoisedExtensions.Add(AppFileFormats.TXT);
 
-            AppData.ChoisedFolders = choised_folders;
+            // Через первичный список получаем все находящиеся в папках файлы, после чего фильтруем папки по их расширению
             List<FileDataEntity> PrimaryFileList = DirectoryInfoReader.GetFileListFromDirectory(AppData.ChoisedFolders);
             AppData.AppFileData = ListOperators.FilterFileListByExtension(PrimaryFileList, ChoisedExtensions);
-
             FileDatas = ListOperators.CopyFileDataListEntities(AppData.AppFileData);
         }
 
