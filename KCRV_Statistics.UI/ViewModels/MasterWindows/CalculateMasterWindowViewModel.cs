@@ -116,8 +116,8 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
         /// При инициализации окна получает данные о подписях (для внешнего окна)
         /// </summary>
         public List<TextLabelEntity> labelData = GraphicsSketchers.GetLabels(
-                AppData.CurrentData.Min(x => x.Value),
-                AppData.CurrentData.Max(x => x.Value),
+                AppData.CurrentData.Min(x => x.Value - x.Uncertanity),
+                AppData.CurrentData.Max(x => x.Value + x.Uncertanity),
                 AppData.CurrentData.Count()
         );
 
@@ -151,7 +151,7 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
         public List<PointGraphicsEntity> pointEntities = GraphicsSketchers.GetPoints(AppData.CurrentData);
 
         /// <summary>
-        /// Возвращает список объектов типа Point для отображения в интерфейсе приложения
+        /// Возвращает список объектов типа Point для отображения в интерфейсе приложения (значения результатов лабораторий)
         /// </summary>
         public List<PointGraphicsEntity> PointEntities
         {
@@ -164,8 +164,8 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
                         pointEntities[i].Y,
                         1,
                         AppData.CurrentData.Count,
-                        AppData.CurrentData.Min(x => x.Value),
-                        AppData.CurrentData.Max(x => x.Value)
+                        AppData.CurrentData.Min(x => x.Value - x.Uncertanity),
+                        AppData.CurrentData.Max(x => x.Value + x.Uncertanity)
                     );
                 }
 
@@ -191,6 +191,23 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
             set
             {
                 KCRV_data = value;
+                CheckChanges();
+            }
+        }
+
+        public List<LineGraphicsEntity> uncertanityData = GraphicsSketchers.GetUncertanityLines(AppData.CurrentData);
+        /// <summary>
+        /// Возвращает список объектов типа Line для отображения в интерфейсе приложения (значения неопределённости результатов лабораторий)
+        /// </summary>
+        public List<LineGraphicsEntity> UnvertanityData
+        {
+            get
+            {
+                return uncertanityData;
+            }
+            set
+            {
+                uncertanityData = value;
                 CheckChanges();
             }
         }
@@ -224,8 +241,12 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
                 return new Command(
                     obj =>
                     {
-                        var truelistcount = ViewedOutputData.Where(x => x.IsChoised).Select(x => x);
-                        if (truelistcount.Count() != 1)
+                        var truelistcount = ViewedOutputData
+                                .Where(x => x.IsChoised)
+                                .Select(x => x)
+                                .Count();
+
+                        if (truelistcount != 1)
                         {
                             MessageBox.Show("Должен быть выбран ровно один элемент");
                         }

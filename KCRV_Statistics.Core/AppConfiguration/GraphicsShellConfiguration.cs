@@ -34,8 +34,11 @@ namespace KCRV_Statistics.Core.AppConfiguration
         public static readonly int NumLabelFontSize = 10;
 
         // Конфигурация линий
-        public static readonly int LineStrokeThickness = 1;
-        public static readonly SolidColorBrush RegressionLinesColor = Brushes.Blue;
-        public static readonly SolidColorBrush TrustLinesColor = Brushes.Gray;
+        public static readonly double RegressionLinesThickness = 2;
+        public static readonly double TrustLinesThickness = 1;
+        public static readonly double LabUncertanityLinesThickness = 1;
+        public static readonly SolidColorBrush RegressionLinesColor = Brushes.Blue; // Отображение результатов расчёта показателя KCRV
+        public static readonly SolidColorBrush TrustLinesColor = Brushes.Gray; // Отображение результатов расчёта неопределённости KCRV
+        public static readonly SolidColorBrush LabUncertanityLinesColor = Brushes.Black; // Отображение неопределённости результатов лабораторий
     }
 }

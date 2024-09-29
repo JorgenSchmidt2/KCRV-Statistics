@@ -18,6 +18,6 @@ namespace KCRV_Statistics.Core.Entities.GraphicsShellEntities
         public SolidColorBrush Color { get; set; }
 
         // Ширина линии
-        public int StrokeThicknessValue { get; set; }
+        public double StrokeThicknessValue { get; set; }
     }
 }

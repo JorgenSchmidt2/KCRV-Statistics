@@ -25,7 +25,7 @@ namespace KCRV_Statistics.UI.AppService
         /// </summary>
         public static List<string> ChoisedFolders = new List<string>();
         /// <summary>
-        /// Содержит полученные данные.
+        /// Содержит полученные данные от лабораторий.
         /// </summary>
         public static List<RegularData> CurrentData = new List<RegularData>();
         /// <summary>

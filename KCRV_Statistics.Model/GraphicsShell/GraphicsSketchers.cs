@@ -84,7 +84,7 @@ namespace KCRV_Statistics.Model.GraphicsShell
         }
 
         /// <summary>
-        /// Задаёт положение точек на координатной плоскости
+        /// Задаёт положение точек на координатной плоскости (не производит вычисление координат непосредственно на канвасе).
         /// </summary>
         public static List<PointGraphicsEntity> GetPoints(List<RegularData> Data)
         {
@@ -114,6 +114,67 @@ namespace KCRV_Statistics.Model.GraphicsShell
         }
 
         /// <summary>
+        /// Даёт данные для отрисовки линий, которые обозначают на графике неопределённость результатов измерений лабораторий.
+        /// </summary>
+        public static List<LineGraphicsEntity> GetUncertanityLines(List<RegularData> regdata)
+        {
+            try
+            {
+                List<LineGraphicsEntity> Result = new List<LineGraphicsEntity>();
+
+                // Определение минимального, максимального значений по оси Y
+                var min = regdata.Min(x => x.Value - x.Uncertanity);
+                var max = regdata.Max(x => x.Value + x.Uncertanity);
+
+                // Определение цены одного деления на отображаемой оси
+                var kx = (GraphicsShellConfiguration.InternalCanvasWidth)
+                    / Math.Sqrt(Math.Pow(regdata.Count - 1, 2));
+                var ky = (GraphicsShellConfiguration.InternalCanvasHeight)
+                    / Math.Sqrt(Math.Pow(max - min, 2));
+
+                foreach (var Item in regdata)
+                {
+                    // Определяем положение линии на оси Х, исходя из номера лабораторий
+                    // (не забываем, что по формуле расчёта координат нужно обязательно искать разность между
+                    // максимальным и минимальным значениями по осям координат, и да пускай то, что под таковыми
+                    // имеюстя ввиду номера лабораторий не вводит в заблуждение :D )
+                    var X = Convert.ToInt32((Item.LaboratoryNumber - 1) * kx) + GraphicsShellConfiguration.PointRadius / 2;
+
+                    // Определяем положение линии на оси Y, исходя из значений результата лаборатории и его неопределённости
+                    var Y1_Coord = Item.Value - Item.Uncertanity;
+                    var Y2_Coord = Item.Value + Item.Uncertanity;
+
+                    var Y1 = GraphicsShellConfiguration.InternalCanvasWidth - Convert.ToInt32((Y1_Coord - min) * ky)
+                        + GraphicsShellConfiguration.PointRadius / 2;
+                    var Y2 = GraphicsShellConfiguration.InternalCanvasWidth - Convert.ToInt32((Y2_Coord - min) * ky)
+                        + GraphicsShellConfiguration.PointRadius / 2;
+
+                    // Добавляем полученное в результирующий список
+                    Result.Add(
+                        new LineGraphicsEntity
+                        {
+                            X1 = X,
+                            Y1 = Y1,
+                            X2 = X,
+                            Y2 = Y2,
+                            Color = GraphicsShellConfiguration.LabUncertanityLinesColor,
+                            StrokeThicknessValue = GraphicsShellConfiguration.LabUncertanityLinesThickness
+                        }
+                    );
+                }
+
+                return Result;
+            }
+            catch (Exception e)
+            {
+                MessageObjects.Sender.SendMessage("Ошибка при попытке получить данные для отрисовки линий "
+                    + "для неопределённости результатов лабораторий: \n" 
+                    + e.Message);
+                return new List<LineGraphicsEntity>();
+            }
+        }
+
+        /// <summary>
         /// Даёт координаты для отрисовки интервала показателя KCRV. Входной объект (obj) - результаты применения одного из методов KCRV,
         /// regdata - для определения минимального, максимального значений по осям.
         /// </summary>
@@ -123,13 +184,11 @@ namespace KCRV_Statistics.Model.GraphicsShell
             {
                 List<LineGraphicsEntity> Result = new List<LineGraphicsEntity>();
 
-                // Определение минимального, максимального значений по осям 
-                var min = regdata.Min(x => x.Value);
-                var max = regdata.Max(x => x.Value);
+                // Определение минимального, максимального значений по оси Y
+                var min = regdata.Min(x => x.Value - x.Uncertanity);
+                var max = regdata.Max(x => x.Value + x.Uncertanity);
 
                 // Определение цены одного деления на отображаемой оси
-                var kx = (GraphicsShellConfiguration.InternalCanvasWidth)
-                    / Math.Sqrt(Math.Pow(max - min, 2));
                 var ky = (GraphicsShellConfiguration.InternalCanvasHeight)
                     / Math.Sqrt(Math.Pow(max - min, 2));
 
@@ -143,7 +202,7 @@ namespace KCRV_Statistics.Model.GraphicsShell
                         X2 = GraphicsShellConfiguration.InternalCanvasWidth + GraphicsShellConfiguration.PointRadius,
                         Y2 = Y_Reg,
                         Color = GraphicsShellConfiguration.RegressionLinesColor,
-                        StrokeThicknessValue = 2
+                        StrokeThicknessValue = GraphicsShellConfiguration.RegressionLinesThickness
                     }
                 );
 
@@ -157,7 +216,7 @@ namespace KCRV_Statistics.Model.GraphicsShell
                         X2 = GraphicsShellConfiguration.InternalCanvasWidth + GraphicsShellConfiguration.PointRadius,
                         Y2 = Y_MinTrust,
                         Color = GraphicsShellConfiguration.TrustLinesColor,
-                        StrokeThicknessValue = 1
+                        StrokeThicknessValue = GraphicsShellConfiguration.TrustLinesThickness
                     }
                 );
 
@@ -171,7 +230,7 @@ namespace KCRV_Statistics.Model.GraphicsShell
                         X2 = GraphicsShellConfiguration.InternalCanvasWidth + GraphicsShellConfiguration.PointRadius,
                         Y2 = Y_MaxTrust,
                         Color = GraphicsShellConfiguration.TrustLinesColor,
-                        StrokeThicknessValue = 1
+                        StrokeThicknessValue = GraphicsShellConfiguration.TrustLinesThickness
                     }
                 );
 

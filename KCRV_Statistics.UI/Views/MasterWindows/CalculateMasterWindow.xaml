@@ -110,7 +110,7 @@
         </Viewbox>
         <!-- Для отображения доверительных интервалов -->
         <Viewbox Margin="65,65,0,0" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{Binding InternalCanvasWidth}" Height="{Binding InternalCanvasHeight}">
-            <ItemsControl ItemsSource="{Binding TrustIntervalData}" Width="{Binding InternalCanvasWidth}" Height="{Binding InternalCanvasHeight}" >
+            <ItemsControl ItemsSource="{Binding UnvertanityData}" Width="{Binding InternalCanvasWidth}" Height="{Binding InternalCanvasHeight}" >
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <Canvas />
