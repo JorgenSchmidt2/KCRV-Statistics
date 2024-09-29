@@ -201,7 +201,7 @@
         <!-- Управляющие кнопки и всё что с ними связано -->
         <Rectangle Margin="1020,40,0,0" Height="340" Width="255" HorizontalAlignment="Left" VerticalAlignment="Top" Stroke="#111" StrokeThickness="1" />
         <Label Margin="1040,50,0,0" Height="30" Width="220" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Выгрузить результаты в папку: " />
-        <TextBox Text="{Binding FolderName}" IsEnabled="False" Margin="1040,80,0,0" Height="20" Width="220" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBox Text="{Binding FolderName}" Margin="1040,80,0,0" Height="20" Width="220" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <CheckBox IsChecked="{Binding MustCreateReport}" Margin="1040,113,0,0" Content="Дополнительно создать отчёт" HorizontalAlignment="Left" VerticalAlignment="Top" />
         <Button Command="{Binding Create}" Margin="1040, 150, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Создать" Height="30" Width="100" />
         <Button Command="{Binding Help}" Margin="1160, 150, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Справка" Height="30" Width="100" />

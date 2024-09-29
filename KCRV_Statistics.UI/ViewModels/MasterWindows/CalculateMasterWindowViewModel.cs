@@ -1,9 +1,13 @@
 ﻿using KCRV_Statistics.Core.AppConfiguration;
+using KCRV_Statistics.Core.AppConstants;
 using KCRV_Statistics.Core.Entities.GraphicsShellEntities;
+using KCRV_Statistics.Model.FileService.Writers;
 using KCRV_Statistics.Model.GraphicsShell;
 using KCRV_Statistics.UI.AppService;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Windows;
 
@@ -308,7 +312,50 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
                 return new Command(
                     obj =>
                     {
+                        if (FolderName.Equals("") || String.IsNullOrEmpty(FolderName))
+                        {
+                            MessageBox.Show("Введите имя папки.");
+                            return;
+                        }
 
+                        // Временный вариант вывода результатов.
+                        string Content = "Результаты лабораторий: \n"
+                               + "N\tX\tU\tE\n";
+
+                        foreach (var Item in AppData.CurrentData)
+                        {
+                            Content += Item.LaboratoryNumber + "\t"
+                                     + Item.Value + "\t"
+                                     + Item.Uncertanity + "\t"
+                                     + Item.E + "\n";
+                        }
+
+                        Content += "\nПоказатели KCRV: \n"
+                                 + "Метод\tX\tU\n";
+                        
+                        foreach (var Item in AppData.OutputData)
+                        {
+                            Content += Item.MethodName + "\t"
+                                     + Item.X + "\t"
+                                     + Item.U + "\n";
+                        }
+
+                        if (!Directory.Exists(
+                                Environment.CurrentDirectory + "\\" + FileSystemNames.ResultsFolder + "\\" + FolderName
+                            )
+                        )
+                        {
+                            Directory.CreateDirectory(
+                                Environment.CurrentDirectory + "\\" + FileSystemNames.ResultsFolder + "\\" + FolderName
+                            );
+                        }
+
+                        SimpleContentWriters.WriteContentToFile(
+                            Content,
+                            FileSystemNames.ResultsFolder + "\\" + FolderName,
+                            FolderName,
+                            AppFileFormats.TXT
+                        );
                     }
                 );
             }
