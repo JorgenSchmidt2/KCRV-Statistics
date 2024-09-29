@@ -104,6 +104,22 @@ namespace KCRV_Statistics.UI.ViewModels.IntermediateWindows
                                 return;
                             }
 
+                            if (IterationDigits > 15 || ResultDigits > 15)
+                            {
+                                var Message =     "Максимально-возможное значение цифр после запятой равно 15. "
+                                                + "Введите число меньшее или равное 15-ти.";
+
+                                MessageBox.Show(Message);
+                                return;
+                            }
+
+                            if (IterationDigits < 0 || ResultDigits < 0)
+                            {
+                                var Message = "Количество знаков после запятой может быть только положительным числом.";
+                                MessageBox.Show(Message);
+                                return;
+                            }
+
                             // Расчёт значений, присвоение результатов вычислений статическому полю 
                             var Result = Estimators.CalculateAllMethods(AppData.CurrentData, IterationDigits, ResultDigits);
                             AppData.OutputData.Clear();

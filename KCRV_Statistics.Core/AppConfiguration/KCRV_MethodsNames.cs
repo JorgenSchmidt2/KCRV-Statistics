@@ -17,5 +17,13 @@
         /// Название метода Median.
         /// </summary>
         public readonly static string Median = "Median";
+        /// <summary>
+        /// Название метода DerSimonian.
+        /// </summary>
+        public readonly static string DerSimonian = "DerSimonian";
+        /// <summary>
+        /// Название метода MandelPaule.
+        /// </summary>
+        public readonly static string MandelPaule = "MandelPaule";
     }
 }

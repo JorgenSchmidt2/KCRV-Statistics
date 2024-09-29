@@ -331,13 +331,14 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
                         }
 
                         Content += "\nПоказатели KCRV: \n"
-                                 + "Метод\tX\tU\n";
+                                 + "Метод\tX\tU\tλ\n";
                         
                         foreach (var Item in AppData.OutputData)
                         {
                             Content += Item.MethodName + "\t"
                                      + Item.X + "\t"
-                                     + Item.U + "\n";
+                                     + Item.U + "\t"
+                                     + Item.InterLabVariance + "\n";
                         }
 
                         if (!Directory.Exists(
