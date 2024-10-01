@@ -246,14 +246,13 @@ namespace KCRV_Statistics.Model.MathService
             {
                 var w = 1 / Math.Pow(Item.Uncertanity, 2);
 
-                GrayBillValue += Math.Round(
-                    w * Math.Pow(Item.Value - WeightedMeanValue, 2), 
+                GrayBillValue = Math.Round(
+                    GrayBillValue + w * Math.Pow(Item.Value - WeightedMeanValue, 2), 
                     IterationDigits
                 );
 
-                W1 += Math.Round(w, IterationDigits);
-                W2 += Math.Round(
-                    Math.Pow(w, 2), 
+                W1 = Math.Round(W1 + w, IterationDigits);
+                W2 = Math.Round(W2 + Math.Pow(w, 2), 
                     IterationDigits
                 );
             }
@@ -266,13 +265,14 @@ namespace KCRV_Statistics.Model.MathService
             else Result.InterLabVariance = 0;
 
             // Начало расчёта показателя KCRV и его неопределённости
-            double Usqr_LAMBDA_Summ = 0; // Usqr означает, что берётся квадрат неопределённости
+            double Usqr_LAMBDA_Summ = 0; // Usqr означает, что берётся квадрат неопределённости,
+                                         // название метода неполное, т.к. суммироваться будет сумма под степенью -1
 
             // Считаем сумму, которая приходится на знаменатель переменной w
             foreach (var Item in Data)
             {
-                Usqr_LAMBDA_Summ += Math.Round(
-                    Math.Pow(Math.Pow(Item.Uncertanity, 2) + Result.InterLabVariance, -1), IterationDigits
+                Usqr_LAMBDA_Summ = Math.Round(
+                    Usqr_LAMBDA_Summ + Math.Pow(Math.Pow(Item.Uncertanity, 2) + LambdaValue, -1), IterationDigits
                 );
             }
 
@@ -280,8 +280,8 @@ namespace KCRV_Statistics.Model.MathService
             double X = 0;
             foreach (var Item in Data)
             {
-                var w = Math.Pow(Math.Pow(Item.Uncertanity, 2) + Result.InterLabVariance, -1) / Usqr_LAMBDA_Summ;
-                X += Math.Round(w * Item.Value, IterationDigits);
+                var w = Math.Pow(Math.Pow(Item.Uncertanity, 2) + LambdaValue, -1) / Usqr_LAMBDA_Summ;
+                X = Math.Round(X + w * Item.Value, IterationDigits);
             }
             Result.X = Math.Round(X, ResultDigits);
 
@@ -289,10 +289,9 @@ namespace KCRV_Statistics.Model.MathService
             double U = 0;
             foreach (var Item in Data)
             {
-                var w = Math.Pow(Math.Pow(Item.Uncertanity, 2) + Result.InterLabVariance, -1) / Usqr_LAMBDA_Summ;
+                var w = Math.Pow(Math.Pow(Item.Uncertanity, 2) + LambdaValue, -1) / Usqr_LAMBDA_Summ;
 
-                U += Math.Round(
-                    Math.Pow(w, 2) * Math.Pow(Item.Value - Result.X, 2) / (1 - w)
+                U = Math.Round( U + Math.Pow(w, 2) * Math.Pow(Item.Value - Result.X, 2) / (1 - w)
                     , IterationDigits
                 );
             }
@@ -318,7 +317,61 @@ namespace KCRV_Statistics.Model.MathService
             OutputData Result = new OutputData();
             Result.MethodName = KCRV_MethodsNames.MandelPaule;
 
-            
+            // Временное значение
+            var ILV = 0.350737906431726;
+            Result.InterLabVariance = Math.Round(0.350737906431726, ResultDigits);
+
+            // Расчёт показателя KCRV и его неопределённости, в первую очередь посчитаем значение знаменателя числа w
+            double w_denominator = 0;
+            foreach (var Item in Data)
+            {
+                w_denominator = Math.Round(w_denominator + 1 / (Math.Pow(Item.Uncertanity, 2) + Math.Pow(ILV, 2)), IterationDigits);
+            }
+
+            // Начало расчёта показателя KCRV
+            double X = 0;
+            foreach (var Item in Data)
+            {
+                var w = (1 / (Math.Pow(Item.Uncertanity, 2) + Math.Pow(ILV, 2))) / w_denominator;
+                X = Math.Round(X + w * Item.Value, IterationDigits);
+            }
+            Result.X = Math.Round(X, ResultDigits);
+
+            // Расчёт показателя неопределённости KCRV
+            double U = Math.Sqrt(1 / w_denominator);
+            Result.U = Math.Round(U, ResultDigits);
+
+            return Result;
+        }
+
+        #endregion
+
+        #region Другие операции
+
+        public static List<RegularData> GetEnValues(List<RegularData> Data, OutputData MandelPaule, int ResultDigits)
+        {
+            // Если оба входных показателя, отвечающих за округление равны 0, то 
+            // им присваивается значение, равное соответствующим константам
+            if (ResultDigits == 0)
+            {
+                ResultDigits = 8;
+            }
+
+            List<RegularData> Result = new List<RegularData>();
+
+            foreach (var Item in Data)
+            {
+                var E = (Item.Value - MandelPaule.X) / 2 / Math.Sqrt(Math.Pow(Item.Uncertanity, 2) + Math.Pow(MandelPaule.U, 2));
+                Result.Add(
+                    new RegularData()
+                    {
+                        LaboratoryNumber = Item.LaboratoryNumber,
+                        Value = Item.Value,
+                        Uncertanity = Item.Uncertanity,
+                        E = Math.Round(E, ResultDigits)
+                    }
+                );
+            }
 
             return Result;
         }
@@ -330,7 +383,7 @@ namespace KCRV_Statistics.Model.MathService
         /// <summary>
         /// Метод для составления списка всех показателей для полученной выборки.
         /// </summary>
-        public static List<OutputData> CalculateAllMethods (List<RegularData> Data, int IterationDigits, int ResultDigits)
+        public static List<OutputData> CalculateAllMethods (ref List<RegularData> Data, int IterationDigits, int ResultDigits)
         {
             List<OutputData> Result = new List<OutputData>();
 
@@ -339,6 +392,8 @@ namespace KCRV_Statistics.Model.MathService
             var median          = Median        (Data, IterationDigits, ResultDigits);
             var mandelPaule     = MandelPaule   (Data, weightedMean.X, IterationDigits, ResultDigits);
             var derSimonian     = DerSimonian   (Data, weightedMean.X, IterationDigits, ResultDigits);
+
+            Data = GetEnValues(Data, mandelPaule, ResultDigits);
 
             Result.Add(mean);
             Result.Add(weightedMean);

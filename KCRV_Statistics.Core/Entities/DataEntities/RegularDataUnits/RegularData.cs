@@ -18,7 +18,7 @@
         /// </summary>
         public double Uncertanity { get; set; }
         /// <summary>
-        /// 
+        /// Значение критерия En. Вычисляется только после расчёта аттестуемой характеристики по методу Мандель-Пауля
         /// </summary>
         public double E { get; set; }
     }

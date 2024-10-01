@@ -121,7 +121,7 @@ namespace KCRV_Statistics.UI.ViewModels.IntermediateWindows
                             }
 
                             // Расчёт значений, присвоение результатов вычислений статическому полю 
-                            var Result = Estimators.CalculateAllMethods(AppData.CurrentData, IterationDigits, ResultDigits);
+                            var Result = Estimators.CalculateAllMethods(ref AppData.CurrentData, IterationDigits, ResultDigits);
                             AppData.OutputData.Clear();
                             AppData.OutputData = Result;
 

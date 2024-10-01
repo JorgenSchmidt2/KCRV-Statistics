@@ -1,7 +1,7 @@
 ﻿namespace KCRV_Statistics.Core.Entities.DataEntities.RegularDataUnits
 {
     /// <summary>
-    /// Выходной набор данных для одного результата по алгоритму
+    /// Содержит результаты расчёта аттестуемой характеристики по одному из методов
     /// </summary>
     public class OutputData
     {
@@ -10,15 +10,15 @@
         /// </summary>
         public string MethodName { get; set; }
         /// <summary>
-        /// Содержит результаты работы алгоритмов
+        /// Значение аттестуемой характеристики
         /// </summary>
         public double X { get; set; }
         /// <summary>
-        /// Содержит неопределённость результатов работы алгоритмы
+        /// Значение неопределённости аттестуемой характеристики
         /// </summary>
         public double U { get; set; }
         /// <summary>
-        /// 
+        /// Значение добавочной дисперсии
         /// </summary>
         public double InterLabVariance { get; set; }
     }

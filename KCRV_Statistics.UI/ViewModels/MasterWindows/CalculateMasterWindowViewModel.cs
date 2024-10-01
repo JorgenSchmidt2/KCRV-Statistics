@@ -357,6 +357,8 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
                             FolderName,
                             AppFileFormats.TXT
                         );
+
+                        MessageBox.Show("Успешно!");
                     }
                 );
             }
