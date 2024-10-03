@@ -1,4 +1,5 @@
-﻿using KCRV_Statistics.Core.Entities.FileSystemEntites;
+﻿using KCRV_Statistics.Core.Entities.DataEntities.RegularDataUnits;
+using KCRV_Statistics.Core.Entities.FileSystemEntites;
 
 namespace KCRV_Statistics.Model.DataOperatorsService.Lists
 {
@@ -67,6 +68,30 @@ namespace KCRV_Statistics.Model.DataOperatorsService.Lists
                         Directory = item.Directory,
                         FileName = item.FileName
                     }
+                );
+            }
+
+            return Result;
+        }
+
+        #endregion
+
+        #region Для сущностей RegularData
+
+        public static List<RegularData> CopyRegularDataListEntities(List<RegularData> Input)
+        {
+            List<RegularData> Result = new List<RegularData>();
+
+            foreach (var Item in Input)
+            {
+                Result.Add(
+                    new RegularData
+                    {
+                        LaboratoryNumber = Item.LaboratoryNumber,
+                        Value = Item.Value,
+                        Uncertanity = Item.Uncertanity,
+                        E = Item.E
+                    }    
                 );
             }
 
