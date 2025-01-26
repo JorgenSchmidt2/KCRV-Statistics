@@ -68,7 +68,6 @@ namespace KCRV_Statistics.Model.MathService
 
         #endregion
 
-
         #region Метод WeightedMean
 
         /// <summary>
@@ -119,7 +118,6 @@ namespace KCRV_Statistics.Model.MathService
         }
 
         #endregion
-
 
         #region Метод Median и всё что с ними связано
 
@@ -305,7 +303,10 @@ namespace KCRV_Statistics.Model.MathService
 
         #region Метод MandelPaule
 
-        public static OutputData MandelPaule(List<RegularData> Data, double WeightedMeanValue, int IterationDigits, int ResultDigits)
+        /// <summary>
+        /// Находит значение KCRV, его неопределённость и добавочную по методу Мандель-Пауля.
+        /// </summary>
+        public static OutputData MandelPaule(List<RegularData> Data, int IterationDigits, int ResultDigits)
         {
             // Если оба входных показателя, отвечающих за округление равны 0, то 
             // им присваивается значение, равное соответствующим константам
@@ -318,7 +319,7 @@ namespace KCRV_Statistics.Model.MathService
             OutputData Result = new OutputData();
             Result.MethodName = KCRV_MethodsNames.MandelPaule;
 
-            // Временное значение
+            // Расчёт добавочной дисперсии для метода Мандель-Пауля
             double AddDispersion = CalculateAddDispForMandelPaule(Data, 15);
             Result.InterLabVariance = Math.Round(AddDispersion, ResultDigits);
 
@@ -347,12 +348,176 @@ namespace KCRV_Statistics.Model.MathService
 
         #endregion
 
+        #region Huber
+        /// <summary>
+        /// Расчёт показателя по методу Хубера (переписать)
+        /// </summary>
+        public static OutputData Huber(List<RegularData> Data, int IterationDigits, int ResultDigits)
+        {
+            OutputData Result = new OutputData();
+            Result.MethodName = KCRV_MethodsNames.Huber;
+
+            try
+            {
+                // Если оба входных показателя, отвечающих за округление равны 0, то 
+                // им присваивается значение, равное соответствующим константам
+                if (IterationDigits == 0 && ResultDigits == 0)
+                {
+                    IterationDigits = DefaultIterationDigits;
+                    ResultDigits = DefaultResultDigits;
+                }
+
+                var EstimateValue = 0;
+
+                var MedianValue = Median(Data, IterationDigits, ResultDigits).X;
+                var SkoEstimate = RobustSKO(Data, MedianValue, IterationDigits, ResultDigits);
+                var IntermediateResult = SkoEstimate;
+
+                var counter = 0;
+                while (true)
+                {
+                    var W = 0.0;
+                    var LocalHUB = IntermediateResult;
+                    IntermediateResult = 0;
+
+                    foreach (var item in Data) 
+                    {
+                        var current_v = 0.0;
+                        if (1.345 * SkoEstimate < Math.Abs(item.Value - LocalHUB))
+                            current_v = 1.345 * SkoEstimate / Math.Abs(item.Value - LocalHUB);
+                        else
+                            current_v = 1;
+
+                        IntermediateResult += item.Value * current_v;
+                        W += current_v;
+                    }
+
+                    IntermediateResult /= W;
+                    SkoEstimate = RobustSKO(Data, IntermediateResult, IterationDigits, ResultDigits);
+
+                    counter++;
+                    if (Math.Abs(IntermediateResult - LocalHUB) >= 0) break;
+                    else if (counter >= 4000) throw new Exception("Количество итераций превысило допустимые пределы (4000).");
+                }
+
+                Result.X = SkoEstimate * Math.Sqrt(1 / 0.95 / Data.Count());
+                Result.U = Math.Sqrt(Math.Pow(SkoEstimate, 2) / Math.E);
+
+                return Result;
+            }
+            catch (Exception e)
+            {
+                GetMessageBox.Show("Метод " + Result.MethodName + " был рассчитан с ошибкой: \n" + e.Message);
+                Result.X = 0;
+                Result.U = 0;
+                return Result;
+            }
+        } 
+
+        private static double RobustSKO(List<RegularData> Data, double Value, int IterationDigits, int ResultDigits)
+        {
+            List<RegularData> Yonda = new List<RegularData>();
+
+            foreach (var Item in Data) Yonda.Add( new RegularData { Value = Math.Abs(Item.Value - Value) });
+
+            return Median(Yonda, IterationDigits, ResultDigits).X * 1.483;
+        }
+        #endregion
+
+        #region GOST
+
+        public static OutputData GOST(List<RegularData> Data, int IterationDigits, int ResultDigits)
+        {
+            // Если оба входных показателя, отвечающих за округление равны 0, то 
+            // им присваивается значение, равное соответствующим константам
+            if (IterationDigits == 0 && ResultDigits == 0)
+            {
+                IterationDigits = DefaultIterationDigits;
+                ResultDigits = DefaultResultDigits;
+            }
+
+            OutputData Result = new OutputData();
+            Result.MethodName = KCRV_MethodsNames.GOST;
+
+
+
+            return Result;
+        }
+
+        #endregion
+
+        #region A
+
+        public static OutputData A(List<RegularData> Data, int IterationDigits, int ResultDigits)
+        {
+            // Если оба входных показателя, отвечающих за округление равны 0, то 
+            // им присваивается значение, равное соответствующим константам
+            if (IterationDigits == 0 && ResultDigits == 0)
+            {
+                IterationDigits = DefaultIterationDigits;
+                ResultDigits = DefaultResultDigits;
+            }
+
+            OutputData Result = new OutputData();
+            Result.MethodName = KCRV_MethodsNames.A;
+
+
+
+            return Result;
+        }
+
+        #endregion
+
+        #region MonteCarlo
+
+        public static OutputData MonteCarlo(List<RegularData> Data, int IterationDigits, int ResultDigits)
+        {
+            // Если оба входных показателя, отвечающих за округление равны 0, то 
+            // им присваивается значение, равное соответствующим константам
+            if (IterationDigits == 0 && ResultDigits == 0)
+            {
+                IterationDigits = DefaultIterationDigits;
+                ResultDigits = DefaultResultDigits;
+            }
+
+            OutputData Result = new OutputData();
+            Result.MethodName = KCRV_MethodsNames.MonteCarlo;
+
+
+
+            return Result;
+        }
+
+        #endregion
+
+        #region PMA
+
+        public static OutputData PMA(List<RegularData> Data, int IterationDigits, int ResultDigits)
+        {
+            // Если оба входных показателя, отвечающих за округление равны 0, то 
+            // им присваивается значение, равное соответствующим константам
+            if (IterationDigits == 0 && ResultDigits == 0)
+            {
+                IterationDigits = DefaultIterationDigits;
+                ResultDigits = DefaultResultDigits;
+            }
+
+            OutputData Result = new OutputData();
+            Result.MethodName = KCRV_MethodsNames.PMA;
+
+
+
+            return Result;
+        }
+
+        #endregion
+
         #region Другие операции
 
         /// <summary>
         /// Позволяет рассчитать En критерий для каждого результата лабораторий
         /// </summary>
-        public static List<RegularData> GetEnValues(List<RegularData> Data, OutputData MandelPaule, int ResultDigits)
+        public static List<RegularData> GetEnValues(List<RegularData> Data, OutputData CertifiedCharacteristic, int ResultDigits)
         {
             // Если оба входных показателя, отвечающих за округление равны 0, то 
             // им присваивается значение, равное соответствующим константам
@@ -365,7 +530,7 @@ namespace KCRV_Statistics.Model.MathService
 
             foreach (var Item in Data)
             {
-                var E = (Item.Value - MandelPaule.X) / 2 / Math.Sqrt(Math.Pow(Item.Uncertanity, 2) + Math.Pow(MandelPaule.U, 2));
+                var E = (Item.Value - CertifiedCharacteristic.X) / 2 / Math.Sqrt(Math.Pow(Item.Uncertanity, 2) + Math.Pow(CertifiedCharacteristic.U, 2));
                 Result.Add(
                     new RegularData()
                     {
@@ -392,8 +557,22 @@ namespace KCRV_Statistics.Model.MathService
             double CriticalSquared = ChiSquared.InvCDF(Data.Count() - 1, 1 - 0.05);
 
             // Добавочная дисперсия и шаг по ней
-            double AddDispersion = 0.5;
+            double AddDispersion = 10;
             double StepDisp = AddDispersion / 2;
+
+            // Инициализация определителя шага (позитивный или негативный)
+            bool IsNegativeStep;
+            double InitialNaturalSquared = GetNaturalSquared_MandelPaule(
+                Data, 
+                AddDispersion, 
+                GetLambdaCharacteristics_MandelPaule(Data, AddDispersion)
+            );
+            if (CriticalSquared > InitialNaturalSquared)
+                IsNegativeStep = true;
+            else 
+                IsNegativeStep = false;
+
+            int counter = 0;
 
             // Начало вычисления добавочной дисперсии
             while (true)
@@ -410,15 +589,32 @@ namespace KCRV_Statistics.Model.MathService
                     Result = Math.Sqrt(AddDispersion);
                     break;
                 }
-                else if (CriticalSquared >= NaturalSquared)
+                else if (CriticalSquared > NaturalSquared)
                 {
                     AddDispersion -= StepDisp;
-                    StepDisp /= 2;
+
+                    if (AddDispersion < 0)
+                    {
+                        AddDispersion = Math.Abs(AddDispersion);
+                        StepDisp /= 2;
+                    }
+
+                    if (!IsNegativeStep)
+                        StepDisp /= 2;
                 }
-                else if (CriticalSquared <= NaturalSquared)
+                else if (CriticalSquared < NaturalSquared)
                 {
-                    AddDispersion += StepDisp;
-                    StepDisp /= 2;
+                    AddDispersion += StepDisp; 
+                    if (IsNegativeStep)
+                        StepDisp /= 2;
+                }
+
+                counter++;
+                if (counter == 100)
+                {
+                    GetMessageBox.Show("К сожалению не удалось рассчитать добавочную дисперсию для метода Мандель-Пауля.");
+                    Result = 0;
+                    break;
                 }
             }
 
@@ -462,23 +658,21 @@ namespace KCRV_Statistics.Model.MathService
         /// <summary>
         /// Метод для составления списка всех показателей для полученной выборки.
         /// </summary>
-        public static List<OutputData> CalculateAllMethods (ref List<RegularData> Data, int IterationDigits, int ResultDigits)
+        public static List<OutputData> CalculateAllMethods (List<RegularData> Data, int IterationDigits, int ResultDigits)
         {
             List<OutputData> Result = new List<OutputData>();
 
             var mean            = Mean          (Data, IterationDigits, ResultDigits);
             var weightedMean    = WeightedMean  (Data, IterationDigits, ResultDigits);
             var median          = Median        (Data, IterationDigits, ResultDigits);
-            var mandelPaule     = MandelPaule   (Data, weightedMean.X, IterationDigits, ResultDigits);
             var derSimonian     = DerSimonian   (Data, weightedMean.X, IterationDigits, ResultDigits);
-
-            Data = GetEnValues(Data, mandelPaule, ResultDigits);
+            var mandelPaule     = MandelPaule   (Data, IterationDigits, ResultDigits);
 
             Result.Add(mean);
             Result.Add(weightedMean);
             Result.Add(median);
-            Result.Add(mandelPaule);
             Result.Add(derSimonian);
+            Result.Add(mandelPaule);
 
             return Result;
         }

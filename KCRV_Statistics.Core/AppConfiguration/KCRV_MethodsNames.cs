@@ -25,5 +25,25 @@
         /// Название метода MandelPaule.
         /// </summary>
         public readonly static string MandelPaule = "MandelPaule";
+        /// <summary>
+        /// Название метода Huber.
+        /// </summary>
+        public readonly static string Huber = "Huber";
+        /// <summary>
+        /// Название метода GOST
+        /// </summary>
+        public readonly static string GOST = "GOST";
+        /// <summary>
+        /// Название метода A
+        /// </summary>
+        public readonly static string A = "A";
+        /// <summary>
+        /// Название метода MonteCarlo
+        /// </summary>
+        public readonly static string MonteCarlo = "MonteCarlo";
+        /// <summary>
+        /// Название метода PMA
+        /// </summary>
+        public readonly static string PMA = "PMA";
     }
 }

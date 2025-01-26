@@ -1,8 +1,10 @@
 ﻿using KCRV_Statistics.Core.AppConfiguration;
 using KCRV_Statistics.Core.AppConstants;
+using KCRV_Statistics.Core.Entities.DataEntities.RegularDataUnits;
 using KCRV_Statistics.Core.Entities.GraphicsShellEntities;
 using KCRV_Statistics.Model.FileService.Writers;
 using KCRV_Statistics.Model.GraphicsShell;
+using KCRV_Statistics.Model.MathService;
 using KCRV_Statistics.UI.AppService;
 using System;
 using System.Collections.Generic;
@@ -318,11 +320,31 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
                             return;
                         }
 
+                        var truelistcount = ViewedOutputData
+                                .Where(x => x.IsChoised)
+                                .Select(x => x)
+                                .Count();
+
+                        if (truelistcount != 1)
+                        {
+                            MessageBox.Show("Должен быть выбран ровно один элемент");
+                            return;
+                        }
+
+                        var choised = ViewedOutputData.FirstOrDefault(x => x.IsChoised);
+                        var sert_cha = new OutputData()
+                        {
+                            InterLabVariance = choised.InterLabVariance,
+                            X = choised.X,
+                            U = choised.U,
+                        };
+                        var EnList = Estimators.GetEnValues(AppData.CurrentData, sert_cha, 4);
+
                         // Временный вариант вывода результатов.
                         string Content = "Результаты лабораторий: \n"
                                + "N\tX\tU\tE\n";
 
-                        foreach (var Item in AppData.CurrentData)
+                        foreach (var Item in EnList)
                         {
                             Content += Item.LaboratoryNumber + "\t"
                                      + Item.Value + "\t"
