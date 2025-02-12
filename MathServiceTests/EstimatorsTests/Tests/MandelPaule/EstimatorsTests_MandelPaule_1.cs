@@ -15,19 +15,19 @@ namespace MathServiceTests.EstimatorsTests.Tests.MandelPaule
         [TestMethod]
         public void MandelPaule_X_test_1_DEF()
         {
-            double result = Estimators.MandelPaule(Estimators_Data_1.TestData, 10.1921646106683, 15, ResDigits).X;
+            double result = Estimators.MandelPaule(Estimators_Data_1.TestData, 15, ResDigits).X;
             Assert.AreEqual(Math.Round(10.017421554264, ResDigits), result);
         }
         [TestMethod]
         public void MandelPaule_U_test_2_DEF()
         {
-            double result = Estimators.MandelPaule(Estimators_Data_1.TestData, 10.1921646106683, 15, ResDigits).U;
+            double result = Estimators.MandelPaule(Estimators_Data_1.TestData, 15, ResDigits).U;
             Assert.AreEqual(Math.Round(0.12008449913461, ResDigits), result);
         }
         [TestMethod]
         public void MandelPaule_λ_test_3_DEF()
         {
-            double result = Estimators.MandelPaule(Estimators_Data_1.TestData, 10.1921646106683, 15, ResDigits).InterLabVariance;
+            double result = Estimators.MandelPaule(Estimators_Data_1.TestData, 15, ResDigits).InterLabVariance;
             Assert.AreEqual(Math.Round(0.350737906431726, ResDigits), result);
         }
     }

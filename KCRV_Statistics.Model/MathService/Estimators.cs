@@ -1,4 +1,6 @@
-﻿using KCRV_Statistics.Core.AppConfiguration;
+﻿using System.Diagnostics.Metrics;
+using System.Windows;
+using KCRV_Statistics.Core.AppConfiguration;
 using KCRV_Statistics.Core.Entities.DataEntities.RegularDataUnits;
 using KCRV_Statistics.Model.MessageService.MessageBoxService;
 using MathNet.Numerics.Distributions;
@@ -172,8 +174,13 @@ namespace KCRV_Statistics.Model.MathService
         /// <returns></returns>
         public static OutputData Median(List<RegularData> Data, int IterationDigits, int ResultDigits)
         {
+            OutputData Result = new OutputData();
+            Result.MethodName = KCRV_MethodsNames.Median;
+
             try
             {
+                if (Data.Count() == 0) throw new Exception("Длина списка входных элементов равнялась нулю.");
+
                 // Если оба входных показателя, отвечающих за округление равны 0, то 
                 // им присваивается значение, равное соответствующим константам
                 if (IterationDigits == 0 && ResultDigits == 0)
@@ -181,9 +188,6 @@ namespace KCRV_Statistics.Model.MathService
                     IterationDigits = DefaultIterationDigits;
                     ResultDigits = DefaultResultDigits;
                 }
-
-                OutputData Result = new OutputData();
-                Result.MethodName = KCRV_MethodsNames.Median;
 
                 // Нахождение медианы
                 Data = Data.OrderBy(x => x.Value).ToList();
@@ -319,43 +323,124 @@ namespace KCRV_Statistics.Model.MathService
             OutputData Result = new OutputData();
             Result.MethodName = KCRV_MethodsNames.MandelPaule;
 
-            // Расчёт добавочной дисперсии для метода Мандель-Пауля
-            double AddDispersion = CalculateAddDispForMandelPaule(Data, 15);
-            Result.InterLabVariance = Math.Round(AddDispersion, ResultDigits);
-
-            // Расчёт показателя KCRV и его неопределённости, в первую очередь посчитаем значение знаменателя числа w
-            double w_denominator = 0;
-            foreach (var Item in Data)
+            try
             {
-                w_denominator = Math.Round(w_denominator + 1 / (Math.Pow(Item.Uncertanity, 2) + Math.Pow(AddDispersion, 2)), IterationDigits);
-            }
+                // Расчёт добавочной дисперсии для метода Мандель-Пауля
+                double AddDispersion = CalculateAddDispForMandelPaule(Data, 15);
+                Result.InterLabVariance = Math.Round(AddDispersion, ResultDigits);
 
-            // Начало расчёта показателя KCRV
-            double X = 0;
-            foreach (var Item in Data)
+                // Расчёт показателя KCRV и его неопределённости, в первую очередь посчитаем значение знаменателя числа w
+                double w_denominator = 0;
+                foreach (var Item in Data)
+                {
+                    w_denominator = Math.Round(w_denominator + 1 / (Math.Pow(Item.Uncertanity, 2) + Math.Pow(AddDispersion, 2)), IterationDigits);
+                }
+
+                // Начало расчёта показателя KCRV
+                double X = 0;
+                foreach (var Item in Data)
+                {
+                    var w = (1 / (Math.Pow(Item.Uncertanity, 2) + Math.Pow(AddDispersion, 2))) / w_denominator;
+                    X = Math.Round(X + w * Item.Value, IterationDigits);
+                }
+                Result.X = Math.Round(X, ResultDigits);
+
+                // Расчёт показателя неопределённости KCRV
+                double U = Math.Sqrt(1 / w_denominator);
+                Result.U = Math.Round(U, ResultDigits);
+
+                return Result;
+            }
+            catch (Exception e)
             {
-                var w = (1 / (Math.Pow(Item.Uncertanity, 2) + Math.Pow(AddDispersion, 2))) / w_denominator;
-                X = Math.Round(X + w * Item.Value, IterationDigits);
+                GetMessageBox.Show("Метод " + Result.MethodName + " был рассчитан с ошибкой: \n" + e.Message);
+                return Result;
             }
-            Result.X = Math.Round(X, ResultDigits);
-
-            // Расчёт показателя неопределённости KCRV
-            double U = Math.Sqrt(1 / w_denominator);
-            Result.U = Math.Round(U, ResultDigits);
-
-            return Result;
         }
 
         #endregion
 
         #region Huber
         /// <summary>
-        /// Расчёт показателя по методу Хубера (переписать)
+        /// Расчёт показателя по методу Хубера
         /// </summary>
         public static OutputData Huber(List<RegularData> Data, int IterationDigits, int ResultDigits)
         {
             OutputData Result = new OutputData();
             Result.MethodName = KCRV_MethodsNames.Huber;
+
+            try
+            {
+                if (Data.Count() == 0) throw new Exception("Длина списка входных элементов равнялась нулю.");
+
+                // Если оба входных показателя, отвечающих за округление равны 0, то 
+                // им присваивается значение, равное соответствующим константам
+                if (IterationDigits == 0 && ResultDigits == 0)
+                {
+                    IterationDigits = DefaultIterationDigits;
+                    ResultDigits = DefaultResultDigits;
+                }
+
+                var MedianValue = Median(Data, IterationDigits, ResultDigits).X;
+                var SkoEstimate = RobustSKO(Data, MedianValue, IterationDigits, ResultDigits);
+                var IntermediateResult = MedianValue;
+
+                var Counter = 0;
+                while (true)
+                {
+                    var W = 0.0;
+                    var LocalHUB = IntermediateResult;
+                    IntermediateResult = 0;
+
+                    foreach (var item in Data) 
+                    {
+                        var current_v = 0.0;
+                        if (1.345 * SkoEstimate < Math.Abs(item.Value - LocalHUB))
+                            current_v = Math.Round(1.345 * SkoEstimate / Math.Abs(item.Value - LocalHUB), IterationDigits);
+                        else
+                            current_v = 1;
+
+                        IntermediateResult = Math.Round(IntermediateResult + item.Value * current_v, IterationDigits);
+                        W = Math.Round(W + current_v, IterationDigits);
+                    }
+
+                    IntermediateResult = Math.Round(IntermediateResult / W, IterationDigits);
+                    SkoEstimate = RobustSKO(Data, IntermediateResult, IterationDigits, ResultDigits);
+
+                    Counter++;
+                    if (Math.Abs(IntermediateResult - LocalHUB) <= 0.00001) 
+                        break;
+                    if (Counter >= 4000) 
+                        throw new Exception("Количество итераций превысило допустимые пределы (4000).");
+                }
+
+                Result.X = Math.Round(
+                    IntermediateResult,
+                    ResultDigits
+                );
+                Result.U = Math.Round(
+                    Math.Sqrt(Math.Pow(SkoEstimate, 2) / (0.95 * Data.Count)),
+                    ResultDigits
+                );
+
+                return Result;
+            }
+            catch (Exception e)
+            {
+                GetMessageBox.Show("Метод " + Result.MethodName + " был рассчитан с ошибкой: \n" + e.Message);
+                return Result;
+            }
+        } 
+
+        
+        #endregion
+
+        #region GOST (треб. правки)
+
+        public static OutputData GOST(List<RegularData> Data, int IterationDigits, int ResultDigits)
+        {
+            OutputData Result = new OutputData();
+            Result.MethodName = KCRV_MethodsNames.GOST;
 
             try
             {
@@ -367,86 +452,71 @@ namespace KCRV_Statistics.Model.MathService
                     ResultDigits = DefaultResultDigits;
                 }
 
-                var EstimateValue = 0;
+                if (Data.Count() == 0) throw new Exception("Длина списка входных элементов равнялась нулю.");
 
-                var MedianValue = Median(Data, IterationDigits, ResultDigits).X;
-                var SkoEstimate = RobustSKO(Data, MedianValue, IterationDigits, ResultDigits);
-                var IntermediateResult = SkoEstimate;
+                List<RegularData> DataDiff = new List<RegularData>();
 
-                var counter = 0;
-                while (true)
+                // Медиана ненулевых отклонений
+                double Mad = 0;
+
+                // Значение медианы выборки
+                double MedianValue = Median(Data, IterationDigits, ResultDigits).X;
+
+                // Расчёт значений для медианы ненулевых отклонений
+                foreach (var item in Data) DataDiff.Add(new RegularData { Value = Math.Abs(item.Value - MedianValue) });
+
+                List<RegularData> DataDiffWithoutZero = new List<RegularData>();
+
+                foreach (var item in DataDiff)
+                    if (item.Value != 0) DataDiffWithoutZero.Add(item);
+
+                Mad = Median(DataDiffWithoutZero, IterationDigits, ResultDigits).X;
+
+                if (DataDiff.Max(obj => obj.Value) <= 3 * Mad)
                 {
-                    var W = 0.0;
-                    var LocalHUB = IntermediateResult;
-                    IntermediateResult = 0;
-
-                    foreach (var item in Data) 
-                    {
-                        var current_v = 0.0;
-                        if (1.345 * SkoEstimate < Math.Abs(item.Value - LocalHUB))
-                            current_v = 1.345 * SkoEstimate / Math.Abs(item.Value - LocalHUB);
-                        else
-                            current_v = 1;
-
-                        IntermediateResult += item.Value * current_v;
-                        W += current_v;
-                    }
-
-                    IntermediateResult /= W;
-                    SkoEstimate = RobustSKO(Data, IntermediateResult, IterationDigits, ResultDigits);
-
-                    counter++;
-                    if (Math.Abs(IntermediateResult - LocalHUB) >= 0) break;
-                    else if (counter >= 4000) throw new Exception("Количество итераций превысило допустимые пределы (4000).");
+                    var MeanValue = Mean(Data, IterationDigits, ResultDigits);
+                    Result.X = MeanValue.X;
+                    Result.U = MeanValue.U;
                 }
+                else
+                {
+                    double summ_w = 0;
+                    double gos = 0;
+                    int Counter = 0;
+                    foreach (var item in DataDiff)
+                    {
+                        double w_value = 0;
+                        if (item.Value < 5.2 * Mad && item.Value != 0)
+                        {
+                            w_value = Math.Pow(
+                                1 - Math.Pow(item.Value / 5.2 / Mad, 2), 2
+                            );
+                        }
+                        summ_w = Math.Round(summ_w + w_value, IterationDigits);
 
-                Result.X = SkoEstimate * Math.Sqrt(1 / 0.95 / Data.Count());
-                Result.U = Math.Sqrt(Math.Pow(SkoEstimate, 2) / Math.E);
+                        if (Counter >= DataDiff.Count())
+                            throw new Exception("Количество значений исходных данных превысило количество значений модулей от разницы значения и медианы выборки.");
+                        gos = Math.Round(gos + w_value * Data[Counter].Value, IterationDigits);
+
+                        Counter += 1;
+                    }
+                    gos /= summ_w;
+                    Result.X = RobustSKO(Data, gos, IterationDigits, ResultDigits);
+                    Result.U = (gos * 1.483) / Math.Sqrt(Data.Count);
+                }
 
                 return Result;
             }
             catch (Exception e)
             {
                 GetMessageBox.Show("Метод " + Result.MethodName + " был рассчитан с ошибкой: \n" + e.Message);
-                Result.X = 0;
-                Result.U = 0;
                 return Result;
             }
-        } 
-
-        private static double RobustSKO(List<RegularData> Data, double Value, int IterationDigits, int ResultDigits)
-        {
-            List<RegularData> Yonda = new List<RegularData>();
-
-            foreach (var Item in Data) Yonda.Add( new RegularData { Value = Math.Abs(Item.Value - Value) });
-
-            return Median(Yonda, IterationDigits, ResultDigits).X * 1.483;
-        }
-        #endregion
-
-        #region GOST
-
-        public static OutputData GOST(List<RegularData> Data, int IterationDigits, int ResultDigits)
-        {
-            // Если оба входных показателя, отвечающих за округление равны 0, то 
-            // им присваивается значение, равное соответствующим константам
-            if (IterationDigits == 0 && ResultDigits == 0)
-            {
-                IterationDigits = DefaultIterationDigits;
-                ResultDigits = DefaultResultDigits;
-            }
-
-            OutputData Result = new OutputData();
-            Result.MethodName = KCRV_MethodsNames.GOST;
-
-
-
-            return Result;
         }
 
         #endregion
 
-        #region A
+        #region A (треб. правки)
 
         public static OutputData A(List<RegularData> Data, int IterationDigits, int ResultDigits)
         {
@@ -461,36 +531,56 @@ namespace KCRV_Statistics.Model.MathService
             OutputData Result = new OutputData();
             Result.MethodName = KCRV_MethodsNames.A;
 
-
-
-            return Result;
-        }
-
-        #endregion
-
-        #region MonteCarlo
-
-        public static OutputData MonteCarlo(List<RegularData> Data, int IterationDigits, int ResultDigits)
-        {
-            // Если оба входных показателя, отвечающих за округление равны 0, то 
-            // им присваивается значение, равное соответствующим константам
-            if (IterationDigits == 0 && ResultDigits == 0)
+            try
             {
-                IterationDigits = DefaultIterationDigits;
-                ResultDigits = DefaultResultDigits;
+                var InternalAccuracy = 5;
+                var MedianValue = Median(Data, IterationDigits, ResultDigits).X;
+                var RobustValue = RobustSKO(Data, MedianValue, IterationDigits, ResultDigits);
+                var ChangedRobustValue = RobustValue;
+                var CountSQRT = Math.Sqrt(Data.Count);
+
+                int Counter = 0;
+                double ResultValue = 0;
+
+                while (true)
+                {
+                    double MeanA = MedianValue;
+                    ResultValue = ChangedRobustValue;
+                    List<double> ChangedList = new List<double>();
+
+                    foreach (var Item in Data)
+                    {
+                        if (Item.Value < MeanA - 1.5 * ChangedRobustValue) ChangedList.Add(MeanA - 1.5 * ChangedRobustValue);
+                        else if (Item.Value > MeanA + 1.5 * ChangedRobustValue) ChangedList.Add(MeanA + 1.5 * ChangedRobustValue);
+                        else ChangedList.Add(Item.Value);
+                    }
+
+                    Mean_A_Method(ChangedList, out MeanA, out ChangedRobustValue, IterationDigits, ResultDigits); // Void метод!!! 
+                    ChangedRobustValue = Math.Round(ChangedRobustValue*CountSQRT*1.134, IterationDigits);
+
+                    Counter++;
+                    if (( Math.Round(MeanA, InternalAccuracy) == Math.Round(MedianValue, InternalAccuracy)
+                    &&    Math.Round(ResultValue, InternalAccuracy) == Math.Round(ChangedRobustValue, InternalAccuracy)))
+                    {
+                        break;
+                    }
+                    if (Counter >= 4000) throw new Exception("Количество итераций превысило допустимые пределы (4000).");
+                }
+
+                Result.X = ResultValue;
+                Result.U = ResultValue/CountSQRT;
+                return Result;
             }
-
-            OutputData Result = new OutputData();
-            Result.MethodName = KCRV_MethodsNames.MonteCarlo;
-
-
-
-            return Result;
+            catch (Exception e)
+            {
+                GetMessageBox.Show("Метод " + Result.MethodName + " был рассчитан с ошибкой: \n" + e.Message);
+                return Result;
+            }
         }
 
         #endregion
 
-        #region PMA
+        #region PMA (треб. правки)
 
         public static OutputData PMA(List<RegularData> Data, int IterationDigits, int ResultDigits)
         {
@@ -513,6 +603,32 @@ namespace KCRV_Statistics.Model.MathService
         #endregion
 
         #region Другие операции
+
+        public static void Mean_A_Method(List<double> Data, out double MeanValue, out double SKO_Value, int IterationDigits, int ResultDigits)
+        {
+            if (Data.Count() == 0) throw new Exception("Изменённая выборка оказалась пуста.");
+
+            MeanValue = 0;
+            SKO_Value = 0;
+
+            foreach (var Item in Data) MeanValue = Math.Round(MeanValue + Item);
+            MeanValue /= Data.Count();
+
+            foreach (var Item in Data) SKO_Value = Math.Round(SKO_Value + Math.Pow(Item - MeanValue,2));
+            SKO_Value = Math.Sqrt(SKO_Value/(Data.Count() - 1)/Data.Count());
+        } 
+
+        /// <summary>
+        /// Робастное среднеквадратичное отклонение
+        /// </summary>
+        private static double RobustSKO(List<RegularData> Data, double Value, int IterationDigits, int ResultDigits)
+        {
+            List<RegularData> Yonda = new List<RegularData>();
+
+            foreach (var Item in Data) Yonda.Add(new RegularData { Value = Math.Abs(Item.Value - Value) });
+
+            return Median(Yonda, IterationDigits, ResultDigits).X * 1.483;
+        }
 
         /// <summary>
         /// Позволяет рассчитать En критерий для каждого результата лабораторий

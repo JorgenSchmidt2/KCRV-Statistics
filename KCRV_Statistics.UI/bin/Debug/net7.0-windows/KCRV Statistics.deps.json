@@ -9,7 +9,9 @@
       "KCRV Statistics/1.0.0": {
         "dependencies": {
           "CalcModuleKCRV": "1.0.0",
-          "DataModuleKCRV": "1.0.0"
+          "DataModuleKCRV": "1.0.0",
+          "CalcModuleKCRV.Reference": "1.0.0.0",
+          "DataModuleKCRV.Reference": "1.0.0.0"
         },
         "runtime": {
           "KCRV Statistics.dll": {}
@@ -959,12 +961,34 @@
           "itext7": "7.2.5"
         },
         "runtime": {
-          "CalcModuleKCRV.dll": {}
+          "CalcModuleKCRV.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": ""
+          }
         }
       },
       "DataModuleKCRV/1.0.0": {
         "runtime": {
-          "DataModuleKCRV.dll": {}
+          "DataModuleKCRV.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": ""
+          }
+        }
+      },
+      "CalcModuleKCRV.Reference/1.0.0.0": {
+        "runtime": {
+          "CalcModuleKCRV.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "DataModuleKCRV.Reference/1.0.0.0": {
+        "runtime": {
+          "DataModuleKCRV.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       }
     }
@@ -1682,6 +1706,16 @@
     },
     "DataModuleKCRV/1.0.0": {
       "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "CalcModuleKCRV.Reference/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "DataModuleKCRV.Reference/1.0.0.0": {
+      "type": "reference",
       "serviceable": false,
       "sha512": ""
     }
