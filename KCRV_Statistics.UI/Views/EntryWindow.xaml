@@ -78,7 +78,7 @@
         <!--#region Управление и описание программы -->
         <Label Margin="546,23,0,0" Height="30" Width="150" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Открыть файл по ID:" />
         <TextBox x:Name="ID_Field" Text="{Binding ID_Field}" Margin="550,50,0,0" Height="20" Width="180" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Button Command="{Binding Calculate}" Margin="550, 83, 0, 0"  Height="25" Width="180" Content="Расчитать" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button Command="{Binding FindElementByID_Command}" Margin="550, 83, 0, 0"  Height="25" Width="180" Content="Расчитать" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <Button Command="{Binding ShowVisualization}" Margin="550, 117, 0, 0" Height="25" Width="180" Content="Визуализация данных" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <Button Command="{Binding ShortDescription}" Margin="550, 180, 0, 0" Height="30" Width="180" FontSize="10" HorizontalAlignment="Left" VerticalAlignment="Top">
             <TextBlock TextAlignment="Center">Краткое описание окон<LineBreak/>Расчитать / Визуализация данных</TextBlock>

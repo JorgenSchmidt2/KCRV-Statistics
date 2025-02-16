@@ -1,4 +1,10 @@
-﻿using KCRV_Statistics.Core.AppConfiguration;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Windows;
+using System.Windows.Input;
+using KCRV_Statistics.Core.AppConfiguration;
 using KCRV_Statistics.Core.AppConstants;
 using KCRV_Statistics.Core.Entities.DataEntities.RegularDataUnits;
 using KCRV_Statistics.Core.Entities.GraphicsShellEntities;
@@ -6,13 +12,6 @@ using KCRV_Statistics.Model.FileService.Writers;
 using KCRV_Statistics.Model.GraphicsShell;
 using KCRV_Statistics.Model.MathService;
 using KCRV_Statistics.UI.AppService;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Windows;
-using System.Windows.Input;
 
 namespace KCRV_Statistics.UI.ViewModels.MasterWindows
 {
@@ -223,44 +222,17 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
 
         #region Данные расчётов 
 
-        public List<ViewedOutputData> viewedOutputData = GraphicsShellService.GetViewedOutputData(AppData.OutputData);
+        public List<ViewedOutputData> viewedOutputDataList = GraphicsShellService.GetViewedOutputData(AppData.OutputData);
         /// <summary>
         /// Для отображения полученных показателей KCRV в виде списка значений "Значение-Погрешность"
         /// </summary>
-        public List<ViewedOutputData> ViewedOutputData
+        public List<ViewedOutputData> ViewedOutputDataList
         {
-            get { return viewedOutputData; }
+            get { return viewedOutputDataList; }
             set
             {
-                viewedOutputData = value;
+                viewedOutputDataList = value;
                 CheckChanges();
-            }
-        }
-
-        public Command ShowOnGraphic
-        {
-            get
-            {
-                return new Command(
-                    obj =>
-                    {
-                        var truelistcount = ViewedOutputData
-                                .Where(x => x.IsChoised)
-                                .Select(x => x)
-                                .Count();
-
-                        if (truelistcount != 1)
-                        {
-                            MessageBox.Show("Должен быть выбран ровно один элемент");
-                        }
-                        else
-                        {
-                            var choisedobj = ViewedOutputData.FirstOrDefault(x => x.IsChoised);
-
-                            KCRV_Data = GraphicsSketchers.GetKCRV_Lines(choisedobj, AppData.CurrentData);
-                        }
-                    }
-                );
             }
         }
         #endregion
@@ -317,7 +289,7 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
                             return;
                         }
 
-                        var truelistcount = ViewedOutputData
+                        var truelistcount = ViewedOutputDataList
                                 .Where(x => x.IsChoised)
                                 .Select(x => x)
                                 .Count();
@@ -328,7 +300,7 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
                             return;
                         }
 
-                        var choised = ViewedOutputData.FirstOrDefault(x => x.IsChoised);
+                        var choised = ViewedOutputDataList.FirstOrDefault(x => x.IsChoised);
                         var sert_cha = new OutputData()
                         {
                             InterLabVariance = choised.InterLabVariance,
@@ -451,6 +423,9 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
             ChoiseResult = new Command(ChoiseResultMethod);
         }
 
+        /// <summary>
+        /// Выбирает какой из результатов расчётов будет отображён на экране пользователю
+        /// </summary>
         private void ChoiseResultMethod(object parameter)
         {
             try
@@ -462,9 +437,36 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
                     return;
                 }
 
+                List<ViewedOutputData> NewList = new List<ViewedOutputData>();
 
+                foreach (var Item in ViewedOutputDataList)
+                {
+                    if (Item.MethodName.Equals(obj.MethodName)) 
+                        NewList.Add(new ViewedOutputData { 
+                            MethodName = Item.MethodName, 
+                            X = Item.X,
+                            U = Item.U,
+                            InterLabVariance = Item.InterLabVariance,
+                            IsChoised = true
+                        });
+                    else
+                    {
+                        NewList.Add(new ViewedOutputData
+                        {
+                            MethodName = Item.MethodName,
+                            X = Item.X,
+                            U = Item.U,
+                            InterLabVariance = Item.InterLabVariance,
+                            IsChoised = false
+                        });
+                    }
+                }
 
-                MessageBox.Show(obj.X.ToString() + "\n" + obj.U.ToString());
+                ViewedOutputDataList = NewList;
+
+                var choisedobj = ViewedOutputDataList.FirstOrDefault(x => x.IsChoised);
+
+                KCRV_Data = GraphicsSketchers.GetKCRV_Lines(choisedobj, AppData.CurrentData);
             }
             catch (Exception e)
             {

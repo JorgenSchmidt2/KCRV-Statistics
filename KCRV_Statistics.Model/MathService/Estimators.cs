@@ -780,13 +780,15 @@ namespace KCRV_Statistics.Model.MathService
             var weightedMean    = WeightedMean  (Data, IterationDigits, ResultDigits);
             var median          = Median        (Data, IterationDigits, ResultDigits);
             var derSimonian     = DerSimonian   (Data, weightedMean.X, IterationDigits, ResultDigits);
-            var mandelPaule     = MandelPaule   (Data, IterationDigits, ResultDigits);
+            //var mandelPaule     = MandelPaule   (Data, IterationDigits, ResultDigits);
+            var huber           = Huber (Data, IterationDigits, ResultDigits);
 
             Result.Add(mean);
             Result.Add(weightedMean);
             Result.Add(median);
             Result.Add(derSimonian);
-            Result.Add(mandelPaule);
+            //Result.Add(mandelPaule);
+            Result.Add(huber);
 
             return Result;
         }

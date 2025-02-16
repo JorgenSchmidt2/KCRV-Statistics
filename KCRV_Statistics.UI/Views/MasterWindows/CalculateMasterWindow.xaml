@@ -156,10 +156,10 @@
         
         
         <!--#region Список файлов -->
-        <ListView x:Name="ViewedOutputDataList" ItemsSource="{Binding ViewedOutputData}" Margin="650,40,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="340" Width="350">
+        <ListView x:Name="ViewedOutputData" ItemsSource="{Binding ViewedOutputDataList}" Margin="650,40,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="340" Width="350">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                    <i:InvokeCommandAction Command="{Binding ChoiseResult}" CommandParameter="{Binding SelectedItem, ElementName=ViewedOutputDataList}"/>
+                    <i:InvokeCommandAction Command="{Binding ChoiseResult}" CommandParameter="{Binding SelectedItem, ElementName=ViewedOutputData}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             <ListView.View>

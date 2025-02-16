@@ -23,23 +23,6 @@ namespace KCRV_Statistics.UI.ViewModels
     {
         #region Поиск
 
-        public bool mustReadingQuery = true;
-        /// <summary>
-        /// Отвечает за то, будет ли при выборе раздела учитываться содержимое запроса (свойство Query).
-        /// </summary>
-        public bool MustReadingQuery
-        {
-            get 
-            { 
-                return mustReadingQuery; 
-            }
-            set 
-            { 
-                mustReadingQuery = value;
-                CheckChanges();
-            }
-        }
-
         public string query; 
         /// <summary>
         /// Содержит запрос к файловой системе.
@@ -105,23 +88,6 @@ namespace KCRV_Statistics.UI.ViewModels
                 );
             }
         }
-
-        /// <summary>
-        /// Обновляет информацию о содержимом в папках с изменением AppData.AppFileData.
-        /// </summary>
-        public Command Update
-        {
-            get
-            {
-                return new Command(
-                    obj =>
-                    {
-                        MessageBox.Show("Isn't implemented.");
-                    }
-                );
-            }
-        }
-
         #endregion
 
         #region Список файлов и директорий
@@ -174,7 +140,10 @@ namespace KCRV_Statistics.UI.ViewModels
             }
         }
 
-        public Command Calculate // Требуется адаптировать под открытие .xlsx и json-csv файлов
+        /// <summary>
+        /// Находит и передаёт в нужный метод данные по файлу
+        /// </summary>
+        public Command FindElementByID_Command
         {
             get
             {
@@ -204,6 +173,7 @@ namespace KCRV_Statistics.UI.ViewModels
                                 return;
                             }
 
+                            // Открываем файл с помощью специально заготовленного универсального void-метода
                             OpenFile(fileInfo);
                         }
                         catch (Exception e)
@@ -319,6 +289,9 @@ namespace KCRV_Statistics.UI.ViewModels
         #region Выбор логики работы со списком файлов
 
         public bool mustBeViewed = true;
+        /// <summary>
+        /// Определяет, что при клике на элемент, будет отображено его содержимое
+        /// </summary>
         public bool MustBeViewed
         {
             get { return mustBeViewed; }
@@ -334,6 +307,9 @@ namespace KCRV_Statistics.UI.ViewModels
         }
 
         public bool mustToID = false;
+        /// <summary>
+        /// Определяет, что при клике на элемент, его ID будет помещён в соответсвующее поле
+        /// </summary>
         public bool MustToID
         {
             get { return mustToID; }
@@ -349,6 +325,9 @@ namespace KCRV_Statistics.UI.ViewModels
         }
 
         public bool mustBeReaded = false;
+        /// <summary>
+        /// Определяет, что при клике на элемент, будет открыт файл, данные которого соответствуют этому файлу
+        /// </summary>
         public bool MustBeReaded
         {
             get { return mustBeReaded; }
@@ -363,9 +342,15 @@ namespace KCRV_Statistics.UI.ViewModels
             }
         }
 
-        public bool ChangeFileChoisesInProcess = false;
+        /// <summary>
+        /// Дополнительная переменная для лучшего контроля над переключениями checkbutton'ов, отвечающих за выбор логики работы со списком файлов
+        /// </summary>
+        private bool ChangeFileChoisesInProcess = false;
 
-        public void ChangeFileChoises (bool Viewed, bool ToID, bool Readed)
+        /// <summary>
+        /// Переключает checkbutton'ы, которые отвечают за выбор логики работы со списком файлов
+        /// </summary>
+        private void ChangeFileChoises (bool Viewed, bool ToID, bool Readed)
         {
             if (ChangeFileChoisesInProcess)
             {
@@ -465,7 +450,9 @@ namespace KCRV_Statistics.UI.ViewModels
             SelectDirectoryCommand = new Command(SelectDirectory);
         }
 
-
+        /// <summary>
+        /// Позволяет по клику на конкретный элемент списка папок, определяемых конфигурацией пользователя, отобразить её содержимое в списке файлов
+        /// </summary>
         private void SelectDirectory(object parameter)
         {
             try
@@ -478,8 +465,10 @@ namespace KCRV_Statistics.UI.ViewModels
                     return;
                 }
 
+                // Создаём отдельный промежуточный список, который будет содержать ин-цию о том, какие папки будут открыты и на который впоследствии будет ссылаться основной список
                 List<ViewedDirectoryData> NewList = new List<ViewedDirectoryData>();
 
+                // Перебираем список директорий, создавая заново каждый элемент списка, в новом списке выбранный пользователем элемент обязательно должен изменить статус IsChoised
                 foreach (var Item in DirectoryDataEntities)
                 {
                     if (Item.DirectoryName.Equals(obj.DirectoryName))
@@ -488,6 +477,9 @@ namespace KCRV_Statistics.UI.ViewModels
                         NewList.Add(new ViewedDirectoryData { DirectoryName = Item.DirectoryName, IsChoised = Item.IsChoised });
                 }
 
+                // Если количество элементов с положительным статусом по полю IsChoised промежуточного списка оказалось равно нулю, ничего не происходит, все списки остаются без изменений
+                // Если глобальный список с выбранными для отображениями директориями содержит выбранный элемент, объект, соответствующий по полю DirName удаляется из списка
+                // В противном случае добавляется в список отображения директорий
                 if (AppData.ChoisedFolders.Contains(obj.DirectoryName) && NewList.Where(x => x.IsChoised == true).Select(x => x).Count() != 0)
                 {
                     AppData.ChoisedFolders.Remove(obj.DirectoryName);
@@ -498,6 +490,7 @@ namespace KCRV_Statistics.UI.ViewModels
                 }
                 else return;
 
+                // Даём ссылку основному списку элементов на составленный ранее
                 DirectoryDataEntities = NewList;
                 UpdateFileInfo();
             }
@@ -507,6 +500,9 @@ namespace KCRV_Statistics.UI.ViewModels
             }
         }
 
+        /// <summary>
+        /// Позволяет по клику на конкретный элемент списка файлов, произвести какие либо данные при помощи данных, содержащихся в элементе
+        /// </summary>
         private void SelectFile(object parameter)
         {
             try
@@ -514,6 +510,8 @@ namespace KCRV_Statistics.UI.ViewModels
                 FileDataEntity obj = (FileDataEntity)parameter;
                 if (obj == null) throw new Exception("Апкаст к целевому объекту не удался.");
 
+                // Определяем какое действие хочет произвести пользователь
+                // В зависимости от того, какое из полей приведено в состояние true, выполняем соответствующее действие
                 if (MustBeViewed)
                 {
                     var splits = obj.FileName.Split(".");
