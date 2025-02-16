@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Windows.Input;
 
 namespace KCRV_Statistics.UI.AppService
@@ -8,8 +9,14 @@ namespace KCRV_Statistics.UI.AppService
     /// </summary>
     public class Command : ICommand
     {
-        private Action<object> execute;
-        private Func<object, bool> canExecute;
+        private Action<object> _execute;
+        private Func<object, bool> _canExecute;
+
+        public Command(Action<object> execute, Func<object, bool> canExecute = null)
+        {
+            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
+            _canExecute = canExecute;
+        }
 
         public event EventHandler? CanExecuteChanged
         {
@@ -17,20 +24,14 @@ namespace KCRV_Statistics.UI.AppService
             remove { CommandManager.RequerySuggested -= value; }
         }
 
-        public Command(Action<object> _execute, Func<object, bool> _canExecute = null)
-        {
-            execute = _execute;
-            canExecute = _canExecute;
-        }
-
         public bool CanExecute(object parameter)
         {
-            return canExecute == null || canExecute(parameter);
+            return _canExecute == null || _canExecute(parameter);
         }
 
         public void Execute(object parameter)
         {
-            execute(parameter);
+            _execute(parameter);
         }
     }
 }

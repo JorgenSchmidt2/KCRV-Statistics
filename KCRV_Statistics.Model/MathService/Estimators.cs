@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.Metrics;
-using System.Windows;
-using KCRV_Statistics.Core.AppConfiguration;
+﻿using KCRV_Statistics.Core.AppConfiguration;
 using KCRV_Statistics.Core.Entities.DataEntities.RegularDataUnits;
 using KCRV_Statistics.Model.MessageService.MessageBoxService;
 using MathNet.Numerics.Distributions;
@@ -305,7 +303,7 @@ namespace KCRV_Statistics.Model.MathService
 
         #endregion
 
-        #region Метод MandelPaule
+        #region Метод MandelPaule (треб. правки)
 
         /// <summary>
         /// Находит значение KCRV, его неопределённость и добавочную по методу Мандель-Пауля.

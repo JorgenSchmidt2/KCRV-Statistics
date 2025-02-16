@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:KCRV_Statistics.UI.ViewModels.MasterWindows"
         xmlns:core ="clr-namespace:KCRV_Statistics.Core.Entities.GraphicsShellEntities;assembly=DataModuleKCRV"
         mc:Ignorable="d"
@@ -154,8 +155,13 @@
         все последующие разделы также не будут отнесены к какому-либо региону) -->
         
         
-        <!-- Список файлов -->
-        <ListView ItemsSource="{Binding ViewedOutputData}" Margin="650,40,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="340" Width="350">
+        <!--#region Список файлов -->
+        <ListView x:Name="ViewedOutputDataList" ItemsSource="{Binding ViewedOutputData}" Margin="650,40,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="340" Width="350">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                    <i:InvokeCommandAction Command="{Binding ChoiseResult}" CommandParameter="{Binding SelectedItem, ElementName=ViewedOutputDataList}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
             <ListView.View>
                 <GridView>
                     <!--Основные поля списка-->
@@ -186,7 +192,7 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid HorizontalAlignment="Stretch">
-                                    <CheckBox IsChecked="{Binding IsChoised}" HorizontalAlignment="Center" />
+                                    <CheckBox IsChecked="{Binding IsChoised}" HorizontalAlignment="Center" IsEnabled="False"/>
                                 </Grid>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -195,10 +201,9 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <!--нужно будет убрать, заменив на отслеживание изменений в списке через события (временный вариант)-->
-        <Button Command="{Binding ShowOnGraphic}" Margin="650,400,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Отобразить выбранное на канвасе" Height="30" Width="350" />
-
-        <!-- Управляющие кнопки и всё что с ними связано -->
+        <!--#endregion-->
+        
+        <!--#region Управляющие кнопки и всё что с ними связано -->
         <Rectangle Margin="1020,40,0,0" Height="340" Width="255" HorizontalAlignment="Left" VerticalAlignment="Top" Stroke="#111" StrokeThickness="1" />
         <Label Margin="1040,50,0,0" Height="30" Width="220" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Выгрузить результаты в папку: " />
         <TextBox Text="{Binding FolderName}" Margin="1040,80,0,0" Height="20" Width="220" HorizontalAlignment="Left" VerticalAlignment="Top"/>
@@ -208,5 +213,6 @@
         <Button Command="{Binding OutputFilesInfo}" Margin="1040, 225, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Формат итоговых файлов" Height="30" Width="220" />
         <Button Command="{Binding ReportInfo}" Margin="1040, 270, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Формат отчёта" Height="30" Width="220" />
         <Button Command="{Binding Close}" Margin="1160, 330, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Закрыть окно" Height="30" Width="100" />
+        <!--#endregion-->
     </Grid>
 </Window>

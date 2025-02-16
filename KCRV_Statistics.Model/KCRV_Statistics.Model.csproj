@@ -8,6 +8,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ValidateService\CSV_Checkers\**" />
+    <Compile Remove="ValidateService\JSON_Checkers\**" />
+    <Compile Remove="ValidateService\XLSX_Checkers\**" />
+    <EmbeddedResource Remove="ValidateService\CSV_Checkers\**" />
+    <EmbeddedResource Remove="ValidateService\JSON_Checkers\**" />
+    <EmbeddedResource Remove="ValidateService\XLSX_Checkers\**" />
+    <None Remove="ValidateService\CSV_Checkers\**" />
+    <None Remove="ValidateService\JSON_Checkers\**" />
+    <None Remove="ValidateService\XLSX_Checkers\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="EPPlus" Version="7.2.1" />
     <PackageReference Include="itext7" Version="7.2.5" />
     <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
@@ -19,9 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ValidateService\XLSX_Checkers\" />
-    <Folder Include="ValidateService\JSON_Checkers\" />
-    <Folder Include="ValidateService\CSV_Checkers\" />
     <Folder Include="ValidateService\SimpleFileCheckers\" />
   </ItemGroup>
 

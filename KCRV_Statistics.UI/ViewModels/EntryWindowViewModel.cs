@@ -1,4 +1,10 @@
-﻿using KCRV_Statistics.Core.AppConstants;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Windows;
+using System.Windows.Input;
+using KCRV_Statistics.Core.AppConstants;
 using KCRV_Statistics.Core.Entities.FileSystemEntites;
 using KCRV_Statistics.Core.Entities.GraphicsShellEntities;
 using KCRV_Statistics.Model.DataOperatorsService.Lists;
@@ -7,11 +13,6 @@ using KCRV_Statistics.Model.FileService.Readers;
 using KCRV_Statistics.Model.SearchService.FileFinders;
 using KCRV_Statistics.Model.ValidateService.SimpleFileCheckers;
 using KCRV_Statistics.UI.AppService;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Windows;
 
 namespace KCRV_Statistics.UI.ViewModels
 {
@@ -115,8 +116,7 @@ namespace KCRV_Statistics.UI.ViewModels
                 return new Command(
                     obj =>
                     {
-                        // Доработать метод с целью универсализации (другой кнопке будет дан немного отличающийся функционал)
-                        UpdateFileInfo();
+                        MessageBox.Show("Isn't implemented.");
                     }
                 );
             }
@@ -132,53 +132,11 @@ namespace KCRV_Statistics.UI.ViewModels
         /// </summary>
         public List<ViewedDirectoryData> DirectoryDataEntities
         {
-            get
-            {
-                return directoryDataEntities;
-            }
+            get { return directoryDataEntities; }
             set
             {
                 directoryDataEntities = value;
                 CheckChanges();
-            }
-        }
-
-        /// <summary>
-        /// Временная кнопка цель которой - помочь отобразить на экране изменения, внесённые пользователем в интерфейсе приложения.
-        /// </summary>
-        public Command ConfirmDirChoise
-        {
-            get
-            {
-                return new Command(
-                    obj =>
-                    {
-                        // В дальнейшем кнопка будет удалена
-                        // Доработать метод с целью универсализации (другой кнопке будет дан немного отличающийся функционал)
-                        UpdateFileInfo();
-                    }
-                );
-            }
-        }
-
-        /// <summary>
-        /// Временная кнопка цель которой - помочь понять содержимое каких папок отображено на экране компьютера на текущий момент времени.
-        /// </summary>
-        public Command CurrentDirectories
-        {
-            get
-            {
-                return new Command(
-                    obj =>
-                    {
-                        var Content = "Сейчас отображается содержимое следующих папок: \n";
-                        foreach (var Item in AppData.ChoisedFolders)
-                        {
-                            Content += Item + "\n";
-                        }
-                        MessageBox.Show(Content);
-                    }
-                );
             }
         }
 
@@ -188,10 +146,7 @@ namespace KCRV_Statistics.UI.ViewModels
         /// </summary>
         public List<FileDataEntity> FileDatas
         {
-            get
-            {
-                return fileDatas;
-            }
+            get { return fileDatas; }
             set 
             { 
                 fileDatas = value; 
@@ -200,102 +155,7 @@ namespace KCRV_Statistics.UI.ViewModels
         }
         #endregion
 
-        #region Выбор раздела
-
-        /// <summary>
-        /// Содержит сообщение об ошибке. Вынесено в отдельное поле для удобства.
-        /// </summary>
-        private readonly string ChoisePartErrorMessage = "Должен быть выбран хотя-бы один вариант выбираемого формата файлов.";
-
-        public bool xlsx_Check = true;
-        /// <summary>
-        /// Переменная, привязанная к checkbutton'у xlsx
-        /// </summary>
-        public bool XLSX_Check
-        {
-            get 
-            { 
-                return xlsx_Check; 
-            }
-            set
-            {
-                if (value == false && !(JSON_Check || CSV_Check || TXT_Check)) 
-                    MessageBox.Show(ChoisePartErrorMessage);
-                else
-                    xlsx_Check = value;
-                
-                CheckChanges();
-            }
-        }
-
-        public bool json_Check = true;
-        /// <summary>
-        /// Переменная, привязанная к checkbutton'у json
-        /// </summary>
-        public bool JSON_Check
-        {
-            get
-            {
-                return json_Check;
-            }
-
-            set
-            {
-                if (value == false && !(XLSX_Check || CSV_Check || TXT_Check))
-                    MessageBox.Show(ChoisePartErrorMessage);
-                else
-                    json_Check = value;
-
-                CheckChanges();
-            }
-        }
-
-        public bool csv_Check = true;
-        /// <summary>
-        /// Переменная, привязанная к checkbutton'у csv
-        /// </summary>
-        public bool CSV_Check
-        {
-            get
-            {
-                return csv_Check;
-            }
-
-            set
-            {
-                if (value == false && !(XLSX_Check || JSON_Check || TXT_Check))
-                    MessageBox.Show(ChoisePartErrorMessage);
-                else
-                    csv_Check = value;
-
-                CheckChanges();
-            }
-        }
-
-        public bool txt_Check = true;
-        /// <summary>
-        /// Переменная, привязанная к checkbutton'у txt
-        /// </summary>
-        public bool TXT_Check
-        {
-            get
-            {
-                return txt_Check;
-            }
-            set
-            {
-                if (value == false && !(XLSX_Check || JSON_Check || CSV_Check))
-                    MessageBox.Show(ChoisePartErrorMessage);
-                else
-                    txt_Check = value;
-
-                CheckChanges();
-            }
-        }
-
-        #endregion
-
-        #region Управление и описание программы
+        #region Открытие файла
 
         public int id_Field = 0;
         /// <summary>
@@ -329,6 +189,7 @@ namespace KCRV_Statistics.UI.ViewModels
                         if (ID_Field < 0)
                         {
                             MessageBox.Show("ID файла не может быть меньше нуля, либо равно нулю.");
+                            return;
                         }
 
                         try
@@ -343,55 +204,191 @@ namespace KCRV_Statistics.UI.ViewModels
                                 return;
                             }
 
-                            // Проверяем существует ли файл в директории с приложением
-                            if (!File.Exists(Environment.CurrentDirectory + "\\" + fileInfo.Directory + "\\" + fileInfo.FileName))
-                            {
-                                var Message = "Не удалось найти файл " + fileInfo.FileName + " из директории " + fileInfo.Directory + ".\n"
-                                    + "Проверьте целостность файловой структуры в корневой директории приложения.";
-                                MessageBox.Show(Message);
-                                return;
-                            }
-
-                            // Получаем содержимое файла
-                            string Content = SimpleContentReaders.GetContentFromFile(fileInfo.Directory, fileInfo.FileName);
-
-                            // Проверяем содержимое файла на соответствие его формату "два столбца разделены табуляцией, строки - переносом строки"
-                            // Если содержимое не соответствует вышеуказанным требованиям - выводится сообщение об ошибке, ход прерывается
-                            var Validate = InterlabDataSimpleChecker.CheckSimpleData(Content);
-                            if (!Validate.Status)
-                            {
-                                MessageBox.Show(Validate.Message);
-                                return;
-                            }
-
-                            // Получаем переданный ранее контент в удобном для обработки виде, дополнительно забиваем его в статическую переменную
-                            var ValuesList = ListConverters.StringToRegularData(Content);
-                            AppData.CurrentData.Clear();
-                            AppData.CurrentData = ValuesList;
-
-                            // Открываем окно указания начала координат (для xlsx файла)
-                            WindowsObjects.OpenCalculateIntermediateWindow = new();
-                            if (WindowsObjects.OpenCalculateIntermediateWindow.ShowDialog() == true)
-                            {
-                                WindowsObjects.OpenCalculateIntermediateWindow.Show();
-                            }
+                            OpenFile(fileInfo);
                         }
                         catch (Exception e)
                         {
-                            MessageBox.Show("Возникла неустранимая ошибка: \n" + e.Message);
+                            MessageBox.Show("Возникла неустранимая ошибка:\n" + e.Message + "\n\nСообщите о проблеме разработчику.");
                             return;
                         }
                     }
                 );
             }
         }
+        #endregion
+
+        #region Выбор раздела
+
+        /// <summary>
+        /// Содержит сообщение об ошибке. Вынесено в отдельное поле для удобства.
+        /// </summary>
+        private readonly string ChoisePartErrorMessage = "Должен быть выбран хотя-бы один вариант выбираемого формата файлов.";
+
+        public bool xlsx_Check = true;
+        /// <summary>
+        /// Переменная, привязанная к checkbutton'у xlsx
+        /// </summary>
+        public bool XLSX_Check
+        {
+            get
+            {
+                return xlsx_Check;
+            }
+            set
+            {
+                if (value == false && !(JSON_Check || CSV_Check || TXT_Check))
+                    MessageBox.Show(ChoisePartErrorMessage);
+                else
+                    xlsx_Check = value;
+
+                CheckChanges();
+                UpdateFileInfo();
+            }
+        }
+
+        public bool json_Check = true;
+        /// <summary>
+        /// Переменная, привязанная к checkbutton'у json
+        /// </summary>
+        public bool JSON_Check
+        {
+            get
+            {
+                return json_Check;
+            }
+
+            set
+            {
+                if (value == false && !(XLSX_Check || CSV_Check || TXT_Check))
+                    MessageBox.Show(ChoisePartErrorMessage);
+                else
+                    json_Check = value;
+
+                CheckChanges();
+                UpdateFileInfo();
+            }
+        }
+
+        public bool csv_Check = true;
+        /// <summary>
+        /// Переменная, привязанная к checkbutton'у csv
+        /// </summary>
+        public bool CSV_Check
+        {
+            get
+            {
+                return csv_Check;
+            }
+
+            set
+            {
+                if (value == false && !(XLSX_Check || JSON_Check || TXT_Check))
+                    MessageBox.Show(ChoisePartErrorMessage);
+                else
+                    csv_Check = value;
+
+                CheckChanges();
+                UpdateFileInfo();
+            }
+        }
+
+        public bool txt_Check = true;
+        /// <summary>
+        /// Переменная, привязанная к checkbutton'у txt
+        /// </summary>
+        public bool TXT_Check
+        {
+            get
+            {
+                return txt_Check;
+            }
+            set
+            {
+                if (value == false && !(XLSX_Check || JSON_Check || CSV_Check))
+                    MessageBox.Show(ChoisePartErrorMessage);
+                else
+                    txt_Check = value;
+
+                CheckChanges();
+                UpdateFileInfo();
+            }
+        }
+
+        #endregion
+
+        #region Выбор логики работы со списком файлов
+
+        public bool mustBeViewed = true;
+        public bool MustBeViewed
+        {
+            get { return mustBeViewed; }
+            set
+            {
+                if (!ChangeFileChoisesInProcess && value != false)
+                {
+                    ChangeFileChoisesInProcess = true;
+                    ChangeFileChoises(value, !value, !value);
+                }
+                CheckChanges();
+            }
+        }
+
+        public bool mustToID = false;
+        public bool MustToID
+        {
+            get { return mustToID; }
+            set
+            {
+                if (!ChangeFileChoisesInProcess && value != false)
+                {
+                    ChangeFileChoisesInProcess = true;
+                    ChangeFileChoises(!value, value, !value);
+                }
+                CheckChanges();
+            }
+        }
+
+        public bool mustBeReaded = false;
+        public bool MustBeReaded
+        {
+            get { return mustBeReaded; }
+            set
+            {
+                if (!ChangeFileChoisesInProcess && value != false)
+                {
+                    ChangeFileChoisesInProcess = true;
+                    ChangeFileChoises(!value, !value, value);
+                }
+                CheckChanges();
+            }
+        }
+
+        public bool ChangeFileChoisesInProcess = false;
+
+        public void ChangeFileChoises (bool Viewed, bool ToID, bool Readed)
+        {
+            if (ChangeFileChoisesInProcess)
+            {
+                mustBeViewed = Viewed;
+                MustBeViewed = mustBeViewed;
+                mustToID = ToID;
+                MustToID = mustToID;
+                mustBeReaded = Readed;
+                MustBeReaded = MustBeReaded;
+                ChangeFileChoisesInProcess = false;
+            }
+        }
+
+        #endregion
+
+        #region Описание программы 
 
         public Command ShowVisualization
         {
             get
             {
                 return new Command(
-                    obj => 
+                    obj =>
                     {
                         MessageBox.Show("Not Implemented.");
                     }
@@ -408,7 +405,7 @@ namespace KCRV_Statistics.UI.ViewModels
                     {
                         var Content = "Будет добавлено по доведению программы.";
                         MessageBox.Show(Content);
-                    }    
+                    }
                 );
             }
         }
@@ -422,7 +419,7 @@ namespace KCRV_Statistics.UI.ViewModels
                     {
                         var Content = "Будет добавлено по доведению программы.";
                         MessageBox.Show(Content);
-                    }    
+                    }
                 );
             }
         }
@@ -436,7 +433,7 @@ namespace KCRV_Statistics.UI.ViewModels
                     {
                         var Content = "Будет добавлено по доведению программы.";
                         MessageBox.Show(Content);
-                    }    
+                    }
                 );
             }
         }
@@ -450,10 +447,106 @@ namespace KCRV_Statistics.UI.ViewModels
                     {
                         var Content = "Будет добавлено по доведению программы.";
                         MessageBox.Show(Content);
-                    }    
+                    }
                 );
             }
         }
+
+        #endregion
+
+        #region События
+
+        public ICommand SelectFileCommand { get; }
+        public ICommand SelectDirectoryCommand { get; }
+
+        public EntryWindowViewModel()
+        {
+            SelectFileCommand = new Command(SelectFile);
+            SelectDirectoryCommand = new Command(SelectDirectory);
+        }
+
+
+        private void SelectDirectory(object parameter)
+        {
+            try
+            {
+                // Получаем данные о полученном объекте parameter в отдельную переменную obj
+                ViewedDirectoryData obj = (ViewedDirectoryData) parameter; // Прямая ссылка на входной объект!!!
+                if (obj == null)
+                {
+                    MessageBox.Show("Апкаст к целевому объекту не удался.");
+                    return;
+                }
+
+                List<ViewedDirectoryData> NewList = new List<ViewedDirectoryData>();
+
+                foreach (var Item in DirectoryDataEntities)
+                {
+                    if (Item.DirectoryName.Equals(obj.DirectoryName))
+                        NewList.Add(new ViewedDirectoryData { DirectoryName = Item.DirectoryName, IsChoised = !Item.IsChoised });
+                    else
+                        NewList.Add(new ViewedDirectoryData { DirectoryName = Item.DirectoryName, IsChoised = Item.IsChoised });
+                }
+
+                if (AppData.ChoisedFolders.Contains(obj.DirectoryName) && NewList.Where(x => x.IsChoised == true).Select(x => x).Count() != 0)
+                {
+                    AppData.ChoisedFolders.Remove(obj.DirectoryName);
+                }
+                else if (!AppData.ChoisedFolders.Contains(obj.DirectoryName))
+                {
+                    AppData.ChoisedFolders.Add(obj.DirectoryName);
+                }
+                else return;
+
+                DirectoryDataEntities = NewList;
+                UpdateFileInfo();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Возникла неустранимая ошибка:\n" + e.Message + "\n\nСообщите о проблеме разработчику.");
+            }
+        }
+
+        private void SelectFile(object parameter)
+        {
+            try
+            {
+                FileDataEntity obj = (FileDataEntity)parameter;
+                if (obj == null) throw new Exception("Апкаст к целевому объекту не удался.");
+
+                if (MustBeViewed)
+                {
+                    var splits = obj.FileName.Split(".");
+                    string FileExtension = splits[splits.Length - 1];
+                    if (FileExtension.Equals(AppFileFormats.TXT))
+                    {
+                        var Content = SimpleContentReaders.GetContentFromFile(obj.Directory, obj.FileName);
+                        if (InterlabDataSimpleChecker.CheckSimpleData(Content).Status) MessageBox.Show(Content);
+                        else MessageBox.Show("Формат входного файла был некорректен или возникла ошибка.");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Пока доступен только просмотр простых .txt файлов.");
+                    }
+                    return;
+                }
+                if (MustToID)
+                {
+                    ID_Field = obj.ID;
+                    return;
+                }
+                if (MustBeReaded)
+                {
+                    OpenFile(obj);
+                    return;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Возникла неустранимая ошибка:\n" + e.Message + "\n\nСообщите о проблеме разработчику.");
+            }
+        }
+
 
         #endregion
 
@@ -504,6 +597,74 @@ namespace KCRV_Statistics.UI.ViewModels
             List<FileDataEntity> PrimaryFileList = DirectoryInfoReader.GetFileListFromDirectory(AppData.ChoisedFolders);
             AppData.AppFileData = ListOperators.FilterFileListByExtension(PrimaryFileList, ChoisedExtensions);
             FileDatas = ListOperators.CopyFileDataListEntities(AppData.AppFileData);
+        }
+
+        public void OpenFile (FileDataEntity FileData)
+        {
+            try
+            {
+                // Проверяем существует ли файл в директории с приложением
+                if (!File.Exists(Environment.CurrentDirectory + "\\" + FileData.Directory + "\\" + FileData.FileName))
+                {
+                    var Message = "Не удалось найти файл " + FileData.FileName + " из директории " + FileData.Directory + ".\n"
+                        + "Проверьте целостность файловой структуры в корневой директории приложения.";
+                    MessageBox.Show(Message);
+                    return;
+                }
+
+                // Получаем содержимое файла
+                string Content = String.Empty;
+                var splits = FileData.FileName.Split(".");
+                string FileExtension = splits[splits.Length - 1];
+                if (FileExtension.Equals(AppFileFormats.TXT))
+                {
+                    Content = SimpleContentReaders.GetContentFromFile(FileData.Directory, FileData.FileName);
+
+                    // Проверяем содержимое файла на соответствие его формату "два столбца разделены табуляцией, строки - переносом строки"
+                    // Если содержимое не соответствует вышеуказанным требованиям - выводится сообщение об ошибке, ход прерывается
+                    var Validate = InterlabDataSimpleChecker.CheckSimpleData(Content);
+                    if (!Validate.Status)
+                    {
+                        MessageBox.Show(Validate.Message);
+                        return;
+                    }
+                }
+                else if (FileExtension.Equals(AppFileFormats.XLSX))
+                {
+                    MessageBox.Show("Not implemented.");
+                    return;
+                }
+                else if (FileExtension.Equals(AppFileFormats.CSV))
+                {
+                    MessageBox.Show("Not implemented");
+                    return;
+                }
+                else if (FileExtension.Equals(AppFileFormats.JSON))
+                {
+                    MessageBox.Show("Not implemented");
+                    return;
+                }
+                else
+                {
+                    MessageBox.Show("Формат файла неизвестен.");
+                    return;
+                }
+                // Получаем переданный ранее контент в удобном для обработки виде, дополнительно забиваем его в статическую переменную
+                var ValuesList = ListConverters.StringToRegularData(Content);
+                AppData.CurrentData.Clear();
+                AppData.CurrentData = ValuesList;
+
+                // Открываем окно указания начала координат (для xlsx файла)
+                WindowsObjects.OpenCalculateIntermediateWindow = new();
+                if (WindowsObjects.OpenCalculateIntermediateWindow.ShowDialog() == true)
+                {
+                    WindowsObjects.OpenCalculateIntermediateWindow.Show();
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Возникла неустранимая ошибка:\n" + e.Message + "\n\nСообщите о проблеме разработчику.");
+            }
         }
 
         #endregion

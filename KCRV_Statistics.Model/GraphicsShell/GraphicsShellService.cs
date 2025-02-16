@@ -14,11 +14,11 @@ namespace KCRV_Statistics.Model.GraphicsShell
         /// Преобразует исходный список результатов KCRV методов расчёта в отображаемый, дополнительно определяет какой метод будет
         /// отображён в первую очередь
         /// </summary>
-        public static ObservableCollection<ViewedOutputData> GetViewedOutputData (List<OutputData> Data)
+        public static List<ViewedOutputData> GetViewedOutputData (List<OutputData> Data)
         {
             try
             {
-                ObservableCollection<ViewedOutputData> Result = new ObservableCollection<ViewedOutputData>();
+                List<ViewedOutputData> Result = new List<ViewedOutputData>();
 
                 // Инициализация счётчика для определения какой из методов будет отображён при открытии окна отображения
                 int counter = 1;
@@ -46,7 +46,7 @@ namespace KCRV_Statistics.Model.GraphicsShell
             catch (Exception e)
             {
                 GetMessageBox.Show("Ошибка при составлении отображаемого списка элементов результатов расчётов: \n" + e.Message);
-                return new ObservableCollection<ViewedOutputData>();
+                return new List<ViewedOutputData>();
             }
         }
     }

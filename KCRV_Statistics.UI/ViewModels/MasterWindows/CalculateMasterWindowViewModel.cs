@@ -12,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Input;
 
 namespace KCRV_Statistics.UI.ViewModels.MasterWindows
 {
@@ -222,16 +223,13 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
 
         #region Данные расчётов 
 
-        public ObservableCollection<ViewedOutputData> viewedOutputData = GraphicsShellService.GetViewedOutputData(AppData.OutputData);
+        public List<ViewedOutputData> viewedOutputData = GraphicsShellService.GetViewedOutputData(AppData.OutputData);
         /// <summary>
         /// Для отображения полученных показателей KCRV в виде списка значений "Значение-Погрешность"
         /// </summary>
-        public ObservableCollection<ViewedOutputData> ViewedOutputData
+        public List<ViewedOutputData> ViewedOutputData
         {
-            get
-            {
-                return viewedOutputData;
-            }
+            get { return viewedOutputData; }
             set
             {
                 viewedOutputData = value;
@@ -239,7 +237,6 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
             }
         }
 
-        // Нужно будет убрать, заменив на отслеживание изменений в списке через событие
         public Command ShowOnGraphic
         {
             get
@@ -440,6 +437,38 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
                         WindowsObjects.CalculateMasterWindow = null;
                     }    
                 );
+            }
+        }
+
+        #endregion
+
+        #region События
+
+        public ICommand ChoiseResult { get; }
+
+        public CalculateMasterWindowViewModel ()
+        {
+            ChoiseResult = new Command(ChoiseResultMethod);
+        }
+
+        private void ChoiseResultMethod(object parameter)
+        {
+            try
+            {
+                ViewedOutputData obj = (ViewedOutputData) parameter;
+                if (obj == null)
+                {
+                    MessageBox.Show("Апкаст к целевому объекту не удался.");
+                    return;
+                }
+
+
+
+                MessageBox.Show(obj.X.ToString() + "\n" + obj.U.ToString());
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Возникла неустранимая ошибка:\n" + e.Message + "\n\nСообщите о проблеме разработчику.");
             }
         }
 
