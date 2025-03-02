@@ -121,10 +121,8 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
         /// <summary>
         /// При инициализации окна получает данные о подписях (для внешнего окна)
         /// </summary>
-        public List<TextLabelEntity> labelData = GraphicsSketchers.GetLabels(
-                AppData.CurrentData.Min(x => x.Value - x.Uncertanity),
-                AppData.CurrentData.Max(x => x.Value + x.Uncertanity),
-                AppData.CurrentData.Count()
+        public List<TextLabelEntity> labelData = GraphicsSketchers.GetSortedLabels(
+                AppData.CurrentData
         );
 
         /// <summary>

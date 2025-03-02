@@ -6,7 +6,7 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:KCRV_Statistics.UI.ViewModels"
         mc:Ignorable="d"
-        Title="KCRV Statistics v 0.0.0.6" Height="455" Width="765" ResizeMode="NoResize">
+        Title="KCRV Statistics v 0.0.0.7" Height="455" Width="765" ResizeMode="NoResize">
     <Window.DataContext>
         <local:EntryWindowViewModel/>
     </Window.DataContext>

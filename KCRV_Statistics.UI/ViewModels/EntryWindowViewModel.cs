@@ -288,7 +288,7 @@ namespace KCRV_Statistics.UI.ViewModels
 
         #region Выбор логики работы со списком файлов
 
-        public bool mustBeViewed = true;
+        public bool mustBeViewed = false;
         /// <summary>
         /// Определяет, что при клике на элемент, будет отображено его содержимое
         /// </summary>
@@ -324,7 +324,7 @@ namespace KCRV_Statistics.UI.ViewModels
             }
         }
 
-        public bool mustBeReaded = false;
+        public bool mustBeReaded = true;
         /// <summary>
         /// Определяет, что при клике на элемент, будет открыт файл, данные которого соответствуют этому файлу
         /// </summary>
