@@ -324,7 +324,7 @@ namespace KCRV_Statistics.Model.MathService
             try
             {
                 // Расчёт добавочной дисперсии для метода Мандель-Пауля
-                double AddDispersion = CalculateAddDispForMandelPaule(Data, 15);
+                double AddDispersion = CalculateAddDispForMandelPaule(Data, 9);
                 if (AddDispersion == 0) throw new Exception("К сожалению не удалось рассчитать добавочную дисперсию для метода Мандель-Пауля.");
                 Result.InterLabVariance = Math.Round(AddDispersion, ResultDigits);
 
@@ -693,7 +693,7 @@ namespace KCRV_Statistics.Model.MathService
                 double NaturalSquared = GetNaturalSquared_MandelPaule(Data, AddDispersion, LambdaCharacter);
 
                 // Проверка полученного натурального значения
-                if (CriticalSquared == NaturalSquared)
+                if (Math.Round(CriticalSquared, Accuracy) == Math.Round(NaturalSquared, Accuracy))
                 {
                     Result = Math.Sqrt(AddDispersion);
                     break;
@@ -721,7 +721,6 @@ namespace KCRV_Statistics.Model.MathService
                 counter++;
                 if (counter == 100)
                 {
-                    //GetMessageBox.Show("К сожалению не удалось рассчитать добавочную дисперсию для метода Мандель-Пауля.");
                     Result = 0;
                     break;
                 }
