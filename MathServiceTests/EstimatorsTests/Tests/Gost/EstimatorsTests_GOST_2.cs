@@ -12,14 +12,14 @@ namespace MathServiceTests.EstimatorsTests.Tests.Gost
         public void GOST_X_test_1_DEF()
         {
             double Result = Estimators.GOST(Estimators_Data_2.Data, 15, ResDigits).X;
-            Assert.AreEqual(Math.Round(40.0356911641, ResDigits), Result);
+            Assert.AreEqual(Math.Round(40.0356911641, ResDigits), Math.Round(Result, ResDigits));
         }
 
         [TestMethod]
         public void GOST_U_test_2_DEF()
         {
             double Result = Estimators.GOST(Estimators_Data_2.Data, 15, ResDigits).U;
-            Assert.AreEqual(Math.Round(0.8627018073, ResDigits), Result);
+            Assert.AreEqual(Math.Round(0.8627018073, ResDigits), Math.Round(Result, ResDigits));
         }
     }
 }

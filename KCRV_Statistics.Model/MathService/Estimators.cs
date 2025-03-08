@@ -325,6 +325,7 @@ namespace KCRV_Statistics.Model.MathService
             {
                 // Расчёт добавочной дисперсии для метода Мандель-Пауля
                 double AddDispersion = CalculateAddDispForMandelPaule(Data, 15);
+                if (AddDispersion == 0) throw new Exception("К сожалению не удалось рассчитать добавочную дисперсию для метода Мандель-Пауля.");
                 Result.InterLabVariance = Math.Round(AddDispersion, ResultDigits);
 
                 // Расчёт показателя KCRV и его неопределённости, в первую очередь посчитаем значение знаменателя числа w
@@ -433,7 +434,7 @@ namespace KCRV_Statistics.Model.MathService
         
         #endregion
 
-        #region GOST (треб. правки)
+        #region GOST
 
         public static OutputData GOST(List<RegularData> Data, int IterationDigits, int ResultDigits)
         {
@@ -481,15 +482,18 @@ namespace KCRV_Statistics.Model.MathService
                     double summ_w = 0;
                     double gos = 0;
                     int Counter = 0;
+                    int Used_W_Counter = DataDiff.Count();
                     foreach (var item in DataDiff)
                     {
                         double w_value = 0;
-                        if (item.Value < 5.2 * Mad && item.Value != 0)
+                        if (item.Value < 5.2 * Mad)
                         {
                             w_value = Math.Pow(
                                 1 - Math.Pow(item.Value / 5.2 / Mad, 2), 2
                             );
                         }
+                        else Used_W_Counter--;
+
                         summ_w = Math.Round(summ_w + w_value, IterationDigits);
 
                         if (Counter >= DataDiff.Count())
@@ -499,8 +503,8 @@ namespace KCRV_Statistics.Model.MathService
                         Counter += 1;
                     }
                     gos /= summ_w;
-                    Result.X = RobustSKO(Data, gos, IterationDigits, ResultDigits);
-                    Result.U = (gos * 1.483) / Math.Sqrt(Data.Count);
+                    Result.X = gos;
+                    Result.U = RobustSKO(Data, gos, IterationDigits, ResultDigits) / Math.Sqrt(Used_W_Counter);
                 }
 
                 return Result;
@@ -514,7 +518,7 @@ namespace KCRV_Statistics.Model.MathService
 
         #endregion
 
-        #region A (треб. правки)
+        #region A
 
         public static OutputData A(List<RegularData> Data, int IterationDigits, int ResultDigits)
         {
@@ -531,42 +535,47 @@ namespace KCRV_Statistics.Model.MathService
 
             try
             {
-                var InternalAccuracy = 5;
+                var InternalAccuracy = 3;
                 var MedianValue = Median(Data, IterationDigits, ResultDigits).X;
                 var RobustValue = RobustSKO(Data, MedianValue, IterationDigits, ResultDigits);
-                var ChangedRobustValue = RobustValue;
-                var CountSQRT = Math.Sqrt(Data.Count);
+                var CountSQRT = Math.Sqrt(Data.Count());
+                var CountList = Data.Count();
 
                 int Counter = 0;
-                double ResultValue = 0;
+                double MeanA = 0;
+                double SKO = 0;
 
                 while (true)
                 {
-                    double MeanA = MedianValue;
-                    ResultValue = ChangedRobustValue;
-                    List<double> ChangedList = new List<double>();
+                    List<double> ChangedList = Data.Select(obj => obj.Value).ToList();
 
-                    foreach (var Item in Data)
+                    MeanA = MedianValue;
+                    SKO = RobustValue;
+
+                    for (var i = 0; i < ChangedList.Count; i++)
                     {
-                        if (Item.Value < MeanA - 1.5 * ChangedRobustValue) ChangedList.Add(MeanA - 1.5 * ChangedRobustValue);
-                        else if (Item.Value > MeanA + 1.5 * ChangedRobustValue) ChangedList.Add(MeanA + 1.5 * ChangedRobustValue);
-                        else ChangedList.Add(Item.Value);
+                        var bet = 1.5 * SKO;
+                        if (ChangedList[i] < MeanA - bet) ChangedList[i] = MeanA - bet;
+                        else if (ChangedList[i] > MeanA + bet) ChangedList[i] = MeanA + bet;
                     }
 
-                    Mean_A_Method(ChangedList, out MeanA, out ChangedRobustValue, IterationDigits, ResultDigits); // Void метод!!! 
-                    ChangedRobustValue = Math.Round(ChangedRobustValue*CountSQRT*1.134, IterationDigits);
+                    MedianValue = ChangedList.Sum() / CountList;
 
-                    Counter++;
-                    if (( Math.Round(MeanA, InternalAccuracy) == Math.Round(MedianValue, InternalAccuracy)
-                    &&    Math.Round(ResultValue, InternalAccuracy) == Math.Round(ChangedRobustValue, InternalAccuracy)))
+                    var s_summ = ChangedList.Select(y => Math.Pow(y - MedianValue, 2)).Sum();
+                    RobustValue = 1.134 * Math.Sqrt(s_summ/(CountList - 1));
+
+                    if (Math.Round(MeanA, InternalAccuracy) == Math.Round(MedianValue, InternalAccuracy) &&
+                        Math.Round(SKO, InternalAccuracy) == Math.Round(RobustValue, InternalAccuracy))
                     {
                         break;
                     }
-                    if (Counter >= 4000) throw new Exception("Количество итераций превысило допустимые пределы (4000).");
+                    Counter++;
+                    if (Counter >= 800)
+                        throw new Exception("Количество итераций превысило допустимые пределы (800).");
                 }
 
-                Result.X = ResultValue;
-                Result.U = ResultValue/CountSQRT;
+                Result.X = Math.Round(MeanA, ResultDigits);
+                Result.U = Math.Round(SKO / CountSQRT, ResultDigits);
                 return Result;
             }
             catch (Exception e)
@@ -601,20 +610,6 @@ namespace KCRV_Statistics.Model.MathService
         #endregion
 
         #region Другие операции
-
-        public static void Mean_A_Method(List<double> Data, out double MeanValue, out double SKO_Value, int IterationDigits, int ResultDigits)
-        {
-            if (Data.Count() == 0) throw new Exception("Изменённая выборка оказалась пуста.");
-
-            MeanValue = 0;
-            SKO_Value = 0;
-
-            foreach (var Item in Data) MeanValue = Math.Round(MeanValue + Item);
-            MeanValue /= Data.Count();
-
-            foreach (var Item in Data) SKO_Value = Math.Round(SKO_Value + Math.Pow(Item - MeanValue,2));
-            SKO_Value = Math.Sqrt(SKO_Value/(Data.Count() - 1)/Data.Count());
-        } 
 
         /// <summary>
         /// Робастное среднеквадратичное отклонение
@@ -703,7 +698,7 @@ namespace KCRV_Statistics.Model.MathService
                     Result = Math.Sqrt(AddDispersion);
                     break;
                 }
-                else if (CriticalSquared > NaturalSquared)
+                else if (CriticalSquared >= NaturalSquared)
                 {
                     AddDispersion -= StepDisp;
 
@@ -716,7 +711,7 @@ namespace KCRV_Statistics.Model.MathService
                     if (!IsNegativeStep)
                         StepDisp /= 2;
                 }
-                else if (CriticalSquared < NaturalSquared)
+                else if (CriticalSquared <= NaturalSquared)
                 {
                     AddDispersion += StepDisp; 
                     if (IsNegativeStep)
@@ -726,7 +721,7 @@ namespace KCRV_Statistics.Model.MathService
                 counter++;
                 if (counter == 100)
                 {
-                    GetMessageBox.Show("К сожалению не удалось рассчитать добавочную дисперсию для метода Мандель-Пауля.");
+                    //GetMessageBox.Show("К сожалению не удалось рассчитать добавочную дисперсию для метода Мандель-Пауля.");
                     Result = 0;
                     break;
                 }
@@ -782,6 +777,8 @@ namespace KCRV_Statistics.Model.MathService
             var derSimonian     = DerSimonian   (Data, weightedMean.X, IterationDigits, ResultDigits);
             //var mandelPaule     = MandelPaule   (Data, IterationDigits, ResultDigits);
             var huber           = Huber (Data, IterationDigits, ResultDigits);
+            var gost            = GOST (Data, IterationDigits, ResultDigits);
+            var a               = A(Data, IterationDigits, ResultDigits);
 
             Result.Add(mean);
             Result.Add(weightedMean);
@@ -789,6 +786,8 @@ namespace KCRV_Statistics.Model.MathService
             Result.Add(derSimonian);
             //Result.Add(mandelPaule);
             Result.Add(huber);
+            Result.Add(gost);
+            Result.Add(a);
 
             return Result;
         }
