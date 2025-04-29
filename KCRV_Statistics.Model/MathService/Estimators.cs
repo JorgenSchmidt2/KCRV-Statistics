@@ -1,4 +1,5 @@
 ﻿using KCRV_Statistics.Core.AppConfiguration;
+using KCRV_Statistics.Core.Entities.DataEntities.OtherDataEntities;
 using KCRV_Statistics.Core.Entities.DataEntities.RegularDataUnits;
 using KCRV_Statistics.Model.MessageService.MessageBoxService;
 using MathNet.Numerics.Distributions;
@@ -15,7 +16,7 @@ namespace KCRV_Statistics.Model.MathService
         private static readonly int DefaultIterationDigits = 8;
         private static readonly int DefaultResultDigits = 4;
 
-        #region Метод Mean
+        #region Оценка Mean
 
         /// <summary>
         /// Находит среднее значение выборки и её неопределённость 
@@ -68,7 +69,7 @@ namespace KCRV_Statistics.Model.MathService
 
         #endregion
 
-        #region Метод WeightedMean
+        #region Оценка WeightedMean
 
         /// <summary>
         /// Находит средневзвешенное значение выборки и её неопределённость
@@ -119,7 +120,7 @@ namespace KCRV_Statistics.Model.MathService
 
         #endregion
 
-        #region Метод Median и всё что с ними связано
+        #region Оценка Median и всё что с ней связано
 
         /// <summary>
         /// Достаёт средний элемент списка без нахождения медианы (в противном случае нарушение принципа единственной ответственности).
@@ -218,7 +219,7 @@ namespace KCRV_Statistics.Model.MathService
 
         #endregion
 
-        #region Метод DerSimonian
+        #region Оценка DerSimonian
 
         /// <summary>
         /// Находит значение KCRV, его неопределённость и InterLabVariance по методу Дер-Симониана.
@@ -303,7 +304,7 @@ namespace KCRV_Statistics.Model.MathService
 
         #endregion
 
-        #region Метод MandelPaule (треб. правки)
+        #region Оценка MandelPaule и всё что с ней связано (треб. правки)
 
         /// <summary>
         /// Находит значение KCRV, его неопределённость и добавочную по методу Мандель-Пауля.
@@ -325,7 +326,7 @@ namespace KCRV_Statistics.Model.MathService
             {
                 // Расчёт добавочной дисперсии для метода Мандель-Пауля
                 double AddDispersion = CalculateAddDispForMandelPaule(Data, 9);
-                if (AddDispersion == 0) throw new Exception("К сожалению не удалось рассчитать добавочную дисперсию для метода Мандель-Пауля.");
+                if (AddDispersion == 0) throw new Exception("К сожалению, не удалось рассчитать добавочную дисперсию для метода Мандель-Пауля.");
                 Result.InterLabVariance = Math.Round(AddDispersion, ResultDigits);
 
                 // Расчёт показателя KCRV и его неопределённости, в первую очередь посчитаем значение знаменателя числа w
@@ -357,9 +358,114 @@ namespace KCRV_Statistics.Model.MathService
             }
         }
 
+        /// <summary>
+        /// Позволяет с заданной точностью до 15 знаков рассчитать значение добавочной дисперсии для метода Мандель-Пауля.
+        /// Данному методу подчиняются два приватных метода GetLambdaCharacteristics_MandelPaule и GetNaturalSquared_MandelPaule 
+        /// </summary>
+        public static double CalculateAddDispForMandelPaule(List<RegularData> Data, int Accuracy)
+        {
+            double Result = 0;
+
+            // Интервал доверия для расчёта критического значение Хи^2 - 5%
+            double CriticalSquared = ChiSquared.InvCDF(Data.Count() - 1, 1 - 0.05);
+
+            // Добавочная дисперсия и шаг по ней
+            double AddDispersion = 10;
+            double StepDisp = AddDispersion / 2;
+
+            // Инициализация определителя шага (позитивный или негативный)
+            bool IsNegativeStep;
+            double InitialNaturalSquared = GetNaturalSquared_MandelPaule(
+                Data,
+                AddDispersion,
+                GetLambdaCharacteristics_MandelPaule(Data, AddDispersion)
+            );
+            if (CriticalSquared > InitialNaturalSquared)
+                IsNegativeStep = true;
+            else
+                IsNegativeStep = false;
+
+            int counter = 0;
+
+            // Начало вычисления добавочной дисперсии
+            while (true)
+            {
+                // Расчёт характеристики по добавочной дисперсии
+                double LambdaCharacter = GetLambdaCharacteristics_MandelPaule(Data, AddDispersion);
+
+                // Расчёт натурального значения Хи^2
+                double NaturalSquared = GetNaturalSquared_MandelPaule(Data, AddDispersion, LambdaCharacter);
+
+                // Проверка полученного натурального значения
+                if (Math.Round(CriticalSquared, Accuracy) == Math.Round(NaturalSquared, Accuracy))
+                {
+                    Result = Math.Sqrt(AddDispersion);
+                    break;
+                }
+                else if (CriticalSquared >= NaturalSquared)
+                {
+                    AddDispersion -= StepDisp;
+
+                    if (AddDispersion < 0)
+                    {
+                        AddDispersion = Math.Abs(AddDispersion);
+                        StepDisp /= 2;
+                    }
+
+                    if (!IsNegativeStep)
+                        StepDisp /= 2;
+                }
+                else if (CriticalSquared <= NaturalSquared)
+                {
+                    AddDispersion += StepDisp;
+                    if (IsNegativeStep)
+                        StepDisp /= 2;
+                }
+
+                counter++;
+                if (counter == 100)
+                {
+                    Result = 0;
+                    break;
+                }
+            }
+
+            return Result;
+        }
+
+        /// <summary>
+        /// Вычисляет характеристику от лямбды, подчинён методу CalculateAddDispForMandelPaule
+        /// </summary>
+        private static double GetLambdaCharacteristics_MandelPaule(List<RegularData> Data, double AddDispersion)
+        {
+            double LambdaCharacter_numerator = 0;
+            double LambdaCharacter_denomerator = 0;
+            foreach (var Item in Data)
+            {
+                LambdaCharacter_numerator += Item.Value / (Math.Pow(Item.Uncertanity, 2) + AddDispersion);
+                LambdaCharacter_denomerator += 1 / (Math.Pow(Item.Uncertanity, 2) + AddDispersion);
+            }
+            return LambdaCharacter_numerator / LambdaCharacter_denomerator;
+        }
+
+        /// <summary>
+        /// Вычисляет натуральное значение Хи^2, подчинён методу CalculateAddDispForMandelPaule
+        /// </summary>
+        private static double GetNaturalSquared_MandelPaule(List<RegularData> Data, double AddDispersion, double LambdaCharacter)
+        {
+            double NaturalSquared = 0;
+
+            // Расчёт натурального значения Хи^2
+            foreach (var Item in Data)
+            {
+                NaturalSquared += Math.Pow(Item.Value - LambdaCharacter, 2) / (Math.Pow(Item.Uncertanity, 2) + AddDispersion);
+            }
+            return NaturalSquared;
+        }
+
         #endregion
 
-        #region Huber
+        #region Оценка Huber
         /// <summary>
         /// Расчёт показателя по методу Хубера
         /// </summary>
@@ -434,7 +540,7 @@ namespace KCRV_Statistics.Model.MathService
         
         #endregion
 
-        #region GOST
+        #region Оценка GOST
 
         public static OutputData GOST(List<RegularData> Data, int IterationDigits, int ResultDigits)
         {
@@ -518,7 +624,7 @@ namespace KCRV_Statistics.Model.MathService
 
         #endregion
 
-        #region A
+        #region Оценка A
 
         public static OutputData A(List<RegularData> Data, int IterationDigits, int ResultDigits)
         {
@@ -587,7 +693,7 @@ namespace KCRV_Statistics.Model.MathService
 
         #endregion
 
-        #region PMA (треб. правки)
+        #region Группа оценок PMA + оценка Кокса_1 (треб. правки)
 
         public static OutputData PMA(List<RegularData> Data, int IterationDigits, int ResultDigits)
         {
@@ -602,10 +708,74 @@ namespace KCRV_Statistics.Model.MathService
             OutputData Result = new OutputData();
             Result.MethodName = KCRV_MethodsNames.PMA;
 
+            try
+            {
+                var FiltredCoxData = COX_1(Data);
 
+            }
+            catch (Exception e)
+            {
+                GetMessageBox.Show("Метод " + Result.MethodName + " был рассчитан с ошибкой: \n" + e.Message);
+                return Result;
+            }
 
             return Result;
         }
+
+        public static List<RegularData> COX_1(List<RegularData> Data)
+        {
+            List<RegularData> Result = new List<RegularData>();
+
+            try
+            {
+                ChiSquareDataEntity ActuallyDataObject = new ChiSquareDataEntity(Data);
+
+                while (ActuallyDataObject.GetDataListCount() > 0) 
+                {
+                    // Значение по Дер-Симониану (после "починки" метода Мандель-Пауля, нужно будет использовать именно его) 
+                    var NewData = ActuallyDataObject.GetData();
+                    var PreEstimateValue = WeightedMean(NewData, 8, 8).X;
+
+                    // Расчёт хи-значений для выборки
+                    ActuallyDataObject.CalculateAll(PreEstimateValue);
+
+                    // Интервал доверия для расчёта критического значение Хи^2 - 5%
+                    double CriticalSquared = ChiSquared.InvCDF(ActuallyDataObject.GetDataListCount() - 1, 1 - 0.05);
+
+                    // Проверка условия
+                    bool IsEqualsCriticalAndChiSquare = false;
+                    ActuallyDataObject.CheckAndDo(CriticalSquared, out IsEqualsCriticalAndChiSquare);
+                    
+                    if (IsEqualsCriticalAndChiSquare) 
+                        break; 
+                }
+
+                if (ActuallyDataObject.GetDataListCount() <= 0) throw new Exception("Количество элементов оказалось равно нулю 0.");
+                
+                Result = ActuallyDataObject.GetData();
+            }
+            catch (Exception e) 
+            {
+                GetMessageBox.Show("Метод COX_1 был рассчитан с ошибкой: \n" + e.Message);
+                return Result;
+            }
+
+            return Result;
+        }
+
+        /*
+                 * Остаточный код для COX_Standart, когда тот понадобится (не удалять!!!)
+                 * double reverse_uncertanity = 0;
+                double relative_x_squ = 0;
+                foreach (var Item in ActualData)
+                {
+                    reverse_uncertanity += Math.Pow(Item.Uncertanity, -2);
+                    relative_x_squ += Item.Value / Math.Pow(Item.Uncertanity, 2);
+                }
+
+                Result.X = relative_x_squ / reverse_uncertanity;
+                Result.U = Math.Sqrt(ActuallyDataObject.GetChiSquare() / (ActuallyDataObject.GetDataListCount() * reverse_uncertanity));
+        */
 
         #endregion
 
@@ -654,111 +824,6 @@ namespace KCRV_Statistics.Model.MathService
             return Result;
         }
 
-        /// <summary>
-        /// Позволяет с заданной точностью до 15 знаков рассчитать значение добавочной дисперсии для метода Мандель-Пауля.
-        /// Данному методу подчиняются два приватных метода GetLambdaCharacteristics_MandelPaule и GetNaturalSquared_MandelPaule 
-        /// </summary>
-        public static double CalculateAddDispForMandelPaule (List<RegularData> Data, int Accuracy)
-        {
-            double Result = 0;
-
-            // Интервал доверия для расчёта критического значение Хи^2 - 5%
-            double CriticalSquared = ChiSquared.InvCDF(Data.Count() - 1, 1 - 0.05);
-
-            // Добавочная дисперсия и шаг по ней
-            double AddDispersion = 10;
-            double StepDisp = AddDispersion / 2;
-
-            // Инициализация определителя шага (позитивный или негативный)
-            bool IsNegativeStep;
-            double InitialNaturalSquared = GetNaturalSquared_MandelPaule(
-                Data, 
-                AddDispersion, 
-                GetLambdaCharacteristics_MandelPaule(Data, AddDispersion)
-            );
-            if (CriticalSquared > InitialNaturalSquared)
-                IsNegativeStep = true;
-            else 
-                IsNegativeStep = false;
-
-            int counter = 0;
-
-            // Начало вычисления добавочной дисперсии
-            while (true)
-            {
-                // Расчёт характеристики по добавочной дисперсии
-                double LambdaCharacter = GetLambdaCharacteristics_MandelPaule(Data, AddDispersion);
-
-                // Расчёт натурального значения Хи^2
-                double NaturalSquared = GetNaturalSquared_MandelPaule(Data, AddDispersion, LambdaCharacter);
-
-                // Проверка полученного натурального значения
-                if (Math.Round(CriticalSquared, Accuracy) == Math.Round(NaturalSquared, Accuracy))
-                {
-                    Result = Math.Sqrt(AddDispersion);
-                    break;
-                }
-                else if (CriticalSquared >= NaturalSquared)
-                {
-                    AddDispersion -= StepDisp;
-
-                    if (AddDispersion < 0)
-                    {
-                        AddDispersion = Math.Abs(AddDispersion);
-                        StepDisp /= 2;
-                    }
-
-                    if (!IsNegativeStep)
-                        StepDisp /= 2;
-                }
-                else if (CriticalSquared <= NaturalSquared)
-                {
-                    AddDispersion += StepDisp; 
-                    if (IsNegativeStep)
-                        StepDisp /= 2;
-                }
-
-                counter++;
-                if (counter == 100)
-                {
-                    Result = 0;
-                    break;
-                }
-            }
-
-            return Result;
-        }
-
-        /// <summary>
-        /// Вычисляет характеристику от лямбды, подчинён методу CalculateAddDispForMandelPaule
-        /// </summary>
-        private static double GetLambdaCharacteristics_MandelPaule (List<RegularData> Data, double AddDispersion) 
-        {
-            double LambdaCharacter_numerator = 0;
-            double LambdaCharacter_denomerator = 0;
-            foreach (var Item in Data)
-            {
-                LambdaCharacter_numerator += Item.Value / (Math.Pow(Item.Uncertanity, 2) + AddDispersion);
-                LambdaCharacter_denomerator += 1 / (Math.Pow(Item.Uncertanity, 2) + AddDispersion);
-            }
-            return LambdaCharacter_numerator / LambdaCharacter_denomerator;
-        }
-
-        /// <summary>
-        /// Вычисляет натуральное значение Хи^2, подчинён методу CalculateAddDispForMandelPaule
-        /// </summary>
-        private static double GetNaturalSquared_MandelPaule (List<RegularData> Data, double AddDispersion, double LambdaCharacter)
-        {
-            double NaturalSquared = 0;
-
-            // Расчёт натурального значения Хи^2
-            foreach (var Item in Data)
-            {
-                NaturalSquared += Math.Pow(Item.Value - LambdaCharacter, 2) / (Math.Pow(Item.Uncertanity, 2) + AddDispersion);
-            }
-            return NaturalSquared;
-        }
-
         #endregion
 
         #region Расчёт всех показателей
@@ -775,9 +840,9 @@ namespace KCRV_Statistics.Model.MathService
             var median          = Median        (Data, IterationDigits, ResultDigits);
             var derSimonian     = DerSimonian   (Data, weightedMean.X, IterationDigits, ResultDigits);
             //var mandelPaule     = MandelPaule   (Data, IterationDigits, ResultDigits);
-            var huber           = Huber (Data, IterationDigits, ResultDigits);
-            var gost            = GOST (Data, IterationDigits, ResultDigits);
-            var a               = A(Data, IterationDigits, ResultDigits);
+            var huber           = Huber         (Data, IterationDigits, ResultDigits);
+            var gost            = GOST          (Data, IterationDigits, ResultDigits);
+            var a               = A             (Data, IterationDigits, ResultDigits);
 
             Result.Add(mean);
             Result.Add(weightedMean);

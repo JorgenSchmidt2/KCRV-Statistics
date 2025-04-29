@@ -20,14 +20,14 @@ namespace MathServiceTests.EstimatorsTests.Tests.EnCriterialValues
             List<CheckData<double>> checkDatas = new List<CheckData<double>>();
             for (var i = 0; i < actuallyData.Count; i++)
             {
-                if (actuallyData[i].E == Math.Round(Estimators_Data_1.TestData[i].E, resdigits))
+                if (Math.Round(actuallyData[i].E, resdigits) == Math.Round(Estimators_Data_1.TestData[i].E, resdigits))
                 {
                     checkDatas.Add(
                         new CheckData<double>
                         { 
                             IsCorrect = true,
                             TestValue = Math.Round(Estimators_Data_1.TestData[i].E, resdigits),
-                            ActuallyValue = actuallyData[i].E
+                            ActuallyValue = Math.Round(actuallyData[i].E, resdigits)
                         }
                     );
                 }
@@ -38,7 +38,7 @@ namespace MathServiceTests.EstimatorsTests.Tests.EnCriterialValues
                         {
                             IsCorrect = false,
                             TestValue = Math.Round(Estimators_Data_1.TestData[i].E, resdigits),
-                            ActuallyValue = actuallyData[i].E
+                            ActuallyValue = Math.Round(actuallyData[i].E, resdigits)
                         }
                     );
                 }
