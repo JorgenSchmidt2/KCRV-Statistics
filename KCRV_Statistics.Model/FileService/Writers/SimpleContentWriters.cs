@@ -26,7 +26,7 @@ namespace KCRV_Statistics.Model.FileService.Writers
             }
             catch (Exception e)
             {
-                GetMessageBox.Show("Ошибка при записи файла " + FileName + ":\n" + e.Message);
+                GetMessageBox.Show("Ошибка на этапе записи данных в файл." + e.Message);
             }
         }
     }

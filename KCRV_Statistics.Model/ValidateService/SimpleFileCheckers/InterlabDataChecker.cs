@@ -7,7 +7,7 @@ namespace KCRV_Statistics.Model.ValidateService.SimpleFileCheckers
     /// относительно понятном для человека формате (в отличии от двоичного кода .xlsx файлов).
     /// В простых файлах, данные часто разделяют пробелами, табуляцией, запятыми и т.п. по колонкам и переносом строки по строкам.
     /// </summary>
-    public class InterlabDataSimpleChecker
+    public class InterlabDataChecker
     {
         /// <summary>
         /// Выполняет проверку входного контента из простого файла на соответствие его списку объектов типа RegularData (см. Core -> Entities).
@@ -73,8 +73,7 @@ namespace KCRV_Statistics.Model.ValidateService.SimpleFileCheckers
             catch (Exception e)
             {
                 Result.Status = false;
-                Result.Message = "Во время проверки простого файла возникла следующая ошибка: \n";
-                Result.Message += e;
+                Result.Message = "Во время проверки простого файла возникла следующая ошибка: \n" + e;
             }
 
             return Result;

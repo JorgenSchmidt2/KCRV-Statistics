@@ -1,15 +1,14 @@
-﻿using KCRV_Statistics.Core.AppConstants;
-using KCRV_Statistics.Core.Entities.FileSystemEntites;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Windows;
+using KCRV_Statistics.Core.AppConstants;
 using KCRV_Statistics.Model.DataOperatorsService.Lists;
 using KCRV_Statistics.Model.DirectoryService.DirectoryInfoGetters;
 using KCRV_Statistics.Model.FileService.Readers;
 using KCRV_Statistics.Model.ValidateService.DirectoryCheckers;
 using KCRV_Statistics.UI.AppService;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Windows;
 
 namespace KCRV_Statistics.UI
 {
@@ -36,11 +35,17 @@ namespace KCRV_Statistics.UI
             }
 
             // Получение содержимого файла и перевод его в ряд строк
-            var FileListContent = SimpleContentReaders.GetContentFromFile("", FileSystemNames.ConfigurationFile);
-            var FileList = FileListContent.Replace("\r", "").Split('\n');
+            var FileListContentResponse = SimpleContentReaders.GetContentFromFile("", FileSystemNames.ConfigurationFile);
+            if (!FileListContentResponse.Status)
+            {
+                MessageBox.Show(FileListContentResponse.Message);
+                Shutdown();
+                return;
+            }
+            var FileList = FileListContentResponse.Data.Replace("\r", "").Split('\n');
 
             // Если в конфигурационном файле ничего не оказалось - работа программы завершается
-            if (FileListContent.Equals("") || FileList.Length == 0)
+            if (FileListContentResponse.Equals("") || FileList.Length == 0)
             {
                 MessageBox.Show("Так как указанный файл с именем " + FileSystemNames.ConfigurationFile + " оказался пуст и определял " +
                     "какие папки будут использоваться в приложении - работа программы закончится.");
@@ -53,7 +58,7 @@ namespace KCRV_Statistics.UI
             AppData.AppDirectoryData = CorrectDirectoryNamesGetter.GetCorrectDirectories(FileList);
             if (AppData.AppDirectoryData.Count == 0)
             {
-                MessageBox.Show("Конфигурационный файл с именем " + FileSystemNames.ConfigurationFile + "не содержит имён пригодных для открытия директорий. " 
+                MessageBox.Show("Конфигурационный файл с именем " + FileSystemNames.ConfigurationFile + " не содержит имён, пригодных для открытия директорий. " 
                     +"\nРабота программы окончена.");
                 Shutdown();
                 return;
@@ -73,7 +78,7 @@ namespace KCRV_Statistics.UI
                 // Определяет какие директории будут открыты изначально при запуске приложения
                 if (CurrentDir.IsChoised)
                 {
-                    AppData.ChoisedFolders.Add(CurrentDir.DirectoryName);
+                    AppData.ChosenFolders.Add(CurrentDir.DirectoryName);
                 }
             }
 
@@ -105,8 +110,18 @@ namespace KCRV_Statistics.UI
             ChoisedExtensions.Add(AppFileFormats.TXT);
 
             // Получаем первичный список всех файлов из директорий, после получаем нужные нам расширения файлов
-            List<FileDataEntity> PrimaryFileList = DirectoryInfoReader.GetFileListFromDirectory(AppData.ChoisedFolders);
-            AppData.AppFileData = ListOperators.FilterFileListByExtension(PrimaryFileList, ChoisedExtensions);
+            var PrimaryFileListResponse = DirectoryInfoReader.GetFileListFromDirectory(AppData.ChosenFolders);
+            var FileListExtensionsResponse = ListOperators.FilterFileListByExtension(PrimaryFileListResponse.Data, ChoisedExtensions);
+            AppData.AppFileData = FileListExtensionsResponse.Data;
+
+            if (!PrimaryFileListResponse.Status || !FileListExtensionsResponse.Status)
+            {
+                MessageBox.Show("Ошибка на этапе получения списка файлов:\n"
+                              + "Ошибка при получении первичного списка - " + PrimaryFileListResponse.Message + "\n"
+                              + "Ошибка при получении списка файлов с расширениями - " + FileListExtensionsResponse.Message + "\n");
+                Shutdown();
+                return;
+            }
 
             // Открываем главное окно (также прописан алгоритм закрытия главного окна, при котором вся программа заканчивает работу).
             WindowsObjects.EntryWindow = new();

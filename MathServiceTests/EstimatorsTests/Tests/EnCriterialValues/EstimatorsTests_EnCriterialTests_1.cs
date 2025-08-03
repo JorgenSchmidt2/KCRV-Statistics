@@ -15,7 +15,7 @@ namespace MathServiceTests.EstimatorsTests.Tests.EnCriterialValues
             int resdigits = 8;
 
             List<RegularData> actuallyData = ListOperators.CopyRegularDataListEntities(Estimators_Data_1.TestData);
-            List<OutputData> characteristics = Estimators.CalculateAllMethods(actuallyData, 15, resdigits);
+            //List<OutputData> characteristics = Estimators.CalculateAllMethods(actuallyData, 15, resdigits);
 
             List<CheckData<double>> checkDatas = new List<CheckData<double>>();
             for (var i = 0; i < actuallyData.Count; i++)

@@ -7,6 +7,7 @@ using System.Windows.Input;
 using KCRV_Statistics.Core.AppConstants;
 using KCRV_Statistics.Core.Entities.FileSystemEntites;
 using KCRV_Statistics.Core.Entities.GraphicsShellEntities;
+using KCRV_Statistics.Core.Responses.DataResponses;
 using KCRV_Statistics.Model.DataOperatorsService.Lists;
 using KCRV_Statistics.Model.DirectoryService.DirectoryInfoGetters;
 using KCRV_Statistics.Model.FileService.Readers;
@@ -59,14 +60,14 @@ namespace KCRV_Statistics.UI.ViewModels
                         }
 
                         // Выполнение запроса
-                        var Result = FileQueryMaker.DoQuery(Query, AppData.AppFileData);
-                        if (Result.Count == 0)
+                        var Result = QueryMaker.DoQuery(Query, AppData.AppFileData);
+                        if (Result.Data.Count == 0)
                         {
                             MessageBox.Show("Файлов, содержащих \"" + Query + "\" в своём имени не обнаружено");
                             return;
                         }
 
-                        FileDatas = Result;
+                        FileDatas = Result.Data;
                     }
                 );
             }
@@ -83,7 +84,12 @@ namespace KCRV_Statistics.UI.ViewModels
                 return new Command(
                     obj =>
                     {
-                        FileDatas = ListOperators.CopyFileDataListEntities(AppData.AppFileData);
+                        var FileDatasResponse = ListOperators.CopyFileDataListEntities(AppData.AppFileData);
+
+                        if (FileDatasResponse.Status)
+                            FileDatas = FileDatasResponse.Data;
+                        else
+                            MessageBox.Show(FileDatasResponse.Message);
                     }
                 );
             }
@@ -106,7 +112,7 @@ namespace KCRV_Statistics.UI.ViewModels
             }
         }
 
-        public List<FileDataEntity> fileDatas = ListOperators.CopyFileDataListEntities(AppData.AppFileData);
+        public List<FileDataEntity> fileDatas = ListOperators.CopyFileDataListEntities(AppData.AppFileData).Data;
         /// <summary>
         /// Отвечает за то, что будет отображено непосредственно на экране пользователю.
         /// </summary>
@@ -114,9 +120,14 @@ namespace KCRV_Statistics.UI.ViewModels
         {
             get { return fileDatas; }
             set 
-            { 
-                fileDatas = value; 
-                CheckChanges();
+            {
+                var fileDatasResponse = ListOperators.CopyFileDataListEntities(value);
+                if (fileDatasResponse.Status)
+                {
+                    fileDatas = fileDatasResponse.Data;
+                    CheckChanges();
+                }
+                else MessageBox.Show(fileDatasResponse.Message);
             }
         }
         #endregion
@@ -200,10 +211,7 @@ namespace KCRV_Statistics.UI.ViewModels
         /// </summary>
         public bool XLSX_Check
         {
-            get
-            {
-                return xlsx_Check;
-            }
+            get { return xlsx_Check; }
             set
             {
                 if (value == false && !(JSON_Check || CSV_Check || TXT_Check))
@@ -222,10 +230,7 @@ namespace KCRV_Statistics.UI.ViewModels
         /// </summary>
         public bool JSON_Check
         {
-            get
-            {
-                return json_Check;
-            }
+            get { return json_Check; }
 
             set
             {
@@ -245,10 +250,7 @@ namespace KCRV_Statistics.UI.ViewModels
         /// </summary>
         public bool CSV_Check
         {
-            get
-            {
-                return csv_Check;
-            }
+            get { return csv_Check; }
 
             set
             {
@@ -268,10 +270,7 @@ namespace KCRV_Statistics.UI.ViewModels
         /// </summary>
         public bool TXT_Check
         {
-            get
-            {
-                return txt_Check;
-            }
+            get { return txt_Check; }
             set
             {
                 if (value == false && !(XLSX_Check || JSON_Check || CSV_Check))
@@ -480,13 +479,13 @@ namespace KCRV_Statistics.UI.ViewModels
                 // Если количество элементов с положительным статусом по полю IsChoised промежуточного списка оказалось равно нулю, ничего не происходит, все списки остаются без изменений
                 // Если глобальный список с выбранными для отображениями директориями содержит выбранный элемент, объект, соответствующий по полю DirName удаляется из списка
                 // В противном случае добавляется в список отображения директорий
-                if (AppData.ChoisedFolders.Contains(obj.DirectoryName) && NewList.Where(x => x.IsChoised == true).Select(x => x).Count() != 0)
+                if (AppData.ChosenFolders.Contains(obj.DirectoryName) && NewList.Where(x => x.IsChoised == true).Select(x => x).Count() != 0)
                 {
-                    AppData.ChoisedFolders.Remove(obj.DirectoryName);
+                    AppData.ChosenFolders.Remove(obj.DirectoryName);
                 }
-                else if (!AppData.ChoisedFolders.Contains(obj.DirectoryName))
+                else if (!AppData.ChosenFolders.Contains(obj.DirectoryName))
                 {
-                    AppData.ChoisedFolders.Add(obj.DirectoryName);
+                    AppData.ChosenFolders.Add(obj.DirectoryName);
                 }
                 else return;
 
@@ -519,8 +518,17 @@ namespace KCRV_Statistics.UI.ViewModels
                     if (FileExtension.Equals(AppFileFormats.TXT))
                     {
                         var Content = SimpleContentReaders.GetContentFromFile(obj.Directory, obj.FileName);
-                        if (InterlabDataSimpleChecker.CheckSimpleData(Content).Status) MessageBox.Show(Content);
-                        else MessageBox.Show("Формат входного файла был некорректен или возникла ошибка.");
+                        if (Content.Status)
+                        {
+                            var ValidateResponse = InterlabDataChecker.CheckSimpleData(Content.Data);
+                            if (ValidateResponse.Status) MessageBox.Show(Content.Data);
+                            else MessageBox.Show("Формат входного файла был некорректен или возникла ошибка. Описание ошибки:\n" + ValidateResponse.Message);
+                        }
+                        else
+                        {
+                            MessageBox.Show(Content.Message);
+                        }
+                        
                     }
                     else
                     {
@@ -576,7 +584,7 @@ namespace KCRV_Statistics.UI.ViewModels
                     }
                 }
             }
-            AppData.ChoisedFolders = choised_folders;
+            AppData.ChosenFolders = choised_folders;
 
             if (choised_folders.Count == 0)
             {
@@ -592,9 +600,25 @@ namespace KCRV_Statistics.UI.ViewModels
             if (TXT_Check) ChoisedExtensions.Add(AppFileFormats.TXT);
 
             // Через первичный список получаем все находящиеся в папках файлы, после чего фильтруем папки по их расширению
-            List<FileDataEntity> PrimaryFileList = DirectoryInfoReader.GetFileListFromDirectory(AppData.ChoisedFolders);
-            AppData.AppFileData = ListOperators.FilterFileListByExtension(PrimaryFileList, ChoisedExtensions);
-            FileDatas = ListOperators.CopyFileDataListEntities(AppData.AppFileData);
+            ListDataResponse<FileDataEntity> PrimaryFileListResponse = DirectoryInfoReader.GetFileListFromDirectory(AppData.ChosenFolders);
+            if (PrimaryFileListResponse.Status)
+            {
+                var FileDataResponse = ListOperators.FilterFileListByExtension(PrimaryFileListResponse.Data, ChoisedExtensions);
+                if (FileDataResponse.Status) 
+                {
+                    AppData.AppFileData = FileDataResponse.Data;
+                    FileDatas = ListOperators.CopyFileDataListEntities(AppData.AppFileData).Data;
+                }
+                else
+                {
+                    MessageBox.Show(FileDataResponse.Message);
+                }
+            }
+            else
+            {
+                MessageBox.Show(PrimaryFileListResponse.Message);
+            }
+
         }
 
         public void OpenFile (FileDataEntity FileData)
@@ -611,16 +635,21 @@ namespace KCRV_Statistics.UI.ViewModels
                 }
 
                 // Получаем содержимое файла
-                string Content = String.Empty;
                 var splits = FileData.FileName.Split(".");
                 string FileExtension = splits[splits.Length - 1];
+
+                var ContentResponse = SimpleContentReaders.GetContentFromFile(FileData.Directory, FileData.FileName);
+                if (!ContentResponse.Status)
+                {
+                    MessageBox.Show(ContentResponse.Message);
+                    return;
+                }
+
                 if (FileExtension.Equals(AppFileFormats.TXT))
                 {
-                    Content = SimpleContentReaders.GetContentFromFile(FileData.Directory, FileData.FileName);
-
                     // Проверяем содержимое файла на соответствие его формату "два столбца разделены табуляцией, строки - переносом строки"
                     // Если содержимое не соответствует вышеуказанным требованиям - выводится сообщение об ошибке, ход прерывается
-                    var Validate = InterlabDataSimpleChecker.CheckSimpleData(Content);
+                    var Validate = InterlabDataChecker.CheckSimpleData(ContentResponse.Data);
                     if (!Validate.Status)
                     {
                         MessageBox.Show(Validate.Message);
@@ -648,9 +677,9 @@ namespace KCRV_Statistics.UI.ViewModels
                     return;
                 }
                 // Получаем переданный ранее контент в удобном для обработки виде, дополнительно забиваем его в статическую переменную
-                var ValuesList = ListConverters.StringToRegularData(Content);
+                var ValuesList = ListConverters.StringToRegularData(ContentResponse.Data);
                 AppData.CurrentData.Clear();
-                AppData.CurrentData = ValuesList;
+                AppData.CurrentData = ValuesList.Data;
 
                 // Открываем окно указания начала координат (для xlsx файла)
                 WindowsObjects.OpenCalculateIntermediateWindow = new();

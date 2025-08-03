@@ -1,4 +1,4 @@
-﻿using KCRV_Statistics.Core.AppConfiguration;
+﻿using KCRV_Statistics.Core.AppConstants;
 using KCRV_Statistics.Core.Entities.DataEntities.OtherDataEntities;
 using KCRV_Statistics.Core.Entities.DataEntities.RegularDataUnits;
 using KCRV_Statistics.Model.MessageService.MessageBoxService;
@@ -693,7 +693,7 @@ namespace KCRV_Statistics.Model.MathService
 
         #endregion
 
-        #region Группа оценок PMA + оценка Кокса_1 (треб. правки)
+        #region Группа оценок PMA
 
         public static OutputData PMA(List<RegularData> Data, int IterationDigits, int ResultDigits)
         {
@@ -710,53 +710,12 @@ namespace KCRV_Statistics.Model.MathService
 
             try
             {
-                var FiltredCoxData = COX_1(Data);
+
 
             }
             catch (Exception e)
             {
                 GetMessageBox.Show("Метод " + Result.MethodName + " был рассчитан с ошибкой: \n" + e.Message);
-                return Result;
-            }
-
-            return Result;
-        }
-
-        public static List<RegularData> COX_1(List<RegularData> Data)
-        {
-            List<RegularData> Result = new List<RegularData>();
-
-            try
-            {
-                ChiSquareDataEntity ActuallyDataObject = new ChiSquareDataEntity(Data);
-
-                while (ActuallyDataObject.GetDataListCount() > 0) 
-                {
-                    // Значение по Дер-Симониану (после "починки" метода Мандель-Пауля, нужно будет использовать именно его) 
-                    var NewData = ActuallyDataObject.GetData();
-                    var PreEstimateValue = WeightedMean(NewData, 8, 8).X;
-
-                    // Расчёт хи-значений для выборки
-                    ActuallyDataObject.CalculateAll(PreEstimateValue);
-
-                    // Интервал доверия для расчёта критического значение Хи^2 - 5%
-                    double CriticalSquared = ChiSquared.InvCDF(ActuallyDataObject.GetDataListCount() - 1, 1 - 0.05);
-
-                    // Проверка условия
-                    bool IsEqualsCriticalAndChiSquare = false;
-                    ActuallyDataObject.CheckAndDo(CriticalSquared, out IsEqualsCriticalAndChiSquare);
-                    
-                    if (IsEqualsCriticalAndChiSquare) 
-                        break; 
-                }
-
-                if (ActuallyDataObject.GetDataListCount() <= 0) throw new Exception("Количество элементов оказалось равно нулю 0.");
-                
-                Result = ActuallyDataObject.GetData();
-            }
-            catch (Exception e) 
-            {
-                GetMessageBox.Show("Метод COX_1 был рассчитан с ошибкой: \n" + e.Message);
                 return Result;
             }
 
@@ -776,6 +735,59 @@ namespace KCRV_Statistics.Model.MathService
                 Result.X = relative_x_squ / reverse_uncertanity;
                 Result.U = Math.Sqrt(ActuallyDataObject.GetChiSquare() / (ActuallyDataObject.GetDataListCount() * reverse_uncertanity));
         */
+
+        #endregion
+
+        #region Определение согласованного подмножества выборки на основе оценки Кокса
+
+        public static List<CoxResultsEntity> COX_1(List<RegularData> Data)
+        {
+            List<CoxResultsEntity> Result = new List<CoxResultsEntity>();
+
+            try
+            {
+                ChiSquareDataEntity ActuallyDataObject = new ChiSquareDataEntity(Data);
+
+                while (ActuallyDataObject.GetDataListCount() > 0)
+                {
+                    // Значение по Средневзешенному
+                    var NewData = ActuallyDataObject.GetData();
+                    var PreEstimateValue = WeightedMean(NewData, 8, 8).X;
+
+                    // Расчёт хи-значений для выборки
+                    ActuallyDataObject.CalculateAll(PreEstimateValue);
+                    CoxResultsEntity CoxObject = new CoxResultsEntity
+                    {
+                        Data = ActuallyDataObject.GetData(),
+                    };
+
+                    // Интервал доверия для расчёта критического значение Хи^2 - 5%
+                    double CriticalSquared = ChiSquared.InvCDF(ActuallyDataObject.GetDataListCount() - 1, 1 - 0.05);
+
+                    // Проверка условия
+                    bool IsEqualsCriticalAndChiSquare = false;
+                    ActuallyDataObject.CheckAndDo(CriticalSquared, out IsEqualsCriticalAndChiSquare);
+
+                    // Присвоение результатов расчётов специальной локальной переменной 
+                    CoxObject.CriticalValue = ActuallyDataObject.GetCriticalValue();
+                    CoxObject.EstimateValue = ActuallyDataObject.GetEstimateValue();
+                    CoxObject.ChiSquareSum = ActuallyDataObject.GetChiSquare();
+                    Result.Add(CoxObject);
+
+                    if (IsEqualsCriticalAndChiSquare)
+                        break;
+                }
+
+                if (ActuallyDataObject.GetDataListCount() <= 0) throw new Exception("Количество элементов оказалось равно нулю 0.");
+            }
+            catch (Exception e)
+            {
+                GetMessageBox.Show("Метод COX_1 был рассчитан с ошибкой: \n" + e.Message);
+                return Result;
+            }
+
+            return Result;
+        }
 
         #endregion
 
@@ -831,9 +843,11 @@ namespace KCRV_Statistics.Model.MathService
         /// <summary>
         /// Метод для составления списка всех показателей для полученной выборки.
         /// </summary>
-        public static List<OutputData> CalculateAllMethods (List<RegularData> Data, int IterationDigits, int ResultDigits)
+        public static List<OutputData> CalculateAllMethods (List<RegularData> Data, out List<CoxResultsEntity> COX_Data, int IterationDigits, int ResultDigits)
         {
             List<OutputData> Result = new List<OutputData>();
+
+            COX_Data = COX_1(Data);
 
             var mean            = Mean          (Data, IterationDigits, ResultDigits);
             var weightedMean    = WeightedMean  (Data, IterationDigits, ResultDigits);

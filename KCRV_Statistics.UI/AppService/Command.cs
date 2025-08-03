@@ -12,12 +12,18 @@ namespace KCRV_Statistics.UI.AppService
         private Action<object> _execute;
         private Func<object, bool> _canExecute;
 
+        /// <summary>
+        /// Идентификация экземпляра класса Command
+        /// </summary>
         public Command(Action<object> execute, Func<object, bool> canExecute = null)
         {
             _execute = execute ?? throw new ArgumentNullException(nameof(execute));
             _canExecute = canExecute;
         }
 
+        /// <summary>
+        /// Подписка на события
+        /// </summary>
         public event EventHandler? CanExecuteChanged
         {
             add { CommandManager.RequerySuggested += value; }

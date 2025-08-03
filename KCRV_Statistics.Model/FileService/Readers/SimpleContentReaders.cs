@@ -1,4 +1,5 @@
-﻿using KCRV_Statistics.Model.MessageService.MessageBoxService;
+﻿using KCRV_Statistics.Core.Responses.DataResponses;
+using KCRV_Statistics.Model.MessageService.MessageBoxService;
 
 namespace KCRV_Statistics.Model.FileService.Readers
 {
@@ -12,38 +13,40 @@ namespace KCRV_Statistics.Model.FileService.Readers
         /// Решение не передавать путь принято из за относительной адресации и потому что программисту так удобнее
         /// управлять потоками данных в приложении.
         /// </summary>
-        public static string GetContentFromFile(string DirectoryName, string FileName)
+        public static SimpleDataResponse<string> GetContentFromFile(string DirectoryName, string FileName)
         {
             string ActuallyFilePath = "";
-            if (!DirectoryName.Equals(""))
-            {
-                ActuallyFilePath = Environment.CurrentDirectory + @"\" + DirectoryName + @"\" + FileName;
-            }
-            else
-            {
-                ActuallyFilePath = Environment.CurrentDirectory + @"\" + FileName;
-            }
 
-            string Result = "";
+            if (!DirectoryName.Equals(""))
+                ActuallyFilePath = Environment.CurrentDirectory + @"\" + DirectoryName + @"\" + FileName;
+            else
+                ActuallyFilePath = Environment.CurrentDirectory + @"\" + FileName;
+
+            SimpleDataResponse<string> Result = new SimpleDataResponse<string>();
 
             var file = new FileInfo(ActuallyFilePath);
             if (!file.Exists || file.Length == 0)
             {
-                GetMessageBox.Show("Ошибка, файл " + FileName + " не существует, либо его содержимое пустое.");
-                return "";
+                return new SimpleDataResponse<string> 
+                { 
+                    Message = "Ошибка, файл " + FileName + " не существует, либо его содержимое пустое.",
+                    Status = false
+                };
             }
 
             try
             {
-                Result = File.ReadAllText(ActuallyFilePath);
+                Result.Data = File.ReadAllText(ActuallyFilePath);
+                Result.Status = true;
+                return Result;
             }
             catch (Exception e)
             {
-                GetMessageBox.Show("Ошибка при чтении файла " + FileName + ":\n" + e.Message);
-                return "";
+                Result.Message = "Ошибка при чтении файла " + FileName + ":\n" + e.Message;
+                Result.Status = true;
+                return Result;
             }
 
-            return Result;
         }
     }
 }

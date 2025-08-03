@@ -1,7 +1,7 @@
 ﻿using KCRV_Statistics.Core.Entities.DataEntities.RegularDataUnits;
 using KCRV_Statistics.Core.Entities.GraphicsShellEntities;
+using KCRV_Statistics.Core.Responses.DataResponses;
 using KCRV_Statistics.Model.MessageService.MessageBoxService;
-using System.Collections.ObjectModel;
 
 namespace KCRV_Statistics.Model.GraphicsShell
 {
@@ -14,11 +14,13 @@ namespace KCRV_Statistics.Model.GraphicsShell
         /// Преобразует исходный список результатов KCRV методов расчёта в отображаемый, дополнительно определяет какой метод будет
         /// отображён в первую очередь
         /// </summary>
-        public static List<ViewedOutputData> GetViewedOutputData (List<OutputData> Data)
+        public static ListDataResponse<ViewedOutputData> GetViewedOutputData (List<OutputData> Data)
         {
+            var Result = new ListDataResponse<ViewedOutputData>();
+
             try
             {
-                List<ViewedOutputData> Result = new List<ViewedOutputData>();
+                Result.Data = new List<ViewedOutputData>();
 
                 // Инициализация счётчика для определения какой из методов будет отображён при открытии окна отображения
                 int counter = 1;
@@ -37,16 +39,19 @@ namespace KCRV_Statistics.Model.GraphicsShell
                         obj.IsChoised = false;
 
                     // Добавление объекта в результирующий список
-                    Result.Add(obj);
+                    Result.Data.Add(obj);
 
                     counter += 1;
                 }
+
+                Result.Status = true;
                 return Result;
             }
             catch (Exception e)
             {
-                GetMessageBox.Show("Ошибка при составлении отображаемого списка элементов результатов расчётов: \n" + e.Message);
-                return new List<ViewedOutputData>();
+                Result.Message = "Ошибка при составлении отображаемого списка элементов результатов расчётов: \n" + e.Message;
+                Result.Status = false;
+                return Result;
             }
         }
     }

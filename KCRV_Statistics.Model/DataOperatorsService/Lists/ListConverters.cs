@@ -1,4 +1,5 @@
 ﻿using KCRV_Statistics.Core.Entities.DataEntities.RegularDataUnits;
+using KCRV_Statistics.Core.Responses.DataResponses;
 using KCRV_Statistics.Model.MessageService.MessageBoxService;
 
 namespace KCRV_Statistics.Model.DataOperatorsService.Lists
@@ -12,9 +13,10 @@ namespace KCRV_Statistics.Model.DataOperatorsService.Lists
         /// Переводит в RegularData контент переменной типа string, формат контента которой можно описать как 
         /// "2 столбца разделены табуляцией, произвольное количество строк разделены переносом строки".
         /// </summary>
-        public static List<RegularData> StringToRegularData (string Content)
+        public static ListDataResponse<RegularData> StringToRegularData (string Content)
         {
-            List<RegularData> Result = new List<RegularData>();
+            ListDataResponse<RegularData> Result = new ListDataResponse<RegularData>();
+            Result.Data = new List<RegularData>();
 
             try
             {
@@ -40,7 +42,7 @@ namespace KCRV_Statistics.Model.DataOperatorsService.Lists
                     var columns = item.Split('\t');
                     if (Double.TryParse(columns[0], out var number_1) && Double.TryParse(columns[1], out var number_2))
                     {
-                        Result.Add(new RegularData
+                        Result.Data.Add(new RegularData
                         {
                             LaboratoryNumber = laboratoryCounter,
                             Value = number_1,
@@ -48,14 +50,17 @@ namespace KCRV_Statistics.Model.DataOperatorsService.Lists
                         });
                     }
                 }
+
+                Result.Status = true;
+                return Result;
             }
             catch (Exception e)
             {
-                GetMessageBox.Show("Ошибка на стадии перевода текста из файла в соответствующий тип данных: \n" + e.Message);
+                Result.Message = e.Message;
+                Result.Status = false;
                 return Result;
             }
 
-            return Result;
         }
     }
 }

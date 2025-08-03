@@ -15,7 +15,7 @@ namespace SearchServiceTests.FileFinderTests.Tests
                 true,
                 FileFinderTests_Methods.FileListsAreEquals_ByFileName(
                     FileFinder_Data_1.Ethalon_DoQueryTest_DEF,
-                    FileQueryMaker.DoQuery("def", FileFinder_Data_1.TestData)
+                    QueryMaker.DoQuery("def", FileFinder_Data_1.TestData)
                 )
             );
         }
@@ -27,7 +27,7 @@ namespace SearchServiceTests.FileFinderTests.Tests
                 true,
                 FileFinderTests_Methods.FileListsAreEquals_ByFileName(
                     FileFinder_Data_1.Ethalon_DoQueryTest_FGH,
-                    FileQueryMaker.DoQuery("fgh", FileFinder_Data_1.TestData)
+                    QueryMaker.DoQuery("fgh", FileFinder_Data_1.TestData)
                 )
             );
         }
@@ -40,7 +40,7 @@ namespace SearchServiceTests.FileFinderTests.Tests
                 FileFinderTests_Methods.FileListsAreEquals_ByFileName (
 
                     FileFinder_Data_1.Ethalon_DoQueryTest_GHI,
-                    FileQueryMaker.DoQuery("ghi", FileFinder_Data_1.TestData)
+                    QueryMaker.DoQuery("ghi", FileFinder_Data_1.TestData)
                  )
             );
         }

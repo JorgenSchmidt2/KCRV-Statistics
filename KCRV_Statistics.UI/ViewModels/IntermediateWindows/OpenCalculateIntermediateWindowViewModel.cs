@@ -1,6 +1,9 @@
-﻿using KCRV_Statistics.Model.MathService;
+﻿using KCRV_Statistics.Core.Entities.DataEntities.OtherDataEntities;
+using KCRV_Statistics.Core.Entities.DataEntities.RegularDataUnits;
+using KCRV_Statistics.Model.MathService;
 using KCRV_Statistics.UI.AppService;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace KCRV_Statistics.UI.ViewModels.IntermediateWindows
@@ -86,7 +89,7 @@ namespace KCRV_Statistics.UI.ViewModels.IntermediateWindows
         #region Кнопки управления
 
         /// <summary>
-        /// Для кнопки расчёта значений KCRV
+        /// Для кнопки расчёта значений аттестуемой характеристики
         /// </summary>
         public Command Calculate
         {
@@ -121,7 +124,8 @@ namespace KCRV_Statistics.UI.ViewModels.IntermediateWindows
                             }
 
                             // Расчёт значений, присвоение результатов вычислений статическому полю 
-                            var Result = Estimators.CalculateAllMethods(AppData.CurrentData, IterationDigits, ResultDigits);
+                            AppData.COX_Datas = new List<CoxResultsEntity>();
+                            var Result = Estimators.CalculateAllMethods(AppData.CurrentData, out AppData.COX_Datas, IterationDigits, ResultDigits);
                             AppData.OutputData.Clear();
                             AppData.OutputData = Result;
 

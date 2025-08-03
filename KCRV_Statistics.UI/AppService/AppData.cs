@@ -1,4 +1,5 @@
-﻿using KCRV_Statistics.Core.Entities.DataEntities.RegularDataUnits;
+﻿using KCRV_Statistics.Core.Entities.DataEntities.OtherDataEntities;
+using KCRV_Statistics.Core.Entities.DataEntities.RegularDataUnits;
 using KCRV_Statistics.Core.Entities.FileSystemEntites;
 using KCRV_Statistics.Core.Entities.GraphicsShellEntities;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace KCRV_Statistics.UI.AppService
         /// <summary>
         /// Содержит список выбранных пользователем директорий.
         /// </summary>
-        public static List<string> ChoisedFolders = new List<string>();
+        public static List<string> ChosenFolders = new List<string>();
         /// <summary>
         /// Содержит полученные данные от лабораторий.
         /// </summary>
@@ -32,5 +33,9 @@ namespace KCRV_Statistics.UI.AppService
         /// Содержит значения KCRV.
         /// </summary>
         public static List<OutputData> OutputData = new List<OutputData>();
+        /// <summary>
+        /// Содержит значения результатов лаборатории на каждой итерации "отсеивания" данных по алгоритму Кокса до нахождения согласованного подмножества
+        /// </summary>
+        public static List<CoxResultsEntity> COX_Datas = new List<CoxResultsEntity>();
     }
 }

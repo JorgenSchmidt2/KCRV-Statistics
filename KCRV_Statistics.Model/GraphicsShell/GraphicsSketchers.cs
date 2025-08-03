@@ -91,7 +91,7 @@ namespace KCRV_Statistics.Model.GraphicsShell
                 List<TextLabelEntity> Result = new List<TextLabelEntity>();
 
                 // Копирование в новый лист с его последующей сортировкой по возрастанию
-                List<RegularData> SortedData = ListOperators.CopyRegularDataListEntities(Data).OrderBy(x => x.Value).ToList();
+                List<RegularData> SortedData = ListOperators.CopyRegularDataListEntities(Data).Data.OrderBy(x => x.Value).ToList();
 
                 // Вычисление начальных точек расположения подписей на внешнем поле отрисовки
                 int XFieldInitPoints = (GraphicsShellConfiguration.ExternalCanvasWidth - GraphicsShellConfiguration.InternalCanvasWidth) / 2;
@@ -172,7 +172,7 @@ namespace KCRV_Statistics.Model.GraphicsShell
                 var Result = new List<PointGraphicsEntity>();
 
                 // Копирование в новый лист с его последующей сортировкой по возрастанию
-                List<RegularData> SortedData = ListOperators.CopyRegularDataListEntities(Data).OrderBy(x => x.Value).ToList();
+                List<RegularData> SortedData = ListOperators.CopyRegularDataListEntities(Data).Data.OrderBy(x => x.Value).ToList();
 
                 // Задание координат точек
                 int counter = 0;
@@ -217,7 +217,7 @@ namespace KCRV_Statistics.Model.GraphicsShell
                     / Math.Sqrt(Math.Pow(max - min, 2));
 
                 // Копирование в новый лист с его последующей сортировкой по возрастанию
-                List<RegularData> SortedData = ListOperators.CopyRegularDataListEntities(Data).OrderBy(x => x.Value).ToList();
+                List<RegularData> SortedData = ListOperators.CopyRegularDataListEntities(Data).Data.OrderBy(x => x.Value).ToList();
 
                 int counter = 1;
                 foreach (var Item in SortedData)

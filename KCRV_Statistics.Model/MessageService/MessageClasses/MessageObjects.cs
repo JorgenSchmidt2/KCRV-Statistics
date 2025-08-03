@@ -3,7 +3,7 @@
 namespace KCRV_Statistics.Model.MessageService.MessageClasses
 {
     /// <summary>
-    /// Используемые в приложении поля, участвующие в 
+    /// Поля, содержащие экзампляры классов отправщика и подписчика
     /// </summary>
     public class MessageObjects
     {

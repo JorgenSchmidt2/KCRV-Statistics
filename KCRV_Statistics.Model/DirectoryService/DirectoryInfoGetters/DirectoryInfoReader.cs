@@ -1,4 +1,5 @@
 ﻿using KCRV_Statistics.Core.Entities.FileSystemEntites;
+using KCRV_Statistics.Core.Responses.DataResponses;
 using KCRV_Statistics.Model.MessageService.MessageBoxService;
 using System.Windows;
 
@@ -14,10 +15,11 @@ namespace KCRV_Statistics.Model.DirectoryService.DirectoryInfoGetters
         /// Под "указанными директориями" в данном случае 
         /// имеется ввиду список директорий, передаваемый в функцию
         /// </summary>
-        public static List<FileDataEntity> GetFileListFromDirectory (List<string> DirectoryNames)
+        public static ListDataResponse<FileDataEntity> GetFileListFromDirectory (List<string> DirectoryNames)
         {
             // Содержит результат работы метода
-            List<FileDataEntity> Result = new List<FileDataEntity>();
+            ListDataResponse<FileDataEntity> Result = new ListDataResponse<FileDataEntity>();
+            Result.Data = new List<FileDataEntity>();
             // По логике должна содержать список реально существующих директорий из входного списка
             List<string> ExistsDirectories = new List<string>();
             
@@ -49,7 +51,7 @@ namespace KCRV_Statistics.Model.DirectoryService.DirectoryInfoGetters
                     }
                     Message += "Считывание данных из директорий остановлено.";
                     MessageBox.Show(Message);
-                    return new List<FileDataEntity>();
+                    return new ListDataResponse<FileDataEntity>();
                 }
 
                 // Считывание файлов из существующих директорий
@@ -67,7 +69,7 @@ namespace KCRV_Statistics.Model.DirectoryService.DirectoryInfoGetters
                         {
                             var splits = curFile.Split('\\');
 
-                            Result.Add( 
+                            Result.Data.Add( 
                                 new FileDataEntity() { 
                                     ID = FileCounter, 
                                     Directory = splits[splits.Length - 2], 
@@ -78,13 +80,17 @@ namespace KCRV_Statistics.Model.DirectoryService.DirectoryInfoGetters
                         }
                     }
                 }
+
+                Result.Status = true;
+                return Result;
             }
             catch (Exception e)
             {
-                GetMessageBox.Show("При чтении данных из указанных директорий возникла ошибка: " + e.Message);
+                Result.Message = e.Message;
+                Result.Status = false;
+                return Result;
             }
 
-            return Result;
         }
 
         /// <summary>

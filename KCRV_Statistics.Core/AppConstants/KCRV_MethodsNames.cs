@@ -1,4 +1,4 @@
-﻿namespace KCRV_Statistics.Core.AppConfiguration
+﻿namespace KCRV_Statistics.Core.AppConstants
 {
     /// <summary>
     /// Содержит названия всех методов.

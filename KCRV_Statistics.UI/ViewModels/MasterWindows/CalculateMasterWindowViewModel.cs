@@ -220,7 +220,7 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
 
         #region Данные расчётов 
 
-        public List<ViewedOutputData> viewedOutputDataList = GraphicsShellService.GetViewedOutputData(AppData.OutputData);
+        public List<ViewedOutputData> viewedOutputDataList = GraphicsShellService.GetViewedOutputData(AppData.OutputData).Data;
         /// <summary>
         /// Для отображения полученных показателей KCRV в виде списка значений "Значение-Погрешность"
         /// </summary>
@@ -330,6 +330,22 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
                                      + Item.InterLabVariance + "\n";
                         }
 
+                        Content += "\nТаблица \"Промежуточные результаты\" \n";
+                        var counter = 0;
+                        foreach(var Item in AppData.COX_Datas)
+                        {
+                            counter++;
+                            Content += "\nТаблица №" + counter + "\n";
+                            Content += "\nN\tX\tU\tχi\n";
+                            foreach (var Col in Item.Data)
+                            {
+                                Content += Col.LaboratoryNumber + "\t" + Col.Value + "\t" + Col.Uncertanity + "\t" + Col.ChiSquareValue + "\n";
+                            }
+                            Content += "\nСредневзвешенное: " + Item.EstimateValue ;
+                            Content += "\nχКрит: " + Item.CriticalValue;
+                            Content += "\nχВыборки: " + Item.ChiSquareSum + "\n";
+                        }
+
                         if (!Directory.Exists(
                                 Environment.CurrentDirectory + "\\" + FileSystemNames.ResultsFolder + "\\" + FolderName
                             )
@@ -339,6 +355,8 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
                                 Environment.CurrentDirectory + "\\" + FileSystemNames.ResultsFolder + "\\" + FolderName
                             );
                         }
+
+
 
                         SimpleContentWriters.WriteContentToFile(
                             Content,
@@ -402,7 +420,11 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
                 return new Command(
                     obj =>
                     {
+                        // Очищение статических полей от результатов
                         AppData.OutputData.Clear();
+                        AppData.COX_Datas.Clear();
+
+                        // Закрытие окна
                         WindowsObjects.CalculateMasterWindow.Close();
                         WindowsObjects.CalculateMasterWindow = null;
                     }    
