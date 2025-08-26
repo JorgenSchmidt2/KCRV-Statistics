@@ -6,22 +6,19 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:KCRV_Statistics.UI.ViewModels"
         mc:Ignorable="d"
-        Title="KCRV Statistics v 0.0.0.8" Height="455" Width="765" ResizeMode="NoResize">
+        Title="KCRV Statistics v.0.0.0.9" Height="470" Width="1020" ResizeMode="NoResize">
     <Window.DataContext>
         <local:EntryWindowViewModel/>
     </Window.DataContext>
     <Grid>
-        <!--#region Поиск -->
-        <Label Margin="226,20,0,0" Height="30" Width="200" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Найти в списке:" />
-        <TextBox Text="{Binding Query}" Margin="230,50,0,0" Height="20" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Button Command="{Binding Search}" Margin="360, 30, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Найти" Height="40" Width="80"/>
-        <Button Command="{Binding Reset}" Margin="450, 30, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="40" Width="80">
-            <TextBlock TextAlignment="Center">Сбросить<LineBreak/>результаты</TextBlock>
-        </Button>
-        <!--#endregion-->
-
         <!-- #region Список файлов и директорий -->
-        <ListView x:Name="DirectoryDataEntitiesList" ItemsSource="{Binding DirectoryDataEntities}" Margin="10,30,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="345" Width="210">
+        <Button Command="{Binding OpenDirectoryWindow}" Margin="10, 30, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="40" Width="100">
+            <TextBlock TextAlignment="Center">Управление <LineBreak/> директориями</TextBlock>
+        </Button>
+        <Button Command="{Binding OpenProgrammFolder}" Margin="120, 30, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="40" Width="100">
+            <TextBlock TextAlignment="Center">Открыть папку <LineBreak/> с программой</TextBlock>
+        </Button>
+        <ListView x:Name="DirectoryDataEntitiesList" ItemsSource="{Binding DirectoryDataEntities}" Margin="10,85,0,0" Height="330" Width="210" HorizontalAlignment="Left" VerticalAlignment="Top" >
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
                     <i:InvokeCommandAction Command="{Binding SelectDirectoryCommand}" CommandParameter="{Binding SelectedItem, ElementName=DirectoryDataEntitiesList}"/>
@@ -60,6 +57,15 @@
         
         <!--#endregion-->
 
+        <!--#region Поиск -->
+        <Label Margin="226,20,0,0" Height="30" Width="200" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Найти в списке:" />
+        <TextBox Text="{Binding Query}" Margin="230,50,0,0" Height="20" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button Command="{Binding Search}" Margin="360, 30, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Найти" Height="40" Width="80"/>
+        <Button Command="{Binding Reset}" Margin="450, 30, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="40" Width="80">
+            <TextBlock TextAlignment="Center">Сбросить<LineBreak/>результаты</TextBlock>
+        </Button>
+        <!--#endregion-->
+
         <!--#region Выбор логики работы со списком файлов -->
         <Label Margin="227, 333, 0, 0" Width="240" HorizontalAlignment="Left" VerticalAlignment="Top" Content="При нажатии на элемент списка файлов:" />
         <CheckBox IsChecked="{Binding MustBeViewed}" Margin="230, 360, 0, 0" Content="Отобразить данные" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="10"/>
@@ -68,18 +74,18 @@
         <!--#endregion-->
 
         <!--#region Выбор раздела -->
-        <Label Margin="80,384,0,0" Width="200" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Отобразить файлы формата:" />
-        <CheckBox IsChecked="{Binding XLSX_Check}" Margin="260,390,0,0" Content="XLSX" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <CheckBox IsChecked="{Binding JSON_Check}" Margin="330,390,0,0" Content="JSON" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <CheckBox IsChecked="{Binding CSV_Check}"  Margin="400,390,0,0" Content="CSV" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <CheckBox IsChecked="{Binding TXT_Check}"  Margin="470,390,0,0" Content="TXT" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Label Margin="227,375,0,0" Width="200" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Отобразить файлы формата:" />
+        <CheckBox IsChecked="{Binding XLSX_Check}" Margin="230,400,0,0" Content="XLSX" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <CheckBox IsChecked="{Binding JSON_Check}" Margin="320,400,0,0" Content="JSON" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <CheckBox IsChecked="{Binding CSV_Check}"  Margin="410,400,0,0" Content="CSV" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <CheckBox IsChecked="{Binding TXT_Check}"  Margin="490,400,0,0" Content="TXT" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <!--#endregion-->
 
         <!--#region Управление и описание программы -->
         <Label Margin="546,23,0,0" Height="30" Width="150" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Открыть файл по ID:" />
         <TextBox x:Name="ID_Field" Text="{Binding ID_Field}" Margin="550,50,0,0" Height="20" Width="180" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Button Command="{Binding FindElementByID_Command}" Margin="550, 83, 0, 0"  Height="25" Width="180" Content="Расчитать" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Button Command="{Binding ShowVisualization}" Margin="550, 117, 0, 0" Height="25" Width="180" Content="Визуализация данных" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button Command="{Binding OpenChosenData}" Margin="550, 83, 0, 0"  Height="25" Width="180" Content="Расчитать" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button Command="{Binding ShowVisualization}" Margin="550, 117, 0, 0" Height="25" Width="180" Content="Превизуализация данных" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <Button Command="{Binding ShortDescription}" Margin="550, 180, 0, 0" Height="30" Width="180" FontSize="10" HorizontalAlignment="Left" VerticalAlignment="Top">
             <TextBlock TextAlignment="Center">Краткое описание окон<LineBreak/>Расчитать / Визуализация данных</TextBlock>
         </Button>
@@ -87,6 +93,13 @@
         <Button Command="{Binding ProgrammCycleInfo}" Margin="550, 260, 0, 0" Height="30" Width="180" FontSize="10" Content="Цикл использования программы" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <Button Command="{Binding Help}" Margin="550, 300, 0, 0" Height="30" Width="180" FontSize="10" Content="Справка по программе" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <!--#endregion-->
-        
+
+        <!--#region Свои данные -->
+        <Rectangle Margin="747,-5,0,0" Height="1420" Width="2150" Stroke="#000" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <Label Margin="765,23,0,0" Width="200" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Внешние данные:" />
+        <TextBox Margin="765,50,0,0" Text="{Binding YourselfData}" Height="340" Width="225" AcceptsReturn="True" AcceptsTab="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <CheckBox IsChecked="{Binding IsYourselfDataFieldActive}"  Margin="765,400,0,0" Content="Поле ввода собственных данных активно" FontSize="10" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <!--#endregion-->
+
     </Grid>
 </Window>

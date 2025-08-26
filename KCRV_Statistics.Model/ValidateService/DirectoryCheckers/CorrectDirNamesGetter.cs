@@ -6,12 +6,12 @@ namespace KCRV_Statistics.Model.ValidateService.DirectoryCheckers
     /// <summary>
     /// Содержит методы проверки на валидность списка директорий, например содержатся ли в папке запрещённые системой Windows символы
     /// </summary>
-    public class CorrectDirectoryNamesGetter
+    public class CorrectDirNamesGetter
     {
         /// <summary>
         /// Проверяет содержатся ли в папке запрещённые системой Windows символы
         /// </summary>
-        public static List<ViewedDirectoryData> GetCorrectDirectories (string[] DirectoryList)
+        public static List<ViewedDirectoryData> GetCorrectLocalDirNames (string[] DirectoryList)
         {
             List<ViewedDirectoryData> Result = new List<ViewedDirectoryData>();
 

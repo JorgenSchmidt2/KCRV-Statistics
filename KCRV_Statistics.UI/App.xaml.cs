@@ -28,7 +28,7 @@ namespace KCRV_Statistics.UI
                 var Content = "Не найдено файла, содержащего имена используемых директорий ("
                     + FileSystemNames.ConfigurationFile + ")."
                     + "\nФайл будет пересоздан, а работа программы окончена, прежде чем снова запустить программу, заполните его, "
-                    + "в противном случае работа программы снова будет завершена.";
+                    + "в противном случае работа программы снова будет завершена при следующем запуске.";
                 MessageBox.Show(Content);
                 Shutdown();
                 return;
@@ -55,7 +55,7 @@ namespace KCRV_Statistics.UI
 
             // Передаём полученный ранее список строк из файла и проверяем каждую указанную в нём директорию 
             // на соответствие требованию Windodws к именованию директорий
-            AppData.AppDirectoryData = CorrectDirectoryNamesGetter.GetCorrectDirectories(FileList);
+            AppData.AppDirectoryData = CorrectDirNamesGetter.GetCorrectLocalDirNames(FileList);
             if (AppData.AppDirectoryData.Count == 0)
             {
                 MessageBox.Show("Конфигурационный файл с именем " + FileSystemNames.ConfigurationFile + " не содержит имён, пригодных для открытия директорий. " 

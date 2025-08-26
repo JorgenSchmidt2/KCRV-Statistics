@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using KCRV_Statistics.Core.AppConstants;
 using KCRV_Statistics.Core.Entities.FileSystemEntites;
@@ -12,8 +14,9 @@ using KCRV_Statistics.Model.DataOperatorsService.Lists;
 using KCRV_Statistics.Model.DirectoryService.DirectoryInfoGetters;
 using KCRV_Statistics.Model.FileService.Readers;
 using KCRV_Statistics.Model.SearchService.FileFinders;
-using KCRV_Statistics.Model.ValidateService.SimpleFileCheckers;
+using KCRV_Statistics.Model.ValidateService.FileCheckers;
 using KCRV_Statistics.UI.AppService;
+using Microsoft.Xaml.Behaviors.Core;
 
 namespace KCRV_Statistics.UI.ViewModels
 {
@@ -22,30 +25,94 @@ namespace KCRV_Statistics.UI.ViewModels
     /// </summary>
     public class EntryWindowViewModel : NotifyPropertyChanged
     {
+
+        #region Список файлов и директорий
+
+        public List<ViewedDirectoryData> directoryDataEntities = AppData.AppDirectoryData;
+        /// <summary>
+        /// Отображает список доступных директорий.
+        /// </summary>
+        public List<ViewedDirectoryData> DirectoryDataEntities
+        {
+            get { return directoryDataEntities; }
+            set
+            {
+                directoryDataEntities = value;
+                CheckChanges();
+            }
+        }
+
+        public List<FileDataEntity> fileDatas = ListOperators.CopyFileDataListEntities(AppData.AppFileData).Data;
+        /// <summary>
+        /// Отвечает за то, что будет отображено непосредственно на экране пользователю.
+        /// </summary>
+        public List<FileDataEntity> FileDatas
+        {
+            get { return fileDatas; }
+            set 
+            {
+                var fileDatasResponse = ListOperators.CopyFileDataListEntities(value);
+                if (fileDatasResponse.Status)
+                {
+                    fileDatas = fileDatasResponse.Data;
+                    CheckChanges();
+                }
+                else MessageBox.Show(fileDatasResponse.Message);
+            }
+        }
+
+        public Command OpenDirectoryWindow
+        {
+            get
+            {
+                return new Command(
+                    obj =>
+                    {
+                        MessageBox.Show("Hasn't implemented.");
+                    }    
+                );
+            }
+        }
+
+        public Command OpenProgrammFolder
+        {
+            get
+            {
+                return new Command(
+                    obj =>
+                    {
+                        var path = Environment.CurrentDirectory;
+                        Process.Start("explorer.exe", path);
+                    }
+                );
+            }
+        }
+        #endregion
+
         #region Поиск
 
-        public string query; 
+        public string query;
         /// <summary>
         /// Содержит запрос к файловой системе.
         /// </summary>
         public string Query
         {
-            get 
-            { 
-                return query; 
+            get
+            {
+                return query;
             }
 
-            set 
-            { 
-                query = value; 
+            set
+            {
+                query = value;
                 CheckChanges();
             }
-        } 
+        }
 
         /// <summary>
         /// Выполнение запроса на поиск совпадений.
         /// </summary>
-        public Command Search 
+        public Command Search
         {
             get
             {
@@ -90,108 +157,6 @@ namespace KCRV_Statistics.UI.ViewModels
                             FileDatas = FileDatasResponse.Data;
                         else
                             MessageBox.Show(FileDatasResponse.Message);
-                    }
-                );
-            }
-        }
-        #endregion
-
-        #region Список файлов и директорий
-
-        public List<ViewedDirectoryData> directoryDataEntities = AppData.AppDirectoryData;
-        /// <summary>
-        /// Отображает список доступных директорий.
-        /// </summary>
-        public List<ViewedDirectoryData> DirectoryDataEntities
-        {
-            get { return directoryDataEntities; }
-            set
-            {
-                directoryDataEntities = value;
-                CheckChanges();
-            }
-        }
-
-        public List<FileDataEntity> fileDatas = ListOperators.CopyFileDataListEntities(AppData.AppFileData).Data;
-        /// <summary>
-        /// Отвечает за то, что будет отображено непосредственно на экране пользователю.
-        /// </summary>
-        public List<FileDataEntity> FileDatas
-        {
-            get { return fileDatas; }
-            set 
-            {
-                var fileDatasResponse = ListOperators.CopyFileDataListEntities(value);
-                if (fileDatasResponse.Status)
-                {
-                    fileDatas = fileDatasResponse.Data;
-                    CheckChanges();
-                }
-                else MessageBox.Show(fileDatasResponse.Message);
-            }
-        }
-        #endregion
-
-        #region Открытие файла
-
-        public int id_Field = 0;
-        /// <summary>
-        /// ID файла
-        /// </summary>
-        public int ID_Field
-        {
-            get 
-            { 
-                return id_Field; 
-            }
-            set
-            {
-                id_Field = value;
-                CheckChanges();
-            }
-        }
-
-        /// <summary>
-        /// Находит и передаёт в нужный метод данные по файлу
-        /// </summary>
-        public Command FindElementByID_Command
-        {
-            get
-            {
-                return new Command(
-                    obj =>
-                    {
-                        if (ID_Field == 0)
-                        {
-                            MessageBox.Show("Введите ID файла.");
-                            return;
-                        }
-                        if (ID_Field < 0)
-                        {
-                            MessageBox.Show("ID файла не может быть меньше нуля, либо равно нулю.");
-                            return;
-                        }
-
-                        try
-                        {
-                            // Ищем в списке файл с нужным ID
-                            var fileInfo = FileDatas.Where(x => x.ID == ID_Field).Select(x => x).FirstOrDefault();
-
-                            // Если не найдено объекта с нужным айди - пользователю показывается сообщение об ошибке, ход прерывается
-                            if (fileInfo == null)
-                            {
-                                MessageBox.Show("Элемента с таким ID (" + ID_Field + ") не обнаружено.");
-                                return;
-                            }
-
-                            // Открываем файл с помощью специально заготовленного универсального void-метода
-                            OpenFile(fileInfo);
-                        }
-                        catch (Exception e)
-                        {
-                            MessageBox.Show("Возникла неустранимая ошибка:\n" + e.Message + "\n\nСообщите о проблеме разработчику.");
-                            return;
-                        }
                     }
                 );
             }
@@ -365,6 +330,109 @@ namespace KCRV_Statistics.UI.ViewModels
 
         #endregion
 
+        #region Открытие файла
+
+        public int id_Field = 0;
+        /// <summary>
+        /// ID файла
+        /// </summary>
+        public int ID_Field
+        {
+            get
+            {
+                return id_Field;
+            }
+            set
+            {
+                id_Field = value;
+                CheckChanges();
+            }
+        }
+
+        /// <summary>
+        /// Находит и передаёт в нужный метод данные по файлу или внешним данным
+        /// </summary>
+        public Command OpenChosenData
+        {
+            get
+            {
+                return new Command(
+                    obj =>
+                    {
+                        if (IsYourselfDataFieldActive && !String.IsNullOrEmpty(YourselfData))
+                        {
+                            OpenYourselfData();
+                            return;
+                        }
+
+                        OpenWithID();
+                    }
+                );
+            }
+        }
+
+        private void OpenWithID ()
+        {
+            if (ID_Field == 0)
+            {
+                MessageBox.Show("Введите ID файла.");
+                return;
+            }
+            if (ID_Field < 0)
+            {
+                MessageBox.Show("ID файла не может быть меньше нуля, либо равно нулю.");
+                return;
+            }
+
+            try
+            {
+                // Ищем в списке файл с нужным ID
+                var fileInfo = FileDatas.Where(x => x.ID == ID_Field).Select(x => x).FirstOrDefault();
+
+                // Если не найдено объекта с нужным айди - пользователю показывается сообщение об ошибке, ход прерывается
+                if (fileInfo == null)
+                {
+                    MessageBox.Show("Элемента с таким ID (" + ID_Field + ") не обнаружено.");
+                    return;
+                }
+
+                // Открываем файл с помощью специально заготовленного универсального void-метода
+                OpenFile(fileInfo);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Возникла неустранимая ошибка:\n" + e.Message + "\n\nСообщите о проблеме разработчику.");
+                return;
+            }
+        }
+
+        private void OpenYourselfData()
+        {
+            var SimpleFileDataResponse = SimpleFileDataValidator.IsTwoColumnsFormat(YourselfData);
+            if (SimpleFileDataResponse.Status)
+            {
+                // Получаем переданный ранее контент в удобном для обработки виде, дополнительно забиваем его в статическую переменную
+                var ValuesListResponse = ListConverters.StringToRegularData(YourselfData);
+                if (!ValuesListResponse.Status)
+                {
+                    MessageBox.Show(ValuesListResponse.Message);
+                    return;
+                }
+
+                AppData.CurrentData.Clear();
+                AppData.CurrentData = ValuesListResponse.Data;
+
+                // Открываем окно указания начала координат (для xlsx файла)
+                WindowsObjects.OpenCalculateIntermediateWindow = new();
+                if (WindowsObjects.OpenCalculateIntermediateWindow.ShowDialog() == true)
+                {
+                    WindowsObjects.OpenCalculateIntermediateWindow.Show();
+                }
+            }
+            else MessageBox.Show(SimpleFileDataResponse.Message);
+        }
+        #endregion
+
         #region Описание программы 
 
         public Command ShowVisualization
@@ -438,15 +506,43 @@ namespace KCRV_Statistics.UI.ViewModels
 
         #endregion
 
+        #region Для внешних данных пользователя
+
+        public string yourselfData;
+        public string YourselfData
+        {
+            get { return yourselfData;}
+            set 
+            { 
+                yourselfData = value;
+                CheckChanges();
+            }
+        }
+
+        public bool isYourselfDataFieldActive = true;
+        public bool IsYourselfDataFieldActive
+        {
+            get { return isYourselfDataFieldActive; }
+            set
+            {
+                isYourselfDataFieldActive = value;
+                CheckChanges();
+            }
+        }
+
+        #endregion
+
         #region События
 
         public ICommand SelectFileCommand { get; }
         public ICommand SelectDirectoryCommand { get; }
+        //public ICommand SelectAllTextInTextBox { get; }
 
         public EntryWindowViewModel()
         {
             SelectFileCommand = new Command(SelectFile);
             SelectDirectoryCommand = new Command(SelectDirectory);
+            //SelectAllTextInTextBox = new ActionCommand(SelectAllText);
         }
 
         /// <summary>
@@ -520,7 +616,7 @@ namespace KCRV_Statistics.UI.ViewModels
                         var Content = SimpleContentReaders.GetContentFromFile(obj.Directory, obj.FileName);
                         if (Content.Status)
                         {
-                            var ValidateResponse = InterlabDataChecker.CheckSimpleData(Content.Data);
+                            var ValidateResponse = SimpleFileDataValidator.IsTwoColumnsFormat(Content.Data);
                             if (ValidateResponse.Status) MessageBox.Show(Content.Data);
                             else MessageBox.Show("Формат входного файла был некорректен или возникла ошибка. Описание ошибки:\n" + ValidateResponse.Message);
                         }
@@ -552,8 +648,6 @@ namespace KCRV_Statistics.UI.ViewModels
                 MessageBox.Show("Возникла неустранимая ошибка:\n" + e.Message + "\n\nСообщите о проблеме разработчику.");
             }
         }
-
-
         #endregion
 
         // Под мультифункциями подразумеваются такие методы, которые могут быть использованы более, чем в одном разделе
@@ -649,7 +743,7 @@ namespace KCRV_Statistics.UI.ViewModels
                 {
                     // Проверяем содержимое файла на соответствие его формату "два столбца разделены табуляцией, строки - переносом строки"
                     // Если содержимое не соответствует вышеуказанным требованиям - выводится сообщение об ошибке, ход прерывается
-                    var Validate = InterlabDataChecker.CheckSimpleData(ContentResponse.Data);
+                    var Validate = SimpleFileDataValidator.IsTwoColumnsFormat(ContentResponse.Data);
                     if (!Validate.Status)
                     {
                         MessageBox.Show(Validate.Message);

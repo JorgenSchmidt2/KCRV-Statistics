@@ -1,6 +1,6 @@
 ﻿namespace KCRV_Statistics.Model.MathService
 {
-    public class StabilityOperators
+    public class UnformityEstimator
     {
 
     }

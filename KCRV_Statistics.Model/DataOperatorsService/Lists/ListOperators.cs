@@ -21,6 +21,8 @@ namespace KCRV_Statistics.Model.DataOperatorsService.Lists
 
             try 
             {
+                if (InputList == null || InputList.Count == 0) throw new Exception("Входной лист оказался пустым.");
+
                 // Задаём счётчик для присвоения идентификаторов элементам списка файлов
                 var counter = 1;
 

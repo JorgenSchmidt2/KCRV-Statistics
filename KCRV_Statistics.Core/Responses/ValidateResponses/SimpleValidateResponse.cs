@@ -11,6 +11,10 @@
         /// </summary>
         public bool Status { get; set; }
         /// <summary>
+        /// Для регистрации исключений во время работы check-методов
+        /// </summary>
+        public bool IsExceptionHasntThrown { get; set; }
+        /// <summary>
         /// Должен содержать сообщение об ошибке
         /// </summary>
         public string? Message { get; set; }

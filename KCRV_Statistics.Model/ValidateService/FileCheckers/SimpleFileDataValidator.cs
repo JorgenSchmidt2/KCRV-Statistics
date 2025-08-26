@@ -1,21 +1,22 @@
 ﻿using KCRV_Statistics.Core.Responses.ValidateResponses;
 
-namespace KCRV_Statistics.Model.ValidateService.SimpleFileCheckers
+namespace KCRV_Statistics.Model.ValidateService.FileCheckers
 {
     /// <summary>
     /// Содержит методы проверки простых файлов. Под простым файлом подразумевается обычный .txt файл, содержащий данные в 
     /// относительно понятном для человека формате (в отличии от двоичного кода .xlsx файлов).
     /// В простых файлах, данные часто разделяют пробелами, табуляцией, запятыми и т.п. по колонкам и переносом строки по строкам.
     /// </summary>
-    public class InterlabDataChecker
+    public class SimpleFileDataValidator
     {
         /// <summary>
         /// Выполняет проверку входного контента из простого файла на соответствие его списку объектов типа RegularData (см. Core -> Entities).
         /// </summary>
-        public static SimpleValidateResponse CheckSimpleData(string Content)
+        public static SimpleValidateResponse IsTwoColumnsFormat(string Content)
         {
             // Переменная для результатов
             SimpleValidateResponse Result = new SimpleValidateResponse();
+            Result.IsExceptionHasntThrown = true;
             Result.Status = true;
 
             // Другие необходимые переменные
@@ -32,19 +33,17 @@ namespace KCRV_Statistics.Model.ValidateService.SimpleFileCheckers
                 // Часто информация из Excel при копировании выглядит именно таким
                 // образом, что последняя строка всегда остаётся
                 if (Content[Content.Length - 1] == '\n')
-                {
                     Content = Content.Remove(Content.Length - 1, 1);
-                }
 
                 // Переводит входной string в последовательный набор строк
                 var lines = Content.Split('\n');    
 
                 // Цикл проверки
-                foreach (var item in lines)
+                foreach (var line in lines)
                 {
                     // Предварительные операции
                     lines_counter++;
-                    var columns = item.Split('\t');
+                    var columns = line.Split('\t');
 
                     // Условия проверки
                     if (columns.Length != 2)
@@ -69,14 +68,75 @@ namespace KCRV_Statistics.Model.ValidateService.SimpleFileCheckers
                         break;
                     }
                 }
+
+                return Result;
             }
             catch (Exception e)
             {
                 Result.Status = false;
+                Result.IsExceptionHasntThrown = false;
                 Result.Message = "Во время проверки простого файла возникла следующая ошибка: \n" + e;
+                return Result;
             }
+        }
 
-            return Result;
+        /// <summary>
+        /// Проверяет являются элементы ПЕРВОГО столбца 
+        /// </summary>
+        public static SimpleValidateResponse IsStrictlyIncreasingFirstColumn(string Content)
+        {
+            // Данный метод можно будет универсализировать
+            // Переменная для результатов
+            SimpleValidateResponse Result = new SimpleValidateResponse();
+            Result.IsExceptionHasntThrown = true;
+            Result.Status = true;
+
+            try
+            {
+                // Предварительные действия
+                Content = Content.Replace('.', ',')
+                    .Replace("\t\n", "");
+
+                // Если последний символ строки равен переносу, перенос удаляется
+                // Часто информация из Excel при копировании выглядит именно таким
+                // образом, что последняя строка всегда остаётся
+                if (Content[Content.Length - 1] == '\n')
+                    Content = Content.Remove(Content.Length - 1, 1);
+
+                // Переводит входной string в последовательный набор строк
+                var lines = Content.Split('\n');
+
+                var counter = 1;
+                double lastnumber = 0;
+                foreach (var line in lines)
+                {
+                    var columns = line.Split('\t');
+                    Double.TryParse(columns[0], out var number_1);
+                    if (counter != 1)
+                    {
+                        if (lastnumber >= number_1)
+                        {
+                            Result.Status = false;
+                            Result.Message = "Ряд по первой колонке не является возрастающим.";
+                            break;
+                        }
+                        lastnumber = number_1;
+                    }
+                    else
+                        lastnumber = number_1;
+
+                    counter++;
+                }
+
+                return Result;
+            }
+            catch (Exception e) 
+            {
+                Result.Status = false;
+                Result.IsExceptionHasntThrown = false;
+                Result.Message = "Во время проверки простого файла возникла следующая ошибка: \n" + e; 
+                return Result;
+            }
         }
     }
 }
