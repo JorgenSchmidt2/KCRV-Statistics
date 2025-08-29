@@ -18,7 +18,7 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
     /// <summary>
     /// Модель визуального представления для окна отображения результатов расчёта
     /// </summary>
-    public class CalculateMasterWindowViewModel : NotifyPropertyChanged
+    public class InterlabMasterWindowViewModel : NotifyPropertyChanged
     {
         #region Определение размера графика (внешняя часть)
 
@@ -132,20 +132,26 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
         {
             get
             {
-                for (int i = 0; i < labelData.Count; i++)
+                if (labelData.Count != 0)
                 {
-                    labelData[i].LabelMargin = ThicknessGetter.GetCoords(
-                        labelData[i].X,
-                        labelData[i].Y
-                    );
+                    for (int i = 0; i < labelData.Count; i++)
+                    {
+                        labelData[i].LabelMargin = ThicknessGetter.GetCoords(
+                            labelData[i].X,
+                            labelData[i].Y
+                        );
+                    }
                 }
                 return labelData;
             }
 
             set
             {
-                labelData = value;
-                CheckChanges();
+                if (value.Count != 0)
+                {
+                    labelData = value;
+                    CheckChanges();
+                }
             }
         }
 
@@ -177,12 +183,15 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
             }
             set
             {
-                pointEntities = value;
-                CheckChanges();
+                if (value.Count != 0)
+                {
+                    pointEntities = value;
+                    CheckChanges();
+                }
             }
         }
 
-        public List<LineGraphicsEntity> KCRV_data = GraphicsSketchers.GetKCRV_Lines(AppData.OutputData[0], AppData.CurrentData);
+        public List<LineGraphicsEntity> KCRV_data = GraphicsSketchers.GetKCRV_Lines(GetOutputData(), AppData.CurrentData);
         /// <summary>
         /// Для отображения значения показателя KCRV с его интервалами доверия
         /// </summary>
@@ -194,9 +203,21 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
             }
             set
             {
-                KCRV_data = value;
-                CheckChanges();
+                if (value.Count != 0)
+                {
+                    KCRV_data = value;
+                    CheckChanges();
+                }
             }
+        }
+
+        /// <summary>
+        /// Метод для защиты окна от случайных вылетов
+        /// </summary>
+        private static OutputData GetOutputData()
+        {
+            try { return AppData.OutputData[0]; }
+            catch (Exception e) { MessageBox.Show("Ошибка при получении объекта данных:\n" + e.Message); return new OutputData(); }
         }
 
         public List<LineGraphicsEntity> uncertanityData = GraphicsSketchers.GetUncertanityLines(AppData.CurrentData);
@@ -211,8 +232,11 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
             }
             set
             {
-                uncertanityData = value;
-                CheckChanges();
+                if (value.Count != 0)
+                {
+                    uncertanityData = value;
+                    CheckChanges();
+                }
             }
         }
 
@@ -229,8 +253,11 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
             get { return viewedOutputDataList; }
             set
             {
-                viewedOutputDataList = value;
-                CheckChanges();
+                if (value.Count != 0)
+                {
+                    viewedOutputDataList = value;
+                    CheckChanges();
+                }
             }
         }
         #endregion
@@ -425,8 +452,8 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
                         AppData.COX_Datas.Clear();
 
                         // Закрытие окна
-                        WindowsObjects.CalculateMasterWindow.Close();
-                        WindowsObjects.CalculateMasterWindow = null;
+                        WindowsObjects.InterlabMasterWindow.Close();
+                        WindowsObjects.InterlabMasterWindow = null;
                     }    
                 );
             }
@@ -438,7 +465,7 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
 
         public ICommand ChoiseResult { get; }
 
-        public CalculateMasterWindowViewModel ()
+        public InterlabMasterWindowViewModel ()
         {
             ChoiseResult = new Command(ChoiseResultMethod);
         }

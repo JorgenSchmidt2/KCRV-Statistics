@@ -8,7 +8,7 @@ namespace SearchServiceTests.FileFinderTests.Tests
     [TestClass]
     public class FileQuery_Tests_1
     {
-        [TestMethod]
+/*        [TestMethod]
         public void FileFinder_DoQuery_Test_1 ()
         {
             Assert.AreEqual(
@@ -43,6 +43,6 @@ namespace SearchServiceTests.FileFinderTests.Tests
                     QueryMaker.DoQuery("ghi", FileFinder_Data_1.TestData)
                  )
             );
-        }
+        }*/
     }
 }

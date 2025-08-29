@@ -58,8 +58,8 @@ namespace KCRV_Statistics.UI
             AppData.AppDirectoryData = CorrectDirNamesGetter.GetCorrectLocalDirNames(FileList);
             if (AppData.AppDirectoryData.Count == 0)
             {
-                MessageBox.Show("Конфигурационный файл с именем " + FileSystemNames.ConfigurationFile + " не содержит имён, пригодных для открытия директорий. " 
-                    +"\nРабота программы окончена.");
+                MessageBox.Show("Конфигурационный файл с именем " + FileSystemNames.ConfigurationFile + " не содержит имён, пригодных для открытия директорий. "
+                    + "\nРабота программы окончена.");
                 Shutdown();
                 return;
             }
@@ -95,7 +95,7 @@ namespace KCRV_Statistics.UI
                 .Select(x => x)
                 .Count() == 0)
             {
-                MessageBox.Show("Все указанные в конфигурационном файле " + FileSystemNames.ConfigurationFile + " папки оказались пусты." 
+                MessageBox.Show("Все указанные в конфигурационном файле " + FileSystemNames.ConfigurationFile + " папки оказались пусты."
                     + "\nРабота программы окончена."
                     + "\nДля работы программы нужно чтобы как минимум одна папка содержала в себе хотя бы один файл.");
                 Shutdown();
@@ -136,5 +136,19 @@ namespace KCRV_Statistics.UI
                 return;
             }
         }
+
+        /* Для проверки работоспособности каждого из окон по отдельности (не удалять!!!)
+         * // Открываем главное окно (также прописан алгоритм закрытия главного окна, при котором вся программа заканчивает работу).
+            WindowsObjects.InterlabMasterWindow = new();
+            if (WindowsObjects.InterlabMasterWindow.ShowDialog() == true)
+            {
+                WindowsObjects.InterlabMasterWindow.Show();
+            }
+            else
+            {
+                WindowsObjects.InterlabMasterWindow = null;
+                Shutdown();
+                return;
+            }*/
     }
 }

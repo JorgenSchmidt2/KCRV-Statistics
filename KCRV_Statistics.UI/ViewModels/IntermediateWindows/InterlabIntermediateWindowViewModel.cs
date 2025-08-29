@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace KCRV_Statistics.UI.ViewModels.IntermediateWindows
 {
-    public class OpenCalculateIntermediateWindowViewModel : NotifyPropertyChanged
+    public class InterlabIntermediateWindowViewModel : NotifyPropertyChanged
     {
         #region Поля ввода значений округления при итерации и выводе результата
 
@@ -130,10 +130,10 @@ namespace KCRV_Statistics.UI.ViewModels.IntermediateWindows
                             AppData.OutputData = Result;
 
                             // Открытие окна
-                            WindowsObjects.CalculateMasterWindow = new();
-                            if (WindowsObjects.CalculateMasterWindow.ShowDialog() == true)
+                            WindowsObjects.InterlabMasterWindow = new();
+                            if (WindowsObjects.InterlabMasterWindow.ShowDialog() == true)
                             {
-                                WindowsObjects.CalculateMasterWindow.Show();
+                                WindowsObjects.InterlabMasterWindow.Show();
                             }
                         }
                         catch (Exception e)
@@ -167,8 +167,8 @@ namespace KCRV_Statistics.UI.ViewModels.IntermediateWindows
                     obj =>
                     {
                         AppData.CurrentData.Clear();
-                        WindowsObjects.OpenCalculateIntermediateWindow.Close();
-                        WindowsObjects.OpenCalculateIntermediateWindow = null;
+                        WindowsObjects.OpenInterlabIntermediateWindow.Close();
+                        WindowsObjects.OpenInterlabIntermediateWindow = null;
                     }
                 );
             }

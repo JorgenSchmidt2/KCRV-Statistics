@@ -1,4 +1,4 @@
-﻿<Window x:Class="KCRV_Statistics.UI.Views.MasterWindows.CalculateMasterWindow"
+﻿<Window x:Class="KCRV_Statistics.UI.Views.MasterWindows.InterlabMasterWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -11,7 +11,7 @@
         Title="CalculateMasterWindow" Height="615" Width="1282" ResizeMode="NoResize"
         BorderThickness="0.5" BorderBrush="Black">
     <Window.DataContext>
-        <local:CalculateMasterWindowViewModel/>
+        <local:InterlabMasterWindowViewModel/>
     </Window.DataContext>
     <Grid>
         <!--#region Для возможности перемещать окно по экрану компьютера (master window version)-->
@@ -21,7 +21,7 @@
             <Grid Grid.Row="1"></Grid>
         </Grid>
         <!--#endregion-->
-        
+
         <!--#region Кнопка закрытия окна -->
         <Button Command="{Binding Close}" HorizontalAlignment="Right" VerticalAlignment="Top" Height="30" Width="30">
             <Button.Content>
@@ -150,11 +150,11 @@
             </ItemsControl>
         </Viewbox>
         <!--#endregion-->
-        
+
         <!-- Результаты расчётов (не отнесено к отдельному региону в xaml коде окна для удобства, 
-        все последующие разделы также не будут отнесены к какому-либо региону) -->
-        
-        
+все последующие разделы также не будут отнесены к какому-либо региону) -->
+
+
         <!--#region Список файлов -->
         <ListView x:Name="ViewedOutputData" ItemsSource="{Binding ViewedOutputDataList}" Margin="650,40,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="340" Width="350">
             <i:Interaction.Triggers>
@@ -197,12 +197,12 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    
+
                 </GridView>
             </ListView.View>
         </ListView>
         <!--#endregion-->
-        
+
         <!--#region Управляющие кнопки и всё что с ними связано -->
         <Rectangle Margin="1020,40,0,0" Height="340" Width="255" HorizontalAlignment="Left" VerticalAlignment="Top" Stroke="#111" StrokeThickness="1" />
         <Label Margin="1040,50,0,0" Height="30" Width="220" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Выгрузить результаты в папку: " />

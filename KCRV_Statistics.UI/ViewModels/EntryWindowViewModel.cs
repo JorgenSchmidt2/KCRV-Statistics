@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using KCRV_Statistics.Core.AppConstants;
 using KCRV_Statistics.Core.Entities.FileSystemEntites;
@@ -16,7 +15,6 @@ using KCRV_Statistics.Model.FileService.Readers;
 using KCRV_Statistics.Model.SearchService.FileFinders;
 using KCRV_Statistics.Model.ValidateService.FileCheckers;
 using KCRV_Statistics.UI.AppService;
-using Microsoft.Xaml.Behaviors.Core;
 
 namespace KCRV_Statistics.UI.ViewModels
 {
@@ -330,7 +328,7 @@ namespace KCRV_Statistics.UI.ViewModels
 
         #endregion
 
-        #region Открытие файла
+        #region Открытие окон
 
         public int id_Field = 0;
         /// <summary>
@@ -423,10 +421,10 @@ namespace KCRV_Statistics.UI.ViewModels
                 AppData.CurrentData = ValuesListResponse.Data;
 
                 // Открываем окно указания начала координат (для xlsx файла)
-                WindowsObjects.OpenCalculateIntermediateWindow = new();
-                if (WindowsObjects.OpenCalculateIntermediateWindow.ShowDialog() == true)
+                WindowsObjects.OpenInterlabIntermediateWindow = new();
+                if (WindowsObjects.OpenInterlabIntermediateWindow.ShowDialog() == true)
                 {
-                    WindowsObjects.OpenCalculateIntermediateWindow.Show();
+                    WindowsObjects.OpenInterlabIntermediateWindow.Show();
                 }
             }
             else MessageBox.Show(SimpleFileDataResponse.Message);
@@ -776,10 +774,10 @@ namespace KCRV_Statistics.UI.ViewModels
                 AppData.CurrentData = ValuesList.Data;
 
                 // Открываем окно указания начала координат (для xlsx файла)
-                WindowsObjects.OpenCalculateIntermediateWindow = new();
-                if (WindowsObjects.OpenCalculateIntermediateWindow.ShowDialog() == true)
+                WindowsObjects.OpenInterlabIntermediateWindow = new();
+                if (WindowsObjects.OpenInterlabIntermediateWindow.ShowDialog() == true)
                 {
-                    WindowsObjects.OpenCalculateIntermediateWindow.Show();
+                    WindowsObjects.OpenInterlabIntermediateWindow.Show();
                 }
             }
             catch (Exception e)

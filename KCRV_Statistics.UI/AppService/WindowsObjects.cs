@@ -16,10 +16,10 @@ namespace KCRV_Statistics.UI.AppService
         /// <summary>
         /// Окно ввода координат начальных точек, если открыт файл формата .xlsx
         /// </summary>
-        public static OpenCalculateIntermediateWindow OpenCalculateIntermediateWindow;
+        public static OpenInterlabIntermediateWindow OpenInterlabIntermediateWindow;
         /// <summary>
         /// Окно расчёта показателей межлабораторных KCRV
         /// </summary>
-        public static CalculateMasterWindow CalculateMasterWindow;
+        public static InterlabMasterWindow InterlabMasterWindow;
     }
 }

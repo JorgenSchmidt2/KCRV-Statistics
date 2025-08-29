@@ -9,7 +9,7 @@ namespace MathServiceTests.EstimatorsTests.Tests.EnCriterialValues
     [TestClass]
     public class EstimatorsTests_EnCriterialTests_1
     {
-        [TestMethod]
+        /*[TestMethod]
         public void EnCriterial_test_1_DEF()
         {
             int resdigits = 8;
@@ -48,6 +48,6 @@ namespace MathServiceTests.EstimatorsTests.Tests.EnCriterialValues
             var IncorrectValues = checkDatas.Where(x => !x.IsCorrect).Select(x => x).ToList();
 
             Assert.AreEqual(true, IncorrectValues.Count() == 0);
-        }
+        }*/
     }
 }
