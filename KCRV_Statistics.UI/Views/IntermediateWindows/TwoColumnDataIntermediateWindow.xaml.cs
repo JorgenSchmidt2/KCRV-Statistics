@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 namespace KCRV_Statistics.UI.Views.IntermediateWindows
 {
     /// <summary>
-    /// Логика взаимодействия для OpenInterlabIntermediateWindow.xaml
+    /// Логика взаимодействия для TwoColumnDataIntermediateWindow.xaml
     /// </summary>
-    public partial class OpenInterlabIntermediateWindow : Window
+    public partial class TwoColumnDataIntermediateWindow : Window
     {
-        public OpenInterlabIntermediateWindow()
+        public TwoColumnDataIntermediateWindow()
         {
             InitializeComponent();
         }

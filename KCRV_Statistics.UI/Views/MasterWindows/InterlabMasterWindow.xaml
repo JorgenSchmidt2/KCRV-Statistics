@@ -16,7 +16,7 @@
     <Grid>
         <!--#region Для возможности перемещать окно по экрану компьютера (master window version)-->
         <Grid Background="#e0e0e0" Height="30" VerticalAlignment="Top" >
-            <Label Content="Окно отображения показателей KCRV" FontSize="12" Margin="4,2,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <Label Content="Окно отображения показателей МСИ" FontSize="12" Margin="4,2,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             <Grid Grid.Row="0" MouseDown="Grid_MoveForLeftButton" Background="Transparent"></Grid>
             <Grid Grid.Row="1"></Grid>
         </Grid>

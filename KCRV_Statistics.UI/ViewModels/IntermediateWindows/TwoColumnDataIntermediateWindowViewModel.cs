@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace KCRV_Statistics.UI.ViewModels.IntermediateWindows
 {
-    public class InterlabIntermediateWindowViewModel : NotifyPropertyChanged
+    public class TwoColumnDataIntermediateWindowViewModel : NotifyPropertyChanged
     {
         #region Поля ввода значений округления при итерации и выводе результата
 
@@ -100,6 +100,13 @@ namespace KCRV_Statistics.UI.ViewModels.IntermediateWindows
                     {
                         try
                         {
+                            // Прочие операции проверки
+                            if (IsShouldBeOpenedAsILC && IsShouldBeOpenedAsStabFile)
+                            {
+                                MessageBox.Show("Может быть открыто только одно окно типа файла.");
+                                return;
+                            }
+
                             // Проверка списка на наличие в нём элементов
                             if (AppData.CurrentData.Count == 0)
                             {
@@ -123,18 +130,11 @@ namespace KCRV_Statistics.UI.ViewModels.IntermediateWindows
                                 return;
                             }
 
-                            // Расчёт значений, присвоение результатов вычислений статическому полю 
-                            AppData.COX_Datas = new List<CoxResultsEntity>();
-                            var Result = Estimators.CalculateAllMethods(AppData.CurrentData, out AppData.COX_Datas, IterationDigits, ResultDigits);
-                            AppData.OutputData.Clear();
-                            AppData.OutputData = Result;
+                            if (IsShouldBeOpenedAsILC)
+                                OpenCLIWindow();
 
-                            // Открытие окна
-                            WindowsObjects.InterlabMasterWindow = new();
-                            if (WindowsObjects.InterlabMasterWindow.ShowDialog() == true)
-                            {
-                                WindowsObjects.InterlabMasterWindow.Show();
-                            }
+                            if (isShouldBeOpenedAsStabFile)
+                                OpenStabFile();
                         }
                         catch (Exception e)
                         {
@@ -144,6 +144,29 @@ namespace KCRV_Statistics.UI.ViewModels.IntermediateWindows
                 );
             }
         }
+
+        public void OpenCLIWindow ()
+        {
+            // Расчёт значений, присвоение результатов вычислений статическому полю 
+            AppData.COX_Datas = new List<CoxResultsEntity>();
+            var Result = Estimators.CalculateAllMethods(AppData.CurrentData, out AppData.COX_Datas, IterationDigits, ResultDigits);
+            AppData.OutputData.Clear();
+            AppData.OutputData = Result;
+
+            // Открытие окна
+            WindowsObjects.InterlabMasterWindow = new();
+            if (WindowsObjects.InterlabMasterWindow.ShowDialog() == true)
+            {
+                WindowsObjects.InterlabMasterWindow.Show();
+            }
+        }
+
+        public void OpenStabFile()
+        {
+            MessageBox.Show("Hadn't implement");
+        }
+
+        #region Кнопки получения информации об окне
 
         public Command Help
         {
@@ -171,6 +194,66 @@ namespace KCRV_Statistics.UI.ViewModels.IntermediateWindows
                         WindowsObjects.OpenInterlabIntermediateWindow = null;
                     }
                 );
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Чекбоксы для выбора представления данных
+
+        public bool isShouldBeOpenedAsILC = true;
+        public bool IsShouldBeOpenedAsILC
+        {
+            get => isShouldBeOpenedAsILC;
+            set
+            {
+                if (!ChangeOpenDataVarianceInProcess && value != false)
+                {
+                    ChangeOpenDataVarianceInProcess = true;
+                    CheckChoises(value, !value);
+                }
+                CheckChanges();
+            }
+        }
+
+        public bool isShouldBeOpenedAsStabFile = false;
+        public bool IsShouldBeOpenedAsStabFile
+        {
+            get => isShouldBeOpenedAsStabFile; 
+            set
+            {
+                if (!ChangeOpenDataVarianceInProcess && value != false)
+                {
+                    ChangeOpenDataVarianceInProcess = true;
+                    CheckChoises(!value, value);
+                }
+                CheckChanges();
+            }
+        }
+
+        private bool ChangeOpenDataVarianceInProcess;
+        public void CheckChoises(bool ILC, bool Stab)
+        {
+            if (ChangeOpenDataVarianceInProcess) 
+            {
+                isShouldBeOpenedAsILC       = ILC;
+                IsShouldBeOpenedAsILC       = isShouldBeOpenedAsILC;
+                isShouldBeOpenedAsStabFile  = Stab;
+                IsShouldBeOpenedAsStabFile  = isShouldBeOpenedAsStabFile;
+                ChangeOpenDataVarianceInProcess = false;
+            }
+        }
+
+        public bool isTemporaryData = AppData.IsTemporaryTwoColumnData;
+        public bool IsTemporaryData
+        {
+            get => isTemporaryData;
+            set
+            {
+                isTemporaryData = value;
+                CheckChanges();
             }
         }
 

@@ -10,10 +10,7 @@
     <Compile Update="Views\EntryWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\IntermediateWindows\OpenInterlabIntermediateWindow.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\IntermediateWindows\OpenStabilityIntermediateWindow.xaml.cs">
+    <Compile Update="Views\IntermediateWindows\TwoColumnDataIntermediateWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\MasterWindows\InterlabMasterWindow.xaml.cs">
@@ -24,10 +21,7 @@
     <Page Update="Views\EntryWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\IntermediateWindows\OpenInterlabIntermediateWindow.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\IntermediateWindows\OpenStabilityIntermediateWindow.xaml">
+    <Page Update="Views\IntermediateWindows\TwoColumnDataIntermediateWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\MasterWindows\InterlabMasterWindow.xaml">
