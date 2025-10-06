@@ -27,10 +27,7 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
         /// </summary>
         public int ExternalFrameHeight
         {
-            get
-            {
-                return GraphicsShellConfiguration.ExternalCanvasHeight + GraphicsShellConfiguration.PointRadius + 2;
-            }
+            get => GraphicsShellConfiguration.ExternalCanvasHeight + GraphicsShellConfiguration.PointRadius + 2;
         }
 
         /// <summary>
@@ -38,10 +35,7 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
         /// </summary>
         public int ExternalCanvasHeight
         {
-            get
-            {
-                return GraphicsShellConfiguration.ExternalCanvasHeight + GraphicsShellConfiguration.PointRadius;
-            }
+            get => GraphicsShellConfiguration.ExternalCanvasHeight + GraphicsShellConfiguration.PointRadius;
         }
 
         /// <summary>
@@ -49,10 +43,7 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
         /// </summary>
         public int ExternalFrameWidth
         {
-            get
-            {
-                return GraphicsShellConfiguration.ExternalCanvasWidth + GraphicsShellConfiguration.PointRadius + 2 + 60;
-            }
+            get => GraphicsShellConfiguration.ExternalCanvasWidth + GraphicsShellConfiguration.PointRadius + 2 + 60;
         }
 
         /// <summary>
@@ -60,10 +51,7 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
         /// </summary>
         public int ExternalCanvasWidth
         {
-            get
-            {
-                return GraphicsShellConfiguration.ExternalCanvasWidth + GraphicsShellConfiguration.PointRadius + 30;
-            }
+            get => GraphicsShellConfiguration.ExternalCanvasWidth + GraphicsShellConfiguration.PointRadius + 30;
         }
 
         #endregion
@@ -75,10 +63,7 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
         /// </summary>
         public int InternalFrameHeight
         {
-            get
-            {
-                return GraphicsShellConfiguration.InternalCanvasHeight + GraphicsShellConfiguration.PointRadius + 2;
-            }
+            get => GraphicsShellConfiguration.InternalCanvasHeight + GraphicsShellConfiguration.PointRadius + 2;
         }
 
         /// <summary>
@@ -86,10 +71,7 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
         /// </summary>
         public int InternalCanvasHeight
         {
-            get
-            {
-                return GraphicsShellConfiguration.InternalCanvasHeight + GraphicsShellConfiguration.PointRadius;
-            }
+            get => GraphicsShellConfiguration.InternalCanvasHeight + GraphicsShellConfiguration.PointRadius;
         }
 
         /// <summary>
@@ -97,10 +79,7 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
         /// </summary>
         public int InternalFrameWidth
         {
-            get
-            {
-                return GraphicsShellConfiguration.InternalCanvasWidth + GraphicsShellConfiguration.PointRadius + 2;
-            }
+            get => GraphicsShellConfiguration.InternalCanvasWidth + GraphicsShellConfiguration.PointRadius + 2;
         }
 
         /// <summary>
@@ -108,10 +87,7 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
         /// </summary>
         public int InternalCanvasWidth
         {
-            get
-            {
-                return GraphicsShellConfiguration.InternalCanvasWidth + GraphicsShellConfiguration.PointRadius;
-            }
+            get => GraphicsShellConfiguration.InternalCanvasWidth + GraphicsShellConfiguration.PointRadius;
         }
 
         #endregion
@@ -197,10 +173,7 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
         /// </summary>
         public List<LineGraphicsEntity> KCRV_Data
         {
-            get
-            {
-                return KCRV_data;
-            }
+            get => KCRV_data;
             set
             {
                 if (value.Count != 0)
@@ -226,10 +199,7 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
         /// </summary>
         public List<LineGraphicsEntity> UnvertanityData
         {
-            get
-            {
-                return uncertanityData;
-            }
+            get => uncertanityData; 
             set
             {
                 if (value.Count != 0)
@@ -250,7 +220,7 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
         /// </summary>
         public List<ViewedOutputData> ViewedOutputDataList
         {
-            get { return viewedOutputDataList; }
+            get => viewedOutputDataList;
             set
             {
                 if (value.Count != 0)
@@ -270,10 +240,7 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
         /// </summary>
         public string FolderName
         {
-            get
-            {
-                return folderName;
-            }
+            get => folderName;
             set
             {
                 folderName = value;
@@ -287,10 +254,7 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
         /// </summary>
         public bool MustCreateReport
         {
-            get 
-            { 
-                return mustCreateReport; 
-            }
+            get => mustCreateReport; 
             set
             {
                 mustCreateReport = value;

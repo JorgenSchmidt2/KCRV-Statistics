@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using KCRV_Statistics.Core.AppConstants;
+using KCRV_Statistics.Core.Entities.DataEntities.RegularDataUnits;
 using KCRV_Statistics.Core.Entities.FileSystemEntites;
 using KCRV_Statistics.Core.Entities.GraphicsShellEntities;
 using KCRV_Statistics.Core.Responses.DataResponses;
@@ -32,7 +33,7 @@ namespace KCRV_Statistics.UI.ViewModels
         /// </summary>
         public List<ViewedDirectoryData> DirectoryDataEntities
         {
-            get { return directoryDataEntities; }
+            get => directoryDataEntities;
             set
             {
                 directoryDataEntities = value;
@@ -46,7 +47,7 @@ namespace KCRV_Statistics.UI.ViewModels
         /// </summary>
         public List<FileDataEntity> FileDatas
         {
-            get { return fileDatas; }
+            get => fileDatas;
             set 
             {
                 var fileDatasResponse = ListOperators.CopyFileDataListEntities(value);
@@ -95,10 +96,7 @@ namespace KCRV_Statistics.UI.ViewModels
         /// </summary>
         public string Query
         {
-            get
-            {
-                return query;
-            }
+            get => query;
 
             set
             {
@@ -174,7 +172,7 @@ namespace KCRV_Statistics.UI.ViewModels
         /// </summary>
         public bool XLSX_Check
         {
-            get { return xlsx_Check; }
+            get => xlsx_Check; 
             set
             {
                 if (value == false && !(JSON_Check || CSV_Check || TXT_Check))
@@ -193,7 +191,7 @@ namespace KCRV_Statistics.UI.ViewModels
         /// </summary>
         public bool JSON_Check
         {
-            get { return json_Check; }
+            get => json_Check;
 
             set
             {
@@ -213,7 +211,7 @@ namespace KCRV_Statistics.UI.ViewModels
         /// </summary>
         public bool CSV_Check
         {
-            get { return csv_Check; }
+            get => csv_Check;
 
             set
             {
@@ -233,7 +231,7 @@ namespace KCRV_Statistics.UI.ViewModels
         /// </summary>
         public bool TXT_Check
         {
-            get { return txt_Check; }
+            get => txt_Check;
             set
             {
                 if (value == false && !(XLSX_Check || JSON_Check || CSV_Check))
@@ -256,7 +254,7 @@ namespace KCRV_Statistics.UI.ViewModels
         /// </summary>
         public bool MustBeViewed
         {
-            get { return mustBeViewed; }
+            get => mustBeViewed;
             set
             {
                 if (!ChangeFileChoisesInProcess && value != false)
@@ -274,7 +272,7 @@ namespace KCRV_Statistics.UI.ViewModels
         /// </summary>
         public bool MustToID
         {
-            get { return mustToID; }
+            get => mustToID;
             set
             {
                 if (!ChangeFileChoisesInProcess && value != false)
@@ -292,7 +290,7 @@ namespace KCRV_Statistics.UI.ViewModels
         /// </summary>
         public bool MustBeReaded
         {
-            get { return mustBeReaded; }
+            get => mustBeReaded;
             set
             {
                 if (!ChangeFileChoisesInProcess && value != false)
@@ -336,10 +334,7 @@ namespace KCRV_Statistics.UI.ViewModels
         /// </summary>
         public int ID_Field
         {
-            get
-            {
-                return id_Field;
-            }
+            get => id_Field;
             set
             {
                 id_Field = value;
@@ -417,17 +412,8 @@ namespace KCRV_Statistics.UI.ViewModels
                     return;
                 }
 
-                AppData.CurrentData.Clear();
-                AppData.CurrentData = ValuesListResponse.Data;
-
-                // Открываем окно указания начала координат (для xlsx файла)
-                WindowsObjects.OpenInterlabIntermediateWindow = new();
-                if (WindowsObjects.OpenInterlabIntermediateWindow.ShowDialog() == true)
-                {
-                    WindowsObjects.OpenInterlabIntermediateWindow.Show();
-                }
+                OpenWindowWithData(ValuesListResponse.Data);
             }
-            else MessageBox.Show(SimpleFileDataResponse.Message);
         }
         #endregion
 
@@ -509,7 +495,7 @@ namespace KCRV_Statistics.UI.ViewModels
         public string yourselfData;
         public string YourselfData
         {
-            get { return yourselfData;}
+            get => yourselfData;
             set 
             { 
                 yourselfData = value;
@@ -520,7 +506,7 @@ namespace KCRV_Statistics.UI.ViewModels
         public bool isYourselfDataFieldActive = true;
         public bool IsYourselfDataFieldActive
         {
-            get { return isYourselfDataFieldActive; }
+            get => isYourselfDataFieldActive;
             set
             {
                 isYourselfDataFieldActive = value;
@@ -713,6 +699,9 @@ namespace KCRV_Statistics.UI.ViewModels
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void OpenFile (FileDataEntity FileData)
         {
             try
@@ -768,21 +757,28 @@ namespace KCRV_Statistics.UI.ViewModels
                     MessageBox.Show("Формат файла неизвестен.");
                     return;
                 }
+
                 // Получаем переданный ранее контент в удобном для обработки виде, дополнительно забиваем его в статическую переменную
                 var ValuesList = ListConverters.StringToRegularData(ContentResponse.Data);
-                AppData.CurrentData.Clear();
-                AppData.CurrentData = ValuesList.Data;
 
-                // Открываем окно указания начала координат (для xlsx файла)
-                WindowsObjects.OpenInterlabIntermediateWindow = new();
-                if (WindowsObjects.OpenInterlabIntermediateWindow.ShowDialog() == true)
-                {
-                    WindowsObjects.OpenInterlabIntermediateWindow.Show();
-                }
+                OpenWindowWithData(ValuesList.Data);
             }
             catch (Exception e)
             {
                 MessageBox.Show("Возникла неустранимая ошибка:\n" + e.Message + "\n\nСообщите о проблеме разработчику.");
+            }
+        }
+
+        public void OpenWindowWithData(List<RegularData> Data)
+        {
+            AppData.CurrentData.Clear();
+            AppData.CurrentData = Data;
+
+            // Открываем окно указания начала координат (для xlsx файла)
+            WindowsObjects.OpenInterlabIntermediateWindow = new();
+            if (WindowsObjects.OpenInterlabIntermediateWindow.ShowDialog() == true)
+            {
+                WindowsObjects.OpenInterlabIntermediateWindow.Show();
             }
         }
 

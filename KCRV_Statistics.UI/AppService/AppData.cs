@@ -32,7 +32,7 @@ namespace KCRV_Statistics.UI.AppService
         /// <summary>
         /// Определяет является ли первый столбец входных двухстолбчатых данных "времяобразным" (значения нарастают по любому закону)
         /// </summary>
-        public static bool IsTemporaryTwoColumnData = true;
+        public static bool IsTemporaryTwoColumnData = false;
         /// <summary>
         /// Содержит полученные данные от лабораторий.
         /// </summary>

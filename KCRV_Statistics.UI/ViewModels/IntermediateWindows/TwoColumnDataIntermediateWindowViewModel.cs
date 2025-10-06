@@ -18,10 +18,7 @@ namespace KCRV_Statistics.UI.ViewModels.IntermediateWindows
         /// </summary>
         public int IterationDigits
         {
-            get
-            {
-                return iterationDigits;
-            }
+            get => iterationDigits;
             set
             {
                 iterationDigits = value;
@@ -35,10 +32,7 @@ namespace KCRV_Statistics.UI.ViewModels.IntermediateWindows
         /// </summary>
         public int ResultDigits
         {
-            get
-            {
-                return resultDigits;
-            }
+            get => resultDigits;
             set
             {
                 resultDigits = value;
@@ -56,10 +50,7 @@ namespace KCRV_Statistics.UI.ViewModels.IntermediateWindows
         /// </summary>
         public int CoordinateDataBeginX
         {
-            get
-            {
-                return coordinateDataBeginX;
-            }
+            get => coordinateDataBeginX;
             set
             {
                 coordinateDataBeginX = value;
@@ -73,10 +64,7 @@ namespace KCRV_Statistics.UI.ViewModels.IntermediateWindows
         /// </summary>
         public int CoordinateDataBeginY
         {
-            get
-            {
-                return coordinateDataBeginY;
-            }
+            get => coordinateDataBeginY;
             set
             {
                 coordinateDataBeginY = value;
@@ -204,6 +192,9 @@ namespace KCRV_Statistics.UI.ViewModels.IntermediateWindows
         #region Чекбоксы для выбора представления данных
 
         public bool isShouldBeOpenedAsILC = true;
+        /// <summary>
+        /// Определяет должно ли быть открыто окно расчёта значений для МСИ
+        /// </summary>
         public bool IsShouldBeOpenedAsILC
         {
             get => isShouldBeOpenedAsILC;
@@ -219,6 +210,9 @@ namespace KCRV_Statistics.UI.ViewModels.IntermediateWindows
         }
 
         public bool isShouldBeOpenedAsStabFile = false;
+        /// <summary>
+        /// Определяет должно ли быть открыто окно расчёта значений для стабильности
+        /// </summary>
         public bool IsShouldBeOpenedAsStabFile
         {
             get => isShouldBeOpenedAsStabFile; 
@@ -233,7 +227,13 @@ namespace KCRV_Statistics.UI.ViewModels.IntermediateWindows
             }
         }
 
+        /// <summary>
+        /// Проверяет запущен ли процесс выбора нужного варианта
+        /// </summary>
         private bool ChangeOpenDataVarianceInProcess;
+        /// <summary>
+        /// Выбирает нужный вариант, действуя по методу взаимоисключения вариантов выше
+        /// </summary>
         public void CheckChoises(bool ILC, bool Stab)
         {
             if (ChangeOpenDataVarianceInProcess) 
@@ -247,6 +247,10 @@ namespace KCRV_Statistics.UI.ViewModels.IntermediateWindows
         }
 
         public bool isTemporaryData = AppData.IsTemporaryTwoColumnData;
+        /// <summary>
+        /// Определяет является ли первая колонка данных возрастающей по её значениям. 
+        /// В зависимости от того, является ли утверждение выше верным, блокирует или открывает возможность выбрать нужное окно.
+        /// </summary>
         public bool IsTemporaryData
         {
             get => isTemporaryData;
