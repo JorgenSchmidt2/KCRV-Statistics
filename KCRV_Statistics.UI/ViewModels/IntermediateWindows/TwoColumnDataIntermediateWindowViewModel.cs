@@ -135,18 +135,10 @@ namespace KCRV_Statistics.UI.ViewModels.IntermediateWindows
 
         public void OpenCLIWindow ()
         {
-            // Расчёт значений, присвоение результатов вычислений статическому полю 
+            // Расчёт значений, присвоение результатов вычислений статическому полю, запуск окна расчётов
             AppData.COX_Datas = new List<CoxResultsEntity>();
             var Result = Estimators.CalculateAllMethods(AppData.CurrentData, out AppData.COX_Datas, IterationDigits, ResultDigits);
-            AppData.OutputData.Clear();
-            AppData.OutputData = Result;
-
-            // Открытие окна
-            WindowsObjects.InterlabMasterWindow = new();
-            if (WindowsObjects.InterlabMasterWindow.ShowDialog() == true)
-            {
-                WindowsObjects.InterlabMasterWindow.Show();
-            }
+            WindowsObjects.StartInterlabMasterWindow(Result);
         }
 
         public void OpenStabFile()

@@ -109,46 +109,28 @@ namespace KCRV_Statistics.UI
             ChoisedExtensions.Add(AppFileFormats.CSV);
             ChoisedExtensions.Add(AppFileFormats.TXT);
 
-            // Получаем первичный список всех файлов из директорий, после получаем нужные нам расширения файлов
+            // Получаем первичный список всех файлов из директорий, после получаем нужные нам расширения файлов (СМ)
             var PrimaryFileListResponse = DirectoryInfoReader.GetFileListFromDirectory(AppData.ChosenFolders);
+            if (!PrimaryFileListResponse.Status || PrimaryFileListResponse.Data == null)
+            {
+                MessageBox.Show("Ошибка на этапе получения первичного списка файлов.\n" 
+                    + PrimaryFileListResponse.Message);
+                Shutdown();
+                return;
+            }
             var FileListExtensionsResponse = ListOperators.FilterFileListByExtension(PrimaryFileListResponse.Data, ChoisedExtensions);
+            if (!FileListExtensionsResponse.Status || FileListExtensionsResponse.Data == null)
+            {
+                MessageBox.Show("Ошибка на этапе получения первичного списка файлов.\n"
+                    + FileListExtensionsResponse.Message);
+                Shutdown();
+                return;
+            }
             AppData.AppFileData = FileListExtensionsResponse.Data;
 
-            if (!PrimaryFileListResponse.Status || !FileListExtensionsResponse.Status)
-            {
-                MessageBox.Show("Ошибка на этапе получения списка файлов:\n"
-                              + "Ошибка при получении первичного списка - " + PrimaryFileListResponse.Message + "\n"
-                              + "Ошибка при получении списка файлов с расширениями - " + FileListExtensionsResponse.Message + "\n");
-                Shutdown();
-                return;
-            }
 
-            // Открываем главное окно (также прописан алгоритм закрытия главного окна, при котором вся программа заканчивает работу).
-            WindowsObjects.EntryWindow = new();
-            if (WindowsObjects.EntryWindow.ShowDialog() == true)
-            {
-                WindowsObjects.EntryWindow.Show();
-            }
-            else
-            {
-                WindowsObjects.EntryWindow = null;
-                Shutdown();
-                return;
-            }
+            WindowsObjects.StartEntryWindow();
         }
 
-        /* Для проверки работоспособности каждого из окон по отдельности (не удалять!!!)
-         * // Открываем главное окно (также прописан алгоритм закрытия главного окна, при котором вся программа заканчивает работу).
-            WindowsObjects.InterlabMasterWindow = new();
-            if (WindowsObjects.InterlabMasterWindow.ShowDialog() == true)
-            {
-                WindowsObjects.InterlabMasterWindow.Show();
-            }
-            else
-            {
-                WindowsObjects.InterlabMasterWindow = null;
-                Shutdown();
-                return;
-            }*/
     }
 }

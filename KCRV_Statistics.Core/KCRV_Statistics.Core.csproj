@@ -12,10 +12,10 @@
 	  <Folder Include="Interfaces\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="PresentationCore">
-      <HintPath>..\..\..\..\DLL_Libraries\csharp\presentationcore.dll</HintPath>
-    </Reference>
-  </ItemGroup>
+	<ItemGroup>
+		<Reference Include="PresentationCore">
+			<HintPath>..\..\..\..\CS Libs\net 7 0\presentationcore.dll</HintPath>
+		</Reference>
+	</ItemGroup>
 
 </Project>

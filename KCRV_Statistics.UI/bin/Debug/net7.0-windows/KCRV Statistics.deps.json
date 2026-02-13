@@ -963,16 +963,14 @@
         },
         "runtime": {
           "CalcModuleKCRV.dll": {
-            "assemblyVersion": "1.0.0",
-            "fileVersion": ""
+            "fileVersion": "0.0.0.0"
           }
         }
       },
       "DataModuleKCRV/1.0.0": {
         "runtime": {
           "DataModuleKCRV.dll": {
-            "assemblyVersion": "1.0.0",
-            "fileVersion": ""
+            "fileVersion": "0.0.0.0"
           }
         }
       },

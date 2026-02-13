@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Windows;
-using System.Windows.Input;
-using KCRV_Statistics.Core.AppConstants;
-using KCRV_Statistics.Core.Entities.DataEntities.RegularDataUnits;
+﻿using KCRV_Statistics.Core.AppConstants;
 using KCRV_Statistics.Core.Entities.FileSystemEntites;
 using KCRV_Statistics.Core.Entities.GraphicsShellEntities;
 using KCRV_Statistics.Core.Responses.DataResponses;
@@ -16,6 +8,13 @@ using KCRV_Statistics.Model.FileService.Readers;
 using KCRV_Statistics.Model.SearchService.FileFinders;
 using KCRV_Statistics.Model.ValidateService.FileCheckers;
 using KCRV_Statistics.UI.AppService;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Windows;
+using System.Windows.Input;
 
 namespace KCRV_Statistics.UI.ViewModels
 {
@@ -758,10 +757,16 @@ namespace KCRV_Statistics.UI.ViewModels
                     return;
                 }
 
-                // Получаем переданный ранее контент в удобном для обработки виде, дополнительно забиваем его в статическую переменную
-                var ValuesList = ListConverters.StringToRegularData(ContentResponse.Data);
+                // Получаем переданный ранее контент в удобном для обработки виде, дополнительно "забиваем" его в статическую переменную
+                var ValuesListResponse = ListConverters.StringToRegularData(ContentResponse.Data);
+                if (!ValuesListResponse.Status || ValuesListResponse.Data == null)
+                {
+                    MessageBox.Show("Ошибка на этапе получения контента (во время исполнения возникла ошибка.\n" 
+                        + ValuesListResponse.Message);
+                    return;
+                }
 
-                OpenWindowWithData(ValuesList.Data);
+                WindowsObjects.StartTwoColumnDataIntermediateWindow(ValuesListResponse.Data);
             }
             catch (Exception e)
             {
@@ -769,18 +774,6 @@ namespace KCRV_Statistics.UI.ViewModels
             }
         }
 
-        public void OpenWindowWithData(List<RegularData> Data)
-        {
-            AppData.CurrentData.Clear();
-            AppData.CurrentData = Data;
-
-            // Открываем окно указания начала координат (для xlsx файла)
-            WindowsObjects.OpenInterlabIntermediateWindow = new();
-            if (WindowsObjects.OpenInterlabIntermediateWindow.ShowDialog() == true)
-            {
-                WindowsObjects.OpenInterlabIntermediateWindow.Show();
-            }
-        }
 
         #endregion
     }

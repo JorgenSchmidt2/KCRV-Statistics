@@ -1,6 +1,9 @@
-﻿using KCRV_Statistics.UI.Views;
+﻿using KCRV_Statistics.Core.Entities.DataEntities.RegularDataUnits;
+using KCRV_Statistics.UI.Views;
 using KCRV_Statistics.UI.Views.IntermediateWindows;
 using KCRV_Statistics.UI.Views.MasterWindows;
+using System.Collections.Generic;
+using System.Windows.Documents;
 
 namespace KCRV_Statistics.UI.AppService
 {
@@ -12,14 +15,58 @@ namespace KCRV_Statistics.UI.AppService
         /// <summary>
         /// Начальное окно
         /// </summary>
-        public static EntryWindow EntryWindow;
+        private static EntryWindow? EntryWindow;
         /// <summary>
         /// Окно ввода координат начальных точек, если открыт файл формата .xlsx
         /// </summary>
-        public static TwoColumnDataIntermediateWindow OpenInterlabIntermediateWindow;
+        private static TwoColumnDataIntermediateWindow? TwoColumnDataIntermediateWindow;
         /// <summary>
         /// Окно расчёта показателей межлабораторных KCRV
         /// </summary>
-        public static InterlabMasterWindow InterlabMasterWindow;
+        private static InterlabMasterWindow? InterlabMasterWindow;
+
+        public static void StartEntryWindow() 
+        {
+            // Открываем главное окно (также прописан алгоритм закрытия главного окна, при котором вся программа заканчивает работу).
+            EntryWindow = new();
+            if (EntryWindow.ShowDialog() == true)
+            {
+                EntryWindow.Show();
+            }
+            EntryWindow = null;
+        }
+
+
+
+        public static void StartTwoColumnDataIntermediateWindow(List<RegularData> Data)
+        {
+            AppData.CurrentData.Clear();
+            AppData.CurrentData = Data;
+
+            // Открываем окно указания начала координат (для xlsx файла)
+            TwoColumnDataIntermediateWindow = new();
+            if (TwoColumnDataIntermediateWindow.ShowDialog() == true)
+            {
+                TwoColumnDataIntermediateWindow.Show();
+            }
+            TwoColumnDataIntermediateWindow = null;
+            AppData.CurrentData.Clear();
+        }
+
+        public static void StartInterlabMasterWindow(List<OutputData> Data)
+        {
+            AppData.OutputData.Clear();
+            AppData.OutputData = Data;
+
+            // Открытие окна
+            InterlabMasterWindow = new();
+            if (InterlabMasterWindow.ShowDialog() == true)
+            {
+                InterlabMasterWindow.Show();
+            }
+            InterlabMasterWindow = null;
+            AppData.OutputData.Clear();
+            AppData.COX_Datas.Clear();
+        }
     }
 }

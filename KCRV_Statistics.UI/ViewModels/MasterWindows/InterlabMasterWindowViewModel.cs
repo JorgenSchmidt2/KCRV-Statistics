@@ -411,13 +411,8 @@ namespace KCRV_Statistics.UI.ViewModels.MasterWindows
                 return new Command(
                     obj =>
                     {
-                        // Очищение статических полей от результатов
-                        AppData.OutputData.Clear();
-                        AppData.COX_Datas.Clear();
-
                         // Закрытие окна
                         WindowsObjects.InterlabMasterWindow.Close();
-                        WindowsObjects.InterlabMasterWindow = null;
                     }    
                 );
             }
